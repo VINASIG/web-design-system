@@ -1414,7 +1414,8 @@ h3 {
   background: var(--color-surface-muted);
 }
 
-.logo-preview--mark img {
+.logo-preview--mark img,
+.logo-preview--contained img {
   display: block;
   width: min(56%, 9rem);
   height: auto;
