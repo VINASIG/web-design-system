@@ -22,7 +22,7 @@
   "masonry-layout": "<div class='sample-masonry'><span class='sample-masonry-tile sample-card-blue'>Research</span><span class='sample-masonry-tile sample-card-orange'>Plan</span><span class='sample-masonry-tile sample-card-green'>Prototype</span><span class='sample-masonry-tile sample-card-red'>Review</span></div>",
   "easing": "<div class='sample-motion-chart'><span class='sample-chart-axis'></span><span class='sample-easing-curve'></span><small>Start</small><small>End</small></div>",
   "spring-animation": "<div class='sample-spring'><span class='sample-spring-line'></span><b></b><small>Rest</small><small>Target</small></div>",
-  "text-scramble": "<div class='sample-scramble'><small>Loading preview</small><b>Build with intent</b><span class='sample-scramble-line'></span></div>",
+  "text-scramble": "<div class='sample-scramble'><b>Build with intent</b><span class='sample-scramble-line'></span></div>",
   "lightbox": "<div class='sample-lightbox'><div><span></span><span></span><span></span><span></span></div><small>Logo study, 04 of 12</small></div>",
   "marquee": "<div class='sample-marquee'><span>Design with purpose</span><i class='fi-br-star'></i><span>Build with care</span><i class='fi-br-star'></i><span>Design with purpose</span></div>",
   "insertion-caret": "<div class='sample-editor-line'><span>Write a new message</span><i></i></div>",

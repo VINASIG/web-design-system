@@ -655,10 +655,11 @@ const slugify = (value: string) =>
   .sample-toast { display: flex; width: 100%; align-items: center; gap: 0.65rem; padding: 0.65rem 0.8rem; background: var(--color-white); border: 1px solid var(--color-border); border-left: 3px solid var(--color-builder-green); border-radius: var(--radius-sm); box-shadow: 0 0.4rem 1rem rgb(68 58 59 / 8%); }
   .sample-toast > span { display: grid; flex: 1; gap: 0.1rem; }
 
-  .sample-surface-options { display: flex; align-items: end; justify-content: space-around; gap: 0.75rem; }
+  .sample-surface-demo { display: grid; align-content: center; justify-content: stretch; gap: 0.75rem; }
+  .sample-surface-options { display: grid; width: 100%; align-items: stretch; gap: 0.6rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .sample-dialog-mini,
   .sample-drawer-mini,
-  .sample-sheet-mini { display: grid; width: 8rem; min-height: 5rem; align-content: center; gap: 0.3rem; padding: 0.65rem; background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-sm); box-shadow: 0 0.4rem 1rem rgb(68 58 59 / 8%); }
+  .sample-sheet-mini { display: grid; width: 100%; min-width: 0; min-height: 5rem; align-content: center; gap: 0.3rem; padding: 0.65rem; background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-sm); box-shadow: 0 0.4rem 1rem rgb(68 58 59 / 8%); }
   .sample-drawer-mini { border-left: 3px solid var(--color-scout-blue); }
   .sample-sheet-mini { min-height: 4rem; border-bottom: 3px solid var(--color-scout-blue); }
 
@@ -908,16 +909,20 @@ const slugify = (value: string) =>
   .sample-menu button.is-danger { color: var(--color-auditor-red); border-top: 1px solid var(--color-border); }
   .sample-confirm > div button { min-height: 2.2rem; padding: 0.3rem 0.55rem; color: var(--color-scout-blue); border-radius: 3px; }
   .sample-confirm > div button:last-child { color: var(--color-auditor-red); }
-  .sample-surface-options > button { flex: 1; text-align: left; cursor: pointer; }
+  .sample-surface-options > button { min-width: 0; width: 100%; text-align: left; cursor: pointer; }
   .sample-surface-options > button[aria-pressed="true"] { outline: 2px solid var(--color-scout-blue); outline-offset: 2px; }
-  .sample-surface-feedback { margin: 0.75rem 0 0; color: var(--color-text-muted); font-size: 0.88rem; }
+  .sample-surface-feedback { min-width: 0; margin: 0; color: var(--color-text-muted); font-size: 0.88rem; }
   .sample-overlay-trio > div { position: relative; }
   .sample-overlay-trio .sample-anchor,
   .sample-popover-macos .sample-anchor { color: var(--color-scout-blue-strong); font: inherit; cursor: pointer; }
   .sample-overlay-trio > div > b,
   .sample-overlay-trio > div > small,
   .sample-popover-macos > div { z-index: 2; max-width: min(15rem, 68vw); font-size: 0.85rem; }
-  .sample-combobox > button { width: 100%; padding: 0.5rem 0.6rem; text-align: left; background: var(--color-white); border: 1px solid var(--color-border); }
+  .sample-combobox > button { width: 100%; min-width: 0; padding: 0.5rem 0.6rem; text-align: left; background: var(--color-white); border: 1px solid var(--color-border); }
+  .sample-combobox > .sample-option { display: flex; align-items: center; justify-content: space-between; gap: 0.2rem 0.75rem; flex-wrap: wrap; overflow-wrap: anywhere; }
+  .sample-combobox > .sample-option span { color: var(--color-text-muted); font-size: 0.82rem; }
+  .sample-command > div { min-width: 0; }
+  .sample-command-input { width: 100%; min-width: 0; flex: 1; }
   .sample-command > button { width: 100%; min-height: 2.2rem; padding: 0.35rem 0.5rem; text-align: left; border-radius: 3px; font-size: 0.9rem; }
   .sample-command > button:hover { background: var(--color-scout-blue-soft); }
   .sample-accordion > button { display: flex; width: 100%; min-height: 2.8rem; align-items: center; justify-content: space-between; padding: 0.6rem 0; text-align: left; border-bottom: 1px solid var(--color-border); font-size: 0.95rem; }
@@ -1138,6 +1143,198 @@ const slugify = (value: string) =>
   }
 
   @media (max-width: 420px) {
+    .sample-bottom-nav {
+      gap: 0.1rem;
+      padding-inline: 0.15rem;
+    }
+
+    .sample-nav-item {
+      min-width: 0;
+      flex: 1 1 0;
+    }
+
+    .element-preview .ui-sample .sample-nav-item small {
+      font-size: 0.72rem;
+    }
+
+    .sample-scrollspy {
+      gap: 0.55rem;
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sample-scrollspy nav {
+      min-width: 0;
+      gap: 0.3rem 0.5rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sample-scrollspy nav > strong {
+      grid-column: 1 / -1;
+    }
+
+    .sample-scrollspy nav .is-current {
+      margin-left: 0;
+      padding-left: 0.35rem;
+    }
+
+    .sample-pagination {
+      width: 100%;
+      justify-content: center;
+      gap: 0.15rem;
+    }
+
+    .sample-pagination > span,
+    .sample-pagination > b,
+    .sample-pagination > button {
+      min-width: 1.75rem;
+      min-height: 2rem;
+      padding-inline: 0.2rem;
+      font-size: 0.8rem;
+    }
+
+    .sample-pagination > .sample-page-arrow {
+      min-width: 0;
+      padding-inline: 0.1rem;
+      font-size: 0.68rem;
+      white-space: nowrap;
+    }
+
+    .element-preview .ui-sample .sample-pagination > .sample-page-arrow {
+      font-size: 0.68rem;
+    }
+
+    .sample-calendar {
+      min-width: 0;
+    }
+
+    .sample-calendar header {
+      gap: 0.3rem;
+    }
+
+    .sample-calendar-grid {
+      min-width: 0;
+      gap: 0.1rem;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .sample-calendar-grid button {
+      width: 100%;
+      min-width: 0;
+      font-size: 0.8rem;
+    }
+
+    .element-preview .ui-sample .sample-calendar-grid small {
+      font-size: 0.68rem;
+    }
+
+    .sample-site-header {
+      display: grid;
+      min-width: 0;
+      align-items: center;
+      gap: 0.5rem;
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .sample-site-header nav {
+      width: 100%;
+      min-width: 0;
+      flex: initial;
+      grid-column: 1 / -1;
+      justify-content: space-between;
+      gap: 0.4rem;
+    }
+
+    .sample-site-header nav > button {
+      min-width: 0;
+      padding: 0;
+    }
+
+    .sample-multiselect {
+      position: relative;
+      flex-wrap: wrap;
+    }
+
+    .element-preview .ui-sample .sample-selected {
+      font-size: 0.75rem;
+    }
+
+    .element-preview .ui-sample .sample-selected b {
+      font-size: 0.85rem;
+    }
+
+    .sample-multiselect > .sample-input-line {
+      width: 100%;
+      min-width: 0;
+      flex: 1 1 100%;
+      padding-right: 1.6rem;
+    }
+
+    .sample-multiselect > i[class^="fi-br-"] {
+      position: absolute;
+      right: 0.6rem;
+      bottom: 0.7rem;
+    }
+
+    .sample-table-row {
+      gap: 0.25rem;
+      padding: 0.35rem;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr) minmax(0, 1.2fr);
+    }
+
+    .element-preview .ui-sample .sample-state {
+      font-size: 0.72rem;
+    }
+
+    .sample-breadcrumbs {
+      min-width: 0;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.25rem 0.3rem;
+    }
+
+    .sample-overlay-trio {
+      display: grid;
+      width: 100%;
+      align-items: start;
+      gap: 0.5rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sample-overlay-trio > div {
+      min-width: 0;
+    }
+
+    .sample-token-field > div {
+      min-width: 0;
+    }
+
+    .element-preview .ui-sample .sample-token-field > div b {
+      max-width: 100%;
+      font-size: 0.78rem;
+    }
+
+    .sample-token-field input,
+    .sample-save-panel input {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .sample-segmented > button {
+      min-width: 0;
+      padding-inline: 0.35rem;
+    }
+
+    .sample-surface-options {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sample-surface-options > button {
+      align-items: center;
+      gap: 0.5rem;
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      padding: 0.55rem 0.65rem;
+    }
+
     .element-entry-heading {
       align-items: start;
     }

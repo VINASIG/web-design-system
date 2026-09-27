@@ -339,6 +339,7 @@ function enhanceSample(sample: HTMLElement) {
     case "modal-dialog-drawer-sheet": {
       const options = sample.querySelector<HTMLElement>(".sample-surface-options");
       if (!options) break;
+      sample.classList.add("sample-surface-demo");
       options.querySelectorAll<HTMLElement>(":scope > div").forEach((tile) => {
         const label = tile.querySelector("b")?.textContent?.trim() ?? "Surface";
         const button = asButton(tile, "surface-select", `Show ${label.toLowerCase()} example`);
