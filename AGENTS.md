@@ -20,10 +20,12 @@ When a rule is missing or two sources disagree, explain the gap and propose an o
 The documentation site is organized as follows:
 
 - `docs/foundations/`: colors, typography, spacing, and responsive behavior.
+- `docs/brand/`: logo facts, asset mapping, and draft usage recommendations.
 - `docs/components/`: common interface controls and component behavior.
 - `docs/patterns/`: reusable page-level interaction patterns.
 - `src/pages/`: the published documentation pages.
 - `src/layouts/` and `src/components/`: the documentation site's own UI.
+- `public/brand/`: exact copies of selected exported logo files; editable artwork remains in the Brand Assets archive.
 - `public/fonts/`: the local Space Grotesk variable font and its license.
 
 ## Design and implementation rules
@@ -34,7 +36,9 @@ The documentation site is organized as follows:
 - Use semantic HTML, visible keyboard focus, descriptive links, and accessible labels for form controls.
 - Keep rules and examples in English in this repository.
 - When adding or changing guidance, keep its draft status visible and update both the source document and its published page.
-- Avoid adding logo artwork, third-party images, or new fonts without an explicit project decision.
+- Use only the owner-provided logo exports in `public/brand/`. Do not redraw, alter, or add editable logo source files.
+- The repository adds no license for VINASIG logo artwork. Do not infer an author name or licensing terms that are not in the source record.
+- Use only Space Grotesk for typography; do not add other fonts, remote font services, or third-party imagery without an explicit project decision.
 
 ## Useful commands
 

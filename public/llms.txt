@@ -7,6 +7,7 @@ Start with the repository's `AGENTS.md` for agent instructions and project conte
 ## Published guides
 
 - [Overview](/): purpose and current status.
+- [Brand and logo](/brand/): logo variants, asset downloads, and draft usage recommendations.
 - [Foundations](/foundations/): color, typography, spacing, responsive behavior, and accessibility.
 - [Components](/components/): buttons, text inputs, status messages, and cards.
 - [Patterns](/patterns/): forms, empty states, loading, errors, and page layout.
@@ -16,6 +17,7 @@ Start with the repository's `AGENTS.md` for agent instructions and project conte
 
 - `AGENTS.md`: project context and working rules.
 - `docs/foundations/README.md`: foundation specification.
+- `docs/brand/README.md`: logo source facts, file mapping, and draft usage guidance.
 - `docs/components/README.md`: component specification.
 - `docs/patterns/README.md`: pattern specification.
 - `src/styles/tokens.css`: implemented CSS design tokens.

@@ -41,7 +41,8 @@ The static site can stay pre-rendered as it grows. If a future page needs reques
 - Use [`llms.txt`](public/llms.txt) as a compact index of the published guidance.
 - The source specifications live under [`docs/`](docs/); the website pages under [`src/pages/`](src/pages/) publish them.
 - Tokens are implemented in [`src/styles/tokens.css`](src/styles/tokens.css).
+- Logo facts and usage guidance are in [`docs/brand/README.md`](docs/brand/README.md), published at `/brand/`.
 
 ## Rights and provenance
 
-The font file is Space Grotesk under the SIL Open Font License; its notice is included alongside the file. This repository does not grant a license to use VINASIG names, marks, or other brand artwork. No logo artwork is included in this prototype.
+The font file is Space Grotesk under the SIL Open Font License; its notice is included alongside the file. `public/brand/` contains exact copies of selected logo exports supplied in the VINASIG Brand Assets archive, for project documentation and use examples. This repository adds no license for VINASIG names, marks, or logo artwork; do not infer an author name or extra licensing terms.

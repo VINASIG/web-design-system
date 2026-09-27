@@ -1,0 +1,186 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+
+const lockups = [
+  {
+    title: "Primary Color",
+    detail: "Multicolor mark with a Core Graphite wordmark · light surfaces",
+    src: "/brand/lockups/primary-color.svg",
+    alt: "VINASIG multicolor logo with a Core Graphite wordmark",
+    variant: "light",
+    file: "primary-color.svg",
+  },
+  {
+    title: "Color Black",
+    detail: "Multicolor mark with a black wordmark · light surfaces",
+    src: "/brand/lockups/color-black.svg",
+    alt: "VINASIG multicolor logo with a black wordmark",
+    variant: "light",
+    file: "color-black.svg",
+  },
+  {
+    title: "Reversed",
+    detail: "Multicolor mark with a white wordmark · dark surfaces",
+    src: "/brand/lockups/reversed.svg",
+    alt: "VINASIG multicolor logo with a white wordmark",
+    variant: "dark",
+    file: "reversed.svg",
+  },
+  {
+    title: "Monochrome Black",
+    detail: "Single-color black lockup · light surfaces",
+    src: "/brand/lockups/monochrome-black.svg",
+    alt: "VINASIG black monochrome logo",
+    variant: "light",
+    file: "monochrome-black.svg",
+  },
+  {
+    title: "Monochrome White",
+    detail: "Single-color white lockup · dark surfaces",
+    src: "/brand/lockups/monochrome-white.svg",
+    alt: "VINASIG white monochrome logo",
+    variant: "dark",
+    file: "monochrome-white.svg",
+  },
+];
+---
+
+<DocsLayout
+  title="Brand & logo"
+  description="Choose from the existing VINASIG logo exports and see where each variant fits."
+  eyebrow="Identity guidance · draft"
+>
+  <section class="rule-callout" aria-label="Guidance status">
+    <span class="callout-icon" aria-hidden="true">i</span>
+    <div>
+      <strong>Usage recommendations are a draft</strong>
+      <p>Variant names and master sizes come from the supplied asset package. Recommendations on this page need owner review before they become organization-wide rules.</p>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="concept-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">The identity</p><h2 id="concept-title">Four agents, one shared objective</h2></div>
+      <p>The pixel-art mark places four agents around a shared negative-space core.</p>
+    </div>
+    <div class="identity-grid">
+      <article class="card identity-card">
+        <div class="logo-preview logo-preview--mark">
+          <img src="/brand/marks/primary-mark.svg" alt="VINASIG four-agent Primary Brand Mark" width="25" height="25" />
+        </div>
+        <div>
+          <p class="section-kicker">Primary Brand Mark · 25 × 25 px master</p>
+          <p class="card-copy">Scout observes. Thinker reasons. Builder acts. Auditor evaluates. The symbol represents a coordinated, iterative workflow.</p>
+          <a class="button button-secondary" href="/brand/marks/primary-mark.svg" download>Download SVG</a>
+          <a class="text-link" href="/brand/marks/primary-mark-1000.png" download>1000 × 1000 PNG</a>
+        </div>
+      </article>
+
+      <article class="card identity-card">
+        <div class="logo-preview logo-preview--contained">
+          <img src="/brand/marks/contained-mark.svg" alt="VINASIG Contained Brand Mark on its white square canvas" width="27" height="27" />
+        </div>
+        <div>
+          <p class="section-kicker">Contained Brand Mark · 27 × 27 px master</p>
+          <p class="card-copy">The supplied contained export has a white square canvas. Its larger PNG export is available for square profile and avatar placements.</p>
+          <a class="button button-secondary" href="/brand/marks/contained-mark.svg" download>Download SVG</a>
+          <a class="text-link" href="/brand/marks/contained-mark-1080.png" download>1080 × 1080 PNG</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="lockups-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Logo with wordmark</p><h2 id="lockups-title">Choose a horizontal lockup</h2></div>
+      <p>Use a lockup when the VINASIG name should appear as part of the logo artwork. Each preview shows the supplied export on a suitable sample surface.</p>
+    </div>
+    <div class="lockup-grid">
+      {lockups.map((lockup) => (
+        <article class="card lockup-card">
+          <div class:list={["logo-preview", "logo-preview--lockup", lockup.variant === "dark" && "logo-preview--dark"]}>
+            <img src={lockup.src} alt={lockup.alt} />
+          </div>
+          <div class="lockup-meta">
+            <div><h3>{lockup.title}</h3><p class="card-copy">{lockup.detail}</p></div>
+            <a class="button button-secondary" href={lockup.src} download={lockup.file}>Download SVG</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="small-uses-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Compact contexts</p><h2 id="small-uses-title">Use the supplied small-format exports</h2></div>
+      <p>Use the dedicated favicon files when a browser or platform asks for those icon dimensions.</p>
+    </div>
+    <div class="two-column-grid">
+      <article class="card">
+        <h3>Favicon</h3>
+        <div class="logo-preview logo-preview--favicons" aria-label="Favicon exports shown at increasing display sizes">
+          <img src="/brand/favicons/favicon-16.png" alt="16 by 16 pixel VINASIG favicon" width="16" height="16" />
+          <img src="/brand/favicons/favicon-32.png" alt="32 by 32 pixel VINASIG favicon" width="32" height="32" />
+          <img src="/brand/favicons/favicon-48.png" alt="48 by 48 pixel VINASIG favicon" width="48" height="48" />
+        </div>
+        <p class="card-copy">Original supplied PNG sizes: 16 × 16, 32 × 32, and 48 × 48 pixels.</p>
+        <div class="download-row">
+          <a class="text-link" href="/brand/favicons/favicon-16.png" download>16 × 16 PNG</a>
+          <a class="text-link" href="/brand/favicons/favicon-32.png" download>32 × 32 PNG</a>
+          <a class="text-link" href="/brand/favicons/favicon-48.png" download>48 × 48 PNG</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Monochrome Brand Mark</h3>
+        <div class="mono-preview-grid">
+          <div class="logo-preview logo-preview--mark"><img src="/brand/marks/monochrome-black.png" alt="Black monochrome VINASIG Brand Mark" /></div>
+          <div class="logo-preview logo-preview--mark logo-preview--dark"><img src="/brand/marks/monochrome-white.png" alt="White monochrome VINASIG Brand Mark" /></div>
+        </div>
+        <p class="card-copy">Symbol-only exports for one-color contexts. Match black with a light surface and white with a dark surface.</p>
+        <div class="download-row">
+          <a class="text-link" href="/brand/marks/monochrome-black.png" download>Black PNG</a>
+          <a class="text-link" href="/brand/marks/monochrome-white.png" download>White PNG</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="usage-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">For people and agents</p><h2 id="usage-title">Use the artwork as supplied</h2></div>
+      <p>These are practical draft recommendations, not approved policy.</p>
+    </div>
+    <div class="two-column-grid">
+      <article class="card">
+        <h3>Recommended</h3>
+        <ul class="usage-list">
+          <li>Choose the official variant that fits the background and the space available.</li>
+          <li>Use the supplied SVG for scalable contexts or the closest matching PNG size.</li>
+          <li>Keep the complete mark or lockup visible and preserve its proportions.</li>
+          <li>Check the result at the size where people will actually see it.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Avoid</h3>
+        <ul class="usage-list">
+          <li>Do not crop, stretch, recolor, add effects, or redraw the logo.</li>
+          <li>Do not replace or re-typeset the wordmark inside a lockup.</li>
+          <li>Do not enlarge a small raster export when a larger supplied file is available.</li>
+          <li>Do not invent a minimum size or clear-space measurement; neither is specified in the source package.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="source-title">
+    <div class="rule-callout">
+      <span class="callout-icon" aria-hidden="true">i</span>
+      <div>
+        <strong>Source and rights</strong>
+        <p>These files are exact copies of selected exports in the VINASIG Brand Assets archive. This repository does not add a license for the logo artwork. The supplied materials do not record a verified author name, so this guide does not assign one.</p>
+      </div>
+    </div>
+    <p class="source-note" id="source-title">Canonical source documents: <code>VINASIG_Logo_Story.md</code> and <code>99_Evidence/CREATION_RECORD.md</code> in the source archive. Edit the original artwork there; these copies are website-ready exports.</p>
+  </section>
+</DocsLayout>
