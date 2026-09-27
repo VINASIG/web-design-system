@@ -876,7 +876,13 @@ h3 {
 
 .component-showcase {
   display: grid;
+  min-width: 0;
   gap: 1.3rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.component-showcase > * {
+  min-width: 0;
 }
 
 .component-demo {
@@ -912,6 +918,7 @@ h3 {
 .field-demo {
   display: grid;
   width: min(100%, 25rem);
+  min-width: 0;
   gap: 0.4rem;
 }
 
@@ -922,6 +929,8 @@ h3 {
 }
 
 .field-demo input {
+  width: 100%;
+  min-width: 0;
   min-height: 2.8rem;
   padding: 0.65rem 0.75rem;
   background: var(--color-surface);
@@ -1144,6 +1153,7 @@ h3 {
 
 .rule-list li {
   display: grid;
+  min-width: 0;
   gap: 0.7rem;
   grid-template-columns: 6rem minmax(0, 1fr);
 }
@@ -1156,6 +1166,7 @@ h3 {
 }
 
 .rule-text {
+  min-width: 0;
   color: var(--color-text-muted);
   font-size: var(--font-size-small);
 }
@@ -1319,6 +1330,11 @@ h3 {
 
   .page-section {
     margin-top: 2.4rem;
+  }
+
+  .rule-list li {
+    gap: 0.15rem;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
