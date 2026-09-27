@@ -7,6 +7,7 @@ An AI-readable design-system website for shared interface guidance across VINASI
 - **Astro** generates a static site by default, with very little browser-side JavaScript.
 - **Cloudflare Workers** serves the generated static files. Astro's Cloudflare adapter can be added later if a route needs server rendering, sessions, or API behavior.
 - **Space Grotesk** is the only typeface used. The variable font is served locally. The included `public/fonts/OFL.txt` is its license notice.
+- Interface arrows and pictographic icons use Flaticon UIcons Round Bold, bundled locally through `@flaticon/flaticon-uicons`. Space Grotesk symbols may appear in prose or typographic notation. The shared footer provides the required free-use attribution.
 
 ## Run locally
 
@@ -37,7 +38,9 @@ The static site can stay pre-rendered as it grows. If a future page needs reques
 
 ## AI-agent entry points
 
+- Use the [UI element library source](docs/elements/catalog.json) and its [rendered examples](docs/elements/specimens.json) for all 81 web and macOS interface entries. The published library is at /elements/.
 - Start with [`AGENTS.md`](AGENTS.md) for project context, authority, and navigation.
+- Follow the [AI-assisted UI quality workflow](docs/agents/ui-quality.md) before creating or changing visible interface code.
 - Use [`llms.txt`](public/llms.txt) as a compact index of the published guidance.
 - The source specifications live under [`docs/`](docs/). The website pages under [`src/pages/`](src/pages/) publish them.
 - Tokens are implemented in [`src/styles/tokens.css`](src/styles/tokens.css).

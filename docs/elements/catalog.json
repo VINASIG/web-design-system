@@ -1,0 +1,867 @@
+{
+  "source": {
+    "name": "NameThatUI",
+    "url": "https://namethatui.com/",
+    "reviewed": "2026-09-27",
+    "snapshotCount": 81,
+    "platformCounts": {
+      "Web": 49,
+      "macOS": 32
+    }
+  },
+  "categories": [
+    { "platform": "Web", "name": "Navigation and wayfinding" },
+    { "platform": "Web", "name": "Content and data" },
+    { "platform": "Web", "name": "Forms and controls" },
+    { "platform": "Web", "name": "Feedback and overlays" },
+    { "platform": "Web", "name": "Layout and motion" },
+    { "platform": "macOS", "name": "Window and workspace" },
+    { "platform": "macOS", "name": "Menus and commands" },
+    { "platform": "macOS", "name": "Input and editing" },
+    { "platform": "macOS", "name": "System panels and status" }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "id": "data-table",
+      "name": "Data Table (Table View)",
+      "platform": "Web",
+      "category": "Content and data",
+      "definition": "A two-dimensional collection of related records arranged by rows and labeled columns.",
+      "guidance": "Use a native table for comparison and lookup. Add sorting only where it helps, identify the active sort, and preserve row and column meaning when the table scrolls or reflows.",
+      "accessibility": "Use a caption when helpful, scoped row and column headers, and labeled buttons for sortable columns. Keep keyboard access to controls inside cells."
+    },
+    {
+      "order": 2,
+      "id": "bottom-navigation",
+      "name": "Bottom Navigation (Tab Bar)",
+      "platform": "Web",
+      "category": "Navigation and wayfinding",
+      "definition": "A compact navigation region anchored to the bottom edge that switches among a small set of primary destinations.",
+      "guidance": "Use only when persistent destination switching benefits a mobile-first product. Keep the item count small, label every icon, mark the current destination, and account for device safe areas.",
+      "accessibility": "Use a labeled navigation landmark and links with a clear current-page state. Ensure the bar does not cover focused controls or page content."
+    },
+    {
+      "order": 3,
+      "id": "timeline",
+      "name": "Timeline",
+      "platform": "Web",
+      "category": "Content and data",
+      "definition": "A sequence of dated events arranged in chronological order.",
+      "guidance": "Use for history or progress records where time order matters. Keep event labels and dates readable, distinguish it from task steps, and change from horizontal to vertical layout when space is limited.",
+      "accessibility": "Use an ordered list when sequence matters and mark machine-readable dates with time elements. Do not use color or a connecting line as the only indication of order."
+    },
+    {
+      "order": 4,
+      "id": "status-dot",
+      "name": "Status Dot (Presence Indicator)",
+      "platform": "Web",
+      "category": "Content and data",
+      "definition": "A compact visual indicator that communicates a person's presence or an item's current state.",
+      "guidance": "Pair the dot with a readable status name wherever the meaning is not unmistakable. Use stable semantic colors and do not rely on hover to reveal the only explanation.",
+      "accessibility": "Expose the status as text or as part of the associated accessible name. Hide the dot from assistive technology when adjacent text already communicates its meaning."
+    },
+    {
+      "order": 5,
+      "id": "chat-bubble",
+      "name": "Chat Bubble (Message Bubble)",
+      "platform": "Web",
+      "category": "Content and data",
+      "definition": "A visual container for one message in a conversation between participants.",
+      "guidance": "Group messages by speaker and time when useful. Keep alignment, color, and bubble shape secondary to message content, and support long text, links, and attachments without clipping.",
+      "accessibility": "Expose the speaker and message text in reading order. Use a log region only for a conversation that updates dynamically, and announce new messages without moving focus."
+    },
+    {
+      "order": 6,
+      "id": "steps",
+      "name": "Steps",
+      "platform": "Web",
+      "category": "Navigation and wayfinding",
+      "definition": "An ordered set of stages that communicates progress through a multi-step task.",
+      "guidance": "Show the current stage, completed stages, and what remains. Use it for a task flow, not as a substitute for page breadcrumbs or general navigation.",
+      "accessibility": "Represent the stages as an ordered list and identify the current step in text or with aria-current. Do not convey completion by color alone."
+    },
+    {
+      "order": 7,
+      "id": "avatar-group",
+      "name": "Avatar Group",
+      "platform": "Web",
+      "category": "Content and data",
+      "definition": "A compact presentation of several people associated with a shared item or activity.",
+      "guidance": "Use when the people or group size matter. Keep overlap modest, provide a way to discover every person's identity, and show a clear count when the group is abbreviated.",
+      "accessibility": "Give each meaningful portrait a useful alternative name. If the group is summarized as one control, name the group and count, then provide access to the full member list."
+    },
+    {
+      "order": 8,
+      "id": "multi-select",
+      "name": "Multi-select",
+      "platform": "Web",
+      "category": "Forms and controls",
+      "definition": "A selection control that lets a person choose more than one value from a known set.",
+      "guidance": "Use checkboxes for short visible sets. Use a searchable multi-select when the set is large, keep selected values visible and removable, and distinguish it from a single-value combobox.",
+      "accessibility": "Prefer native checkboxes or a proven accessible listbox pattern. Announce selected values, support keyboard movement and removal, and keep the label separate from the current value."
+    },
+    {
+      "order": 9,
+      "id": "scrollspy",
+      "name": "Scrollspy",
+      "platform": "Web",
+      "category": "Navigation and wayfinding",
+      "definition": "A section index whose current link follows the heading currently in view.",
+      "guidance": "Use on long pages with meaningful section headings. Keep navigation links usable when observation is delayed, and update the active item without changing the reading position unexpectedly.",
+      "accessibility": "Use a labeled navigation landmark and mark the current section link with aria-current when appropriate. Keep every section reachable without scrolling or pointer-only actions."
+    },
+    {
+      "order": 10,
+      "id": "inline-alert-callout-banner",
+      "name": "Inline Alert vs. Callout vs. Banner",
+      "platform": "Web",
+      "category": "Feedback and overlays",
+      "definition": "Three notice placements: an inline alert belongs to a task or field, a callout explains nearby content, and a banner spans a page or region.",
+      "guidance": "Choose placement by scope and urgency. Keep persistent information in the page, reserve live alerts for timely changes, and use a banner only when the message affects the wider page.",
+      "accessibility": "Give the message a clear heading or text label. Use an alert role only for important dynamic announcements, and pair status color with words or an icon."
+    },
+    {
+      "order": 11,
+      "id": "sign-in-form",
+      "name": "Sign-in Form",
+      "platform": "Web",
+      "category": "Forms and controls",
+      "definition": "A form that collects the credentials or identity-provider choice needed to start an account session.",
+      "guidance": "Ask only for information required to sign in. Support password managers, preserve non-sensitive entries after errors, and make recovery and alternate sign-in methods easy to find.",
+      "accessibility": "Use visible labels, correct autocomplete tokens, a clear submit button, and errors associated with their fields. Do not communicate validation through color alone."
+    },
+    {
+      "order": 12,
+      "id": "pagination",
+      "name": "Pagination",
+      "platform": "Web",
+      "category": "Navigation and wayfinding",
+      "definition": "Controls for moving among discrete pages of a result set.",
+      "guidance": "Use when users benefit from stable page boundaries, direct page access, and predictable back navigation. Preserve filters and sorting, and do not combine pagination with an unexplained infinite scroll.",
+      "accessibility": "Place controls in a navigation landmark with a pagination label. Identify the current page and give previous, next, and numbered links understandable names."
+    },
+    {
+      "order": 13,
+      "id": "date-picker",
+      "name": "Date Picker",
+      "platform": "Web",
+      "category": "Forms and controls",
+      "definition": "A control for entering one date or choosing a date or range from a calendar.",
+      "guidance": "Prefer the native date input when its platform behavior meets the task. A custom calendar must support month changes, selected and unavailable dates, sensible date formats, and a narrow viewport.",
+      "accessibility": "Keep a visible label and explain accepted formats. For a custom calendar, provide keyboard navigation, announce the focused and selected date, and label month controls."
+    },
+    {
+      "order": 14,
+      "id": "parallax-scrolling",
+      "name": "Parallax Scrolling",
+      "platform": "Web",
+      "category": "Layout and motion",
+      "definition": "A scroll effect in which visual layers move at different rates to suggest depth.",
+      "guidance": "Use only as a restrained visual enhancement. Keep content in normal reading order, avoid scroll hijacking and motion that harms orientation, and provide a reduced-motion alternative.",
+      "accessibility": "Do not encode information in the moving layer. Respect prefers-reduced-motion and keep text contrast stable over every background position."
+    },
+    {
+      "order": 15,
+      "id": "carousel",
+      "name": "Carousel",
+      "platform": "Web",
+      "category": "Layout and motion",
+      "definition": "A viewport that presents one or more items from a larger sequence, with controls for changing the visible slides.",
+      "guidance": "Use only when browsing a sequence is better than seeing the items together. Avoid automatic rotation by default, keep controls visible, and let content reflow without clipping.",
+      "accessibility": "Use labeled previous and next buttons and announce the active slide when necessary. Support keyboard operation, pause automatic movement, and preserve a logical reading order."
+    },
+    {
+      "order": 16,
+      "id": "site-header-navigation-bar",
+      "name": "Site Header vs. Navigation Bar",
+      "platform": "Web",
+      "category": "Navigation and wayfinding",
+      "definition": "A site header is a page region that may contain identity and utilities. A navigation bar is a set of links to destinations.",
+      "guidance": "Use a header for page or site context and a nav element for grouped navigation. Do not make every header item a navigation link or duplicate the same destinations without a clear need.",
+      "accessibility": "Use header and nav landmarks with distinct labels when there are multiple navigation regions. Preserve the same destinations and current-page state across responsive layouts."
+    },
+    {
+      "order": 17,
+      "id": "share-card",
+      "name": "Share Card",
+      "platform": "Web",
+      "category": "Content and data",
+      "definition": "A compact preview of a specific resource paired with an action for sharing or copying its address.",
+      "guidance": "Show enough title and source context to identify the destination. Keep the share action separate from navigation, provide useful feedback after copying, and avoid nested interactive regions.",
+      "accessibility": "Give the destination link and share action distinct names. Announce copy confirmation in a polite status region and provide meaningful image alternatives."
+    },
+    {
+      "order": 18,
+      "id": "resize-handle-web",
+      "name": "Resize Handle (Size Grip)",
+      "platform": "Web",
+      "category": "Forms and controls",
+      "definition": "A draggable separator that changes the relative size of adjacent panes or a resizable region.",
+      "guidance": "Use only when resizing improves a real workspace task. Enforce minimum and maximum sizes, keep adjacent content visible, and provide a non-drag alternative on touch and narrow screens.",
+      "accessibility": "Make the separator keyboard operable with arrow keys and expose orientation and current, minimum, and maximum values when using the window-splitter pattern."
+    },
+    {
+      "order": 19,
+      "id": "hamburger-menu-nav-drawer",
+      "name": "Hamburger Menu (Nav Drawer)",
+      "platform": "Web",
+      "category": "Navigation and wayfinding",
+      "definition": "A compact trigger that reveals navigation in a panel, often on a narrow screen.",
+      "guidance": "Use a labeled menu button to open a drawer containing the same destinations as the desktop navigation. Decide whether the drawer is modal or non-modal and implement that behavior consistently.",
+      "accessibility": "Expose expanded state and the controlled panel. Support keyboard activation and Escape. For a modal drawer, move focus in, contain it while open, and restore focus on close."
+    },
+    {
+      "order": 20,
+      "id": "bento-grid",
+      "name": "Bento Grid",
+      "platform": "Web",
+      "category": "Layout and motion",
+      "definition": "A grid of related content blocks that uses varied spans or sizes within one aligned layout.",
+      "guidance": "Use when items have a clear relationship and the variation helps hierarchy. Preserve source order, avoid decorative empty tiles, and collapse to a readable single-column sequence on narrow screens.",
+      "accessibility": "Use ordinary document structure for static content. Do not assign interactive grid semantics unless arrow-key cell navigation is implemented."
+    },
+    {
+      "order": 21,
+      "id": "masonry-layout",
+      "name": "Masonry Layout (Pinterest Grid)",
+      "platform": "Web",
+      "category": "Layout and motion",
+      "definition": "A multi-column arrangement that packs items with different heights into vertical columns.",
+      "guidance": "Use for browsable collections where strict row alignment is not important. Keep visual and DOM reading order understandable, and reduce the column count as the available width shrinks.",
+      "accessibility": "Do not reorder content visually in a way that conflicts with keyboard or assistive-technology reading order. Keep each item independently understandable."
+    },
+    {
+      "order": 22,
+      "id": "easing",
+      "name": "Easing (Timing Function)",
+      "platform": "Web",
+      "category": "Layout and motion",
+      "definition": "A motion curve that controls how an animation accelerates and decelerates over time.",
+      "guidance": "Use a small shared set of curves and durations. Match motion to the change being shown, keep state feedback quick, and avoid using easing to disguise slow or confusing behavior.",
+      "accessibility": "Respect reduced-motion preferences and avoid motion that flashes or repeatedly attracts attention. Never make an animated transition the only way to understand a state change."
+    },
+    {
+      "order": 23,
+      "id": "spring-animation",
+      "name": "Spring Animation",
+      "platform": "Web",
+      "category": "Layout and motion",
+      "definition": "A physics-inspired transition that overshoots or settles in response to stiffness and damping.",
+      "guidance": "Use sparingly for meaningful spatial movement. Keep settling time short, avoid adding bounce to routine controls, and fall back to a calm state change when motion is reduced.",
+      "accessibility": "Honor prefers-reduced-motion and keep the final state available without animation. Do not repeatedly move content while a person is reading or entering data."
+    },
+    {
+      "order": 24,
+      "id": "text-scramble",
+      "name": "Text Scramble (Decode Effect)",
+      "platform": "Web",
+      "category": "Layout and motion",
+      "definition": "A brief character replacement effect that resolves into a final text string.",
+      "guidance": "Treat as decorative and avoid for labels, instructions, prices, or any content users must read immediately. Keep the final text stable and do not run the effect repeatedly.",
+      "accessibility": "Keep a stable text value in the accessibility tree and hide decorative character churn from assistive technology. Disable the effect for reduced motion."
+    },
+    {
+      "order": 25,
+      "id": "lightbox",
+      "name": "Lightbox",
+      "platform": "Web",
+      "category": "Feedback and overlays",
+      "definition": "An overlay that presents an enlarged image or media item above the page.",
+      "guidance": "Use when inspecting the media is the task. Provide an obvious close action, keep captions and next or previous controls near the media, and adapt the viewer to the available viewport.",
+      "accessibility": "Use a labeled dialog, place and restore focus, support Escape, and expose useful media alternatives or captions. Do not trap focus in a non-modal overlay."
+    },
+    {
+      "order": 26,
+      "id": "marquee",
+      "name": "Marquee",
+      "platform": "Web",
+      "category": "Layout and motion",
+      "definition": "A continuously moving strip of repeated or sequential content.",
+      "guidance": "Avoid for essential information and do not force people to track a long moving line. If movement is needed, provide a pause control and stop on focus or hover where appropriate.",
+      "accessibility": "Respect reduced motion, prevent duplicated loop content from being read twice, and keep every action reachable without following the moving strip."
+    },
+    {
+      "order": 27,
+      "id": "insertion-caret",
+      "name": "Insertion Caret (Insertion Point)",
+      "platform": "macOS",
+      "category": "Input and editing",
+      "definition": "The system-drawn position marker that shows where the next typed character will appear in editable text.",
+      "guidance": "Let the native text control manage caret movement, selection, and editing. Do not draw a competing caret or move the insertion point unexpectedly while the person types.",
+      "accessibility": "Preserve native text editing, selection, and voice-control behavior. Keep the caret visible against the field background and do not use it as the only focus indicator.",
+      "webGuidance": "Use native input and text editing behavior. Apply a legible caret color only when needed and never replace the browser insertion caret with a decorative animation."
+    },
+    {
+      "order": 28,
+      "id": "pointer-cursor",
+      "name": "Pointer (Cursor)",
+      "platform": "macOS",
+      "category": "Input and editing",
+      "definition": "The pointer shape that changes to communicate the kind of interaction available at the current location.",
+      "guidance": "Use the platform cursor conventions for text, links, resizing, and unavailable states. Do not use pointer shape alone to explain an action or custom cursor artwork without a task need.",
+      "accessibility": "Keep the same action available to keyboard and touch users. Cursor changes must reinforce, not replace, a visible control name or focus state.",
+      "webGuidance": "Use the browser cursor defaults for text and controls. Set pointer only on actionable targets and use resize cursors only for working resize handles."
+    },
+    {
+      "order": 29,
+      "id": "empty-trash-alert",
+      "name": "Empty Trash Alert",
+      "platform": "macOS",
+      "category": "System panels and status",
+      "definition": "A system alert that confirms a high-impact action before permanently removing a group of discarded items.",
+      "guidance": "Name the affected content and explain whether recovery is possible. Make the safe action easy to choose and use the platform's standard alert hierarchy.",
+      "accessibility": "Give the alert a specific title, clear action labels, and a predictable default. Ensure VoiceOver announces the alert and the focused choice.",
+      "webGuidance": "Use a labeled confirmation dialog only when the action is destructive and not easily undone. Name the consequence and provide cancel and explicit destructive actions."
+    },
+    {
+      "order": 30,
+      "id": "volume-slider",
+      "name": "Volume Slider",
+      "platform": "macOS",
+      "category": "Input and editing",
+      "definition": "A continuous control for adjusting audio output level within a bounded range.",
+      "guidance": "Keep the current level perceivable and make mute behavior explicit. Support small adjustments without requiring pointer precision.",
+      "accessibility": "Expose the control name, current value, and value range. Preserve keyboard adjustment and the platform's standard accessibility value announcements.",
+      "webGuidance": "Use a labeled range input for continuous volume. Provide a readable value or mute state and preserve arrow-key operation."
+    },
+    {
+      "order": 31,
+      "id": "color-well",
+      "name": "Color Well",
+      "platform": "macOS",
+      "category": "Input and editing",
+      "definition": "A compact preview of the selected color that opens a color selection panel.",
+      "guidance": "Show the chosen color in context and provide a clear way to open, change, and confirm a selection. Do not make hue or contrast the only way to identify a value.",
+      "accessibility": "Name the color control, expose the selected value, and keep picker adjustments available through keyboard and assistive technology.",
+      "webGuidance": "Use a native color input or an established accessible picker. Pair the swatch with a text value or name and label the control."
+    },
+    {
+      "order": 32,
+      "id": "form-field",
+      "name": "Form Field",
+      "platform": "Web",
+      "category": "Forms and controls",
+      "definition": "A labeled input together with its instructions, current value, validation, and related actions.",
+      "guidance": "Keep the label persistent and place format hints before errors. Show required status clearly, preserve user input after validation, and let the field grow or wrap with its content.",
+      "accessibility": "Associate label, hint, and error with the control. Keep focus visible, announce errors, and never rely on placeholder text as the label."
+    },
+    {
+      "order": 33,
+      "id": "truncation",
+      "name": "Truncation (Ellipsis & Line Clamp)",
+      "platform": "Web",
+      "category": "Content and data",
+      "definition": "A display rule that shortens text at one line or a set line count and marks the omission.",
+      "guidance": "Use only when the full content remains available through a clear detail view or expansion. Avoid truncating names, instructions, values, or actions needed to make a decision.",
+      "accessibility": "Keep the full text in the accessible name or provide an explicit disclosure. Do not rely on a hover-only tooltip to reveal content."
+    },
+    {
+      "order": 34,
+      "id": "drag-and-drop",
+      "name": "Drag & Drop",
+      "platform": "Web",
+      "category": "Forms and controls",
+      "definition": "An interaction for moving or transferring an item by dragging it to a destination.",
+      "guidance": "Provide a visible alternative such as move-up, move-down, or choose-destination actions. Show a clear target, preview the result, and support pointer, touch, and keyboard input.",
+      "accessibility": "Announce the source, target, and completion. Keep focus predictable and do not make dragging the only way to reorder or upload."
+    },
+    {
+      "order": 35,
+      "id": "divider-separator-rule",
+      "name": "Divider vs. Separator vs. Rule",
+      "platform": "Web",
+      "category": "Layout and motion",
+      "definition": "A divider is a visual grouping cue, a separator marks a semantic boundary, and a rule can divide topics in document content.",
+      "guidance": "Use a thematic break for a change of topic, a separator for a boundary between controls, and decoration only when it improves grouping. Avoid lines that add no structure.",
+      "accessibility": "Hide purely decorative lines from assistive technology. Give semantic separators the correct orientation and role, and do not make a static line focusable."
+    },
+    {
+      "order": 36,
+      "id": "progress-ring-spinner-bar",
+      "name": "Progress Ring vs. Spinner vs. Progress Bar",
+      "platform": "Web",
+      "category": "Feedback and overlays",
+      "definition": "A progress bar or ring reports measurable completion. A spinner communicates an indeterminate wait.",
+      "guidance": "Choose determinate feedback when the amount of completed work is known. Use a spinner only for a real wait, keep the surrounding layout stable, and explain long-running work.",
+      "accessibility": "Give progress controls an accessible name and current value when determinate. Announce meaningful state changes, and do not communicate progress through motion or color alone."
+    },
+    {
+      "order": 37,
+      "id": "mac-window",
+      "name": "Mac Window",
+      "platform": "macOS",
+      "category": "Window and workspace",
+      "definition": "A native application frame that contains a title, toolbar, content, resizing edges, and system window controls.",
+      "guidance": "Let the operating system manage window movement, sizing, focus, and lifecycle. Keep the title about the current document or view rather than repeating the app name.",
+      "accessibility": "Use native window and title APIs so window identity and focus are exposed to assistive technology. Keep content reachable when the window is resized.",
+      "webGuidance": "A website lives inside a browser window. Do not recreate macOS traffic lights or a fake title bar inside an ordinary web page."
+    },
+    {
+      "order": 38,
+      "id": "inbox-split-view",
+      "name": "Inbox Split View",
+      "platform": "macOS",
+      "category": "Window and workspace",
+      "definition": "A master-detail workspace with a list of items beside the selected item's content.",
+      "guidance": "Keep selection, list filtering, and the detail view synchronized. Support pane resizing within useful limits and preserve the selected item when the list changes.",
+      "accessibility": "Label each pane, expose the selected row, and provide keyboard movement between the list and detail. Do not communicate selection only by row color.",
+      "webGuidance": "Use a responsive master-detail layout. On narrow screens, show one pane at a time with a clear back path to the list."
+    },
+    {
+      "order": 39,
+      "id": "scroll-view",
+      "name": "Scroll View (Scroller)",
+      "platform": "macOS",
+      "category": "Window and workspace",
+      "definition": "A viewport that displays content larger than its available area and provides scrolling.",
+      "guidance": "Prefer system scrolling and preserve normal trackpad, wheel, and keyboard behavior. Avoid nested scroll regions unless independent movement is useful.",
+      "accessibility": "Keep the scrollable content in reading order and ensure keyboard users can reach controls at both ends. Do not hide the only visible indication that more content exists.",
+      "webGuidance": "Use native overflow scrolling. Give an independently scrolling region a name and keyboard access when it contains focusable content."
+    },
+    {
+      "order": 40,
+      "id": "search-field",
+      "name": "Search Field",
+      "platform": "macOS",
+      "category": "Input and editing",
+      "definition": "A text field specialized for entering a query, with search, clear, and sometimes recent-query behavior.",
+      "guidance": "Label the search purpose and keep the query after results update. Make clearing reversible and distinguish suggestions from submitted results.",
+      "accessibility": "Expose a search name, query value, and clear action. Keep keyboard submission and result announcements predictable.",
+      "webGuidance": "Use a visible label with a search input. Add a clear action only when it is named, keyboard accessible, and useful."
+    },
+    {
+      "order": 41,
+      "id": "save-panel",
+      "name": "Save Panel",
+      "platform": "macOS",
+      "category": "System panels and status",
+      "definition": "A native file panel for naming an output and selecting where and in what format it will be saved.",
+      "guidance": "Use the system panel for file access, location selection, and format options. Explain the resulting file type and avoid custom paths that contradict system permissions.",
+      "accessibility": "Rely on the native file panel's accessible controls and provide a clear document name before opening it. Announce success or recoverable save errors in the app.",
+      "webGuidance": "Use a browser download or a supported user-initiated file save API. Do not imitate a system file picker or claim access to arbitrary local paths."
+    },
+    {
+      "order": 42,
+      "id": "token-field",
+      "name": "Token Field",
+      "platform": "macOS",
+      "category": "Input and editing",
+      "definition": "An editable field that turns recognized entries into separate removable values.",
+      "guidance": "Use for sets such as recipients or labels when individual values must remain visible. Explain token creation, validation, editing, and removal.",
+      "accessibility": "Name the field and each token, expose invalid values, and provide an accessible remove action. Preserve predictable caret and keyboard behavior between tokens.",
+      "webGuidance": "Build on an accessible combobox or text input plus a list of tokens. Keep every token removable by keyboard and do not represent values only as styled text."
+    },
+    {
+      "order": 43,
+      "id": "combo-button",
+      "name": "Combo Button",
+      "platform": "macOS",
+      "category": "Menus and commands",
+      "definition": "A primary action joined to a separate menu trigger for closely related alternatives.",
+      "guidance": "Use only when one action is the clear default and related actions share its purpose. Keep the main action and menu trigger visually distinct.",
+      "accessibility": "Expose two independently named controls and announce menu expanded state. Preserve keyboard access to the main action and every menu item.",
+      "webGuidance": "Use a labeled action button and a separate menu button with expanded state. Do not make an ambiguous single target perform different actions by click location."
+    },
+    {
+      "order": 44,
+      "id": "rating-capacity-level-indicator",
+      "name": "Rating Capacity Level Indicator",
+      "platform": "macOS",
+      "category": "Input and editing",
+      "definition": "A compact graphic that displays a bounded measurement, capacity, or rating.",
+      "guidance": "Use a meter for a measured quantity and a rating control when people can set a score. State the scale and current value, and do not confuse a rating with task progress.",
+      "accessibility": "Expose the value, minimum, maximum, and whether the control is adjustable. Pair symbols with a readable label such as a numeric rating or capacity description.",
+      "webGuidance": "Use a meter for non-interactive measurements and a keyboard-accessible radio or button group for editable ratings."
+    },
+    {
+      "order": 45,
+      "id": "column-view-browser",
+      "name": "Column View (Browser)",
+      "platform": "macOS",
+      "category": "Window and workspace",
+      "definition": "A hierarchical browser that opens the next level of items in a new adjacent column.",
+      "guidance": "Use when people need to inspect and select nested files or categories. Keep the selected path visible and provide a clear way to move to a parent level.",
+      "accessibility": "Label each column and selected item, preserve a predictable focus path, and expose hierarchy without depending on horizontal placement alone.",
+      "webGuidance": "Use a tree, nested navigation, or breadcrumb path when it fits the data. Avoid forcing narrow screens to scroll horizontally through unlabeled columns."
+    },
+    {
+      "order": 46,
+      "id": "outline-view",
+      "name": "Outline View",
+      "platform": "macOS",
+      "category": "Window and workspace",
+      "definition": "A hierarchical list whose rows can reveal or conceal nested children.",
+      "guidance": "Use for structured parent-child data. Keep disclosure separate from row actions and preserve expansion and selection when the view updates.",
+      "accessibility": "Expose item level, expanded state, and selection. Use native outline semantics or implement the complete tree keyboard model rather than adding a tree role to a static list.",
+      "webGuidance": "Use nested lists with native disclosure buttons for simple structures. Use an interactive tree only when arrow-key navigation is fully implemented."
+    },
+    {
+      "order": 47,
+      "id": "three-dots-overflow-menu",
+      "name": "Three Dots (Overflow Menu)",
+      "platform": "Web",
+      "category": "Navigation and wayfinding",
+      "definition": "A menu trigger that collects secondary actions not shown in the primary interface.",
+      "guidance": "Use only for infrequent or space-constrained secondary actions. Keep important actions visible, use a consistent icon orientation, and anchor the menu to its trigger.",
+      "accessibility": "Give the button a name such as More actions and expose expanded state. Support menu keyboard behavior, Escape, outside dismissal, and visible focus."
+    },
+    {
+      "order": 48,
+      "id": "menu-bar",
+      "name": "Menu Bar",
+      "platform": "macOS",
+      "category": "Menus and commands",
+      "definition": "The operating-system region that groups application-wide commands into persistent menus.",
+      "guidance": "Use native menu roles and platform shortcuts for app commands. Group commands by task, avoid long menus and deep nesting, and keep primary actions discoverable.",
+      "accessibility": "Preserve native keyboard navigation and command labels. Communicate checked, disabled, and submenu states through system semantics.",
+      "webGuidance": "A normal website should use a site header and navigation, not imitate the macOS system menu bar. Use a web menubar only for a desktop-style app with the complete keyboard model."
+    },
+    {
+      "order": 49,
+      "id": "context-menu",
+      "name": "Context Menu",
+      "platform": "macOS",
+      "category": "Menus and commands",
+      "definition": "A menu of commands related to the selected item or location, opened in its immediate context.",
+      "guidance": "Include actions that apply to the target, label destructive actions clearly, and keep the menu close to the pointer or selected item.",
+      "accessibility": "Support keyboard invocation, menu navigation, and clear item names. Ensure the same actions can be found without a mouse or secondary click.",
+      "webGuidance": "Use a custom context menu only when it adds real contextual actions. Provide a visible menu button alternative for touch and keyboard users."
+    },
+    {
+      "order": 50,
+      "id": "disclosure-triangle",
+      "name": "Disclosure Triangle",
+      "platform": "macOS",
+      "category": "Menus and commands",
+      "definition": "A native disclosure indicator showing whether associated content is expanded or collapsed.",
+      "guidance": "Keep the indicator beside the label it controls and reflect the current state. Do not use the triangle as an unlabelled standalone action.",
+      "accessibility": "Expose the control name and expanded state. Make the full label area operable and preserve standard keyboard activation.",
+      "webGuidance": "Use a button or native details summary with an adjacent icon. Keep the expanded state in semantics and style both open and closed states."
+    },
+    {
+      "order": 51,
+      "id": "dock-badge",
+      "name": "Dock Badge",
+      "platform": "macOS",
+      "category": "System panels and status",
+      "definition": "A short count or status label displayed over an app icon in the macOS Dock.",
+      "guidance": "Reserve badges for actionable changes that a person may need to notice. Keep counts accurate, remove them when resolved, and avoid using them as decoration.",
+      "accessibility": "Make the underlying update available inside the app and announce important changes there. A Dock badge must not be the only notification.",
+      "webGuidance": "A web page cannot set a macOS Dock badge. Use an in-page count or a supported installed-app capability only after explaining and obtaining the required permission."
+    },
+    {
+      "order": 52,
+      "id": "focus-ring-macos",
+      "name": "Focus Ring",
+      "platform": "macOS",
+      "category": "Input and editing",
+      "definition": "The system focus treatment that identifies the control receiving keyboard input.",
+      "guidance": "Preserve the platform's focus appearance unless a control needs a compatible custom treatment. Do not remove the ring to make controls look cleaner.",
+      "accessibility": "Keep the focused control obvious and maintain adequate contrast across light, dark, and increased-contrast appearances.",
+      "webGuidance": "Use a consistent visible :focus-visible treatment for keyboard navigation. Do not suppress outlines globally."
+    },
+    {
+      "order": 53,
+      "id": "inspector",
+      "name": "Inspector",
+      "platform": "macOS",
+      "category": "Window and workspace",
+      "definition": "A contextual panel that displays or edits properties of the current document, selection, or tool.",
+      "guidance": "Keep inspector content tied to the current selection and group properties by task. Avoid duplicating the document hierarchy or placing unrelated settings in the panel.",
+      "accessibility": "Give the panel a heading and labeled controls. Announce meaningful selection changes and preserve the user's focus while values update.",
+      "webGuidance": "Use a responsive side panel or drawer. On small screens, make its open and close state explicit and preserve a path back to the main content."
+    },
+    {
+      "order": 54,
+      "id": "editor-colors-panel",
+      "name": "Editor Colors Panel (Floating Window / HUD)",
+      "platform": "macOS",
+      "category": "System panels and status",
+      "definition": "A floating utility panel that provides color selection or related editing controls while another document remains in context.",
+      "guidance": "Keep the panel associated with the editing task, allow it to close without losing changes, and avoid obscuring the area being edited.",
+      "accessibility": "Name the panel and each color action. Maintain focus and announce selection changes without stealing focus from the document unexpectedly.",
+      "webGuidance": "Use an anchored popover for brief controls or a dialog for a larger task. Avoid a floating HUD that has no clear trigger or dismissal."
+    },
+    {
+      "order": 55,
+      "id": "popover-macos",
+      "name": "Popover",
+      "platform": "macOS",
+      "category": "Menus and commands",
+      "definition": "A temporary panel anchored to the control or item that opened it.",
+      "guidance": "Keep content short and directly related to the trigger. Dismiss it predictably and reposition it when the window edge or available space changes.",
+      "accessibility": "Expose the trigger relationship, panel name, and dismissal behavior. Keep interactive content keyboard reachable and return focus appropriately.",
+      "webGuidance": "Use an accessible anchored popover for related supplementary content. Do not use hover alone as the trigger for essential information."
+    },
+    {
+      "order": 56,
+      "id": "popup-pulldown-combo-box",
+      "name": "Pop-Up Button vs. Pull-Down Button vs. Combo Box",
+      "platform": "macOS",
+      "category": "Menus and commands",
+      "definition": "A pop-up button chooses a value, a pull-down button opens actions, and a combo box combines text entry with suggestions or choices.",
+      "guidance": "Choose the control by task rather than appearance. Keep a selected value visible for value selection and separate commands from form values.",
+      "accessibility": "Expose the correct native role, current value, and keyboard behavior. Do not make a command menu appear to be a required form selection.",
+      "webGuidance": "Use select for a fixed value, a menu button for actions, and a labeled combobox for editable suggestions. Style the open custom popup as well as its trigger."
+    },
+    {
+      "order": 57,
+      "id": "segmented-control-macos",
+      "name": "Segmented Control",
+      "platform": "macOS",
+      "category": "Menus and commands",
+      "definition": "A connected set of compact options for choosing one mode or view.",
+      "guidance": "Use for a small number of peer choices. Keep selected state clear and labels short, and avoid using it for unrelated commands.",
+      "accessibility": "Expose the control as a labeled group with one selected value. Preserve keyboard selection and announce state changes.",
+      "webGuidance": "Use a radio group or toggle group for value selection. Use tabs only when each option switches a corresponding content panel."
+    },
+    {
+      "order": 58,
+      "id": "delete-sheet",
+      "name": "Delete Sheet",
+      "platform": "macOS",
+      "category": "System panels and status",
+      "definition": "A document-attached confirmation panel for an action that affects the current document or window.",
+      "guidance": "Keep the question scoped to the affected document, state what will be deleted, and offer a clear cancel path. Do not chain multiple confirmations for one action.",
+      "accessibility": "Use a labeled native sheet and preserve focus in its task scope. Announce the consequence and return focus to the invoking control after dismissal.",
+      "webGuidance": "Use a contextual dialog or sheet only when attachment to a specific workspace adds meaning. Otherwise use the standard modal confirmation pattern."
+    },
+    {
+      "order": 59,
+      "id": "desktop-sidebar-source-list",
+      "name": "Desktop Sidebar (Source List)",
+      "platform": "macOS",
+      "category": "Window and workspace",
+      "definition": "A persistent source list for switching among related locations, collections, or filters within a window.",
+      "guidance": "Keep the hierarchy shallow and the selected source visible. Distinguish location navigation from actions and retain selection as the content pane updates.",
+      "accessibility": "Use a labeled list or navigation structure, expose selection, and support standard keyboard traversal.",
+      "webGuidance": "Adapt the sidebar to a drawer or compact navigation on narrow screens. Avoid duplicating the site's primary navigation inside a page-specific source list."
+    },
+    {
+      "order": 60,
+      "id": "stepper",
+      "name": "Stepper",
+      "platform": "macOS",
+      "category": "Input and editing",
+      "definition": "A compact pair of controls for increasing or decreasing a numeric value by a fixed increment.",
+      "guidance": "Use only when the value and increment are easy to understand. Show the current value nearby and enforce valid minimum and maximum bounds.",
+      "accessibility": "Give increase and decrease actions clear names and preserve keyboard adjustment. Expose the value and limits of the associated input.",
+      "webGuidance": "Use a labeled number input or spinbutton with explicit increment and limit behavior. Keep values editable when that is more efficient than repeated clicks."
+    },
+    {
+      "order": 61,
+      "id": "toolbar-unified-title-bar",
+      "name": "Toolbar (Unified Title Bar)",
+      "platform": "macOS",
+      "category": "Window and workspace",
+      "definition": "A row of window-level actions visually integrated with the title region.",
+      "guidance": "Group a small set of frequent actions, keep the document or view title identifiable, and make essential commands available through the app's other command paths.",
+      "accessibility": "Give icon-only controls accessible names and group related actions. Preserve keyboard focus and expose overflow actions.",
+      "webGuidance": "Use a page header or toolbar for related page actions. Do not imitate native window chrome, and provide an overflow menu when controls no longer fit."
+    },
+    {
+      "order": 62,
+      "id": "traffic-lights-window-controls",
+      "name": "Traffic Lights (Window Controls)",
+      "platform": "macOS",
+      "category": "Window and workspace",
+      "definition": "The native close, minimize, and zoom controls in a macOS application window.",
+      "guidance": "Let the system provide window controls and their placement. Do not recolor or repurpose the controls inside a native app.",
+      "accessibility": "Preserve system labels and keyboard alternatives for close, minimize, and zoom.",
+      "webGuidance": "Do not draw red, yellow, and green circles in a website to imitate a Mac window. Use browser navigation and real in-page actions."
+    },
+    {
+      "order": 63,
+      "id": "visual-effect-material-vibrancy",
+      "name": "Visual Effect Material (Vibrancy)",
+      "platform": "macOS",
+      "category": "System panels and status",
+      "definition": "A native translucent surface that blends with content behind it while keeping foreground controls readable.",
+      "guidance": "Use system material APIs and preserve text legibility across light, dark, and varied backgrounds. Do not apply transparency to every surface.",
+      "accessibility": "Check contrast as the background changes and support increased contrast settings. Keep essential content readable when transparency is reduced.",
+      "webGuidance": "Use translucent web surfaces only when contrast remains reliable over every background. Provide a solid-color fallback and avoid decorative blur by default."
+    },
+    {
+      "order": 64,
+      "id": "toast-snackbar",
+      "name": "Toast (Snackbar)",
+      "platform": "Web",
+      "category": "Feedback and overlays",
+      "definition": "A brief, non-blocking message that confirms or reports a recent action.",
+      "guidance": "Use for short feedback that does not require a response. Keep important errors or persistent instructions visible until resolved, and do not cover primary controls.",
+      "accessibility": "Announce updates through an appropriate polite status region without moving focus. Give actionable messages enough time and an accessible action name."
+    },
+    {
+      "order": 65,
+      "id": "modal-dialog-drawer-sheet",
+      "name": "Modal Dialog vs. Drawer vs. Sheet",
+      "platform": "Web",
+      "category": "Feedback and overlays",
+      "definition": "A modal dialog interrupts the page for a focused task. A drawer is a side panel. A sheet is a panel that rises from an edge, often on mobile.",
+      "guidance": "Choose the form by task and viewport, not decoration. Block background interaction only for a true modal task and avoid nesting overlays.",
+      "accessibility": "Use a labeled dialog, manage initial and return focus, support Escape when safe, and make background inert only for a modal. Keep close controls visible."
+    },
+    {
+      "order": 66,
+      "id": "popover-dropdown-tooltip",
+      "name": "Popover vs. Dropdown Menu vs. Tooltip",
+      "platform": "Web",
+      "category": "Feedback and overlays",
+      "definition": "A popover holds related supplementary content, a dropdown menu offers actions or choices, and a tooltip provides brief non-interactive help.",
+      "guidance": "Select by content and interaction. Anchor the panel to its trigger, place it within the viewport, and never put required actions in a hover-only tooltip.",
+      "accessibility": "Use a named trigger and correct popup semantics. Support keyboard opening and dismissal, expose expanded state where relevant, and keep focus behavior appropriate to the pattern."
+    },
+    {
+      "order": 67,
+      "id": "scrim-backdrop-overlay",
+      "name": "Scrim (Backdrop / Overlay)",
+      "platform": "Web",
+      "category": "Feedback and overlays",
+      "definition": "A visual layer behind an overlay that separates it from and de-emphasizes the underlying page.",
+      "guidance": "Use only when an overlay blocks or temporarily redirects attention. Keep the overlay surface readable and define whether activating the backdrop dismisses it.",
+      "accessibility": "Treat a purely visual scrim as decorative. Ensure the dialog or drawer, not the backdrop, receives focus and has a clear close action."
+    },
+    {
+      "order": 68,
+      "id": "skeleton-spinner",
+      "name": "Skeleton vs. Spinner",
+      "platform": "Web",
+      "category": "Feedback and overlays",
+      "definition": "A skeleton reserves the shape of expected content. A spinner indicates an indeterminate process without a known result shape.",
+      "guidance": "Use a skeleton when the eventual layout is known and a short spinner for an indeterminate wait. Avoid flashing placeholders for fast operations or pretending content is loaded.",
+      "accessibility": "Mark updating regions as busy and provide a textual progress status when useful. Hide decorative skeleton blocks and respect reduced motion."
+    },
+    {
+      "order": 69,
+      "id": "combobox-autocomplete-typeahead",
+      "name": "Combobox (Autocomplete / Typeahead)",
+      "platform": "Web",
+      "category": "Forms and controls",
+      "definition": "An editable or select-only input paired with a popup of allowed values or suggestions.",
+      "guidance": "Use when typed input benefits from constrained choices or suggestions. Explain whether arbitrary values are allowed and keep the entered value separate from the active suggestion.",
+      "accessibility": "Follow a complete combobox pattern with an accessible name, expanded and active-descendant states, arrow-key navigation, Enter selection, and Escape dismissal."
+    },
+    {
+      "order": 70,
+      "id": "command-palette",
+      "name": "Command Palette",
+      "platform": "Web",
+      "category": "Navigation and wayfinding",
+      "definition": "A searchable launcher for actions and destinations, usually opened by a button or keyboard shortcut.",
+      "guidance": "Use only when there are enough frequent commands to justify a launcher. Keep the shortcut discoverable, group results clearly, and include actions in ordinary navigation too.",
+      "accessibility": "Use a labeled dialog and combobox or listbox behavior with arrow keys, Enter, Escape, and visible focus. Do not intercept browser or assistive-technology shortcuts."
+    },
+    {
+      "order": 71,
+      "id": "accordion-disclosure",
+      "name": "Accordion (Disclosure)",
+      "platform": "Web",
+      "category": "Content and data",
+      "definition": "A stack of labeled sections whose content can be expanded or collapsed.",
+      "guidance": "Use to organize secondary content, not to hide essential instructions by default. Decide whether multiple sections may stay open and preserve state when the page updates.",
+      "accessibility": "Use native details and summary for simple disclosures or implement the WAI-ARIA accordion keyboard and expanded-state pattern."
+    },
+    {
+      "order": 72,
+      "id": "tabs",
+      "name": "Tabs",
+      "platform": "Web",
+      "category": "Navigation and wayfinding",
+      "definition": "A set of peer labels that switches one shared content panel at a time.",
+      "guidance": "Use only for closely related views that belong in one context. Do not use tabs as a substitute for site navigation or when users need to compare all content at once.",
+      "accessibility": "Implement tablist, tab, and tabpanel relationships, selected state, arrow-key movement, and a clear activation model. Keep content available at narrow widths."
+    },
+    {
+      "order": 73,
+      "id": "badge-chip-pill-tag",
+      "name": "Badge vs. Chip vs. Pill vs. Tag",
+      "platform": "Web",
+      "category": "Content and data",
+      "definition": "A badge reports a compact status or count. A chip is an interactive value or filter. A pill describes a rounded shape. A tag labels content.",
+      "guidance": "Choose the term and behavior by purpose, not shape. Keep status text readable, make removable chips expose a separate remove action, and avoid adding decorative labels without meaning.",
+      "accessibility": "Expose status in text, name interactive chips, and preserve keyboard operation for selection and removal. Do not communicate category or urgency by color alone."
+    },
+    {
+      "order": 74,
+      "id": "breadcrumbs",
+      "name": "Breadcrumbs",
+      "platform": "Web",
+      "category": "Navigation and wayfinding",
+      "definition": "A short path of ancestor links that places the current page within a hierarchy.",
+      "guidance": "Show meaningful parent locations in order and keep the current location understandable. Do not include unrelated destinations or substitute breadcrumbs for primary navigation.",
+      "accessibility": "Use a labeled navigation landmark and identify the current page. On narrow screens, shorten the visual path without removing its accessible context."
+    },
+    {
+      "order": 75,
+      "id": "sticky-fixed-positioning",
+      "name": "Sticky vs. Fixed Positioning",
+      "platform": "Web",
+      "category": "Layout and motion",
+      "definition": "Sticky positioning stays within its containing block while scrolling. Fixed positioning attaches an element to the viewport.",
+      "guidance": "Prefer sticky for local context and fixed only for persistent global controls. Reserve space, respect safe areas, and ensure the element does not cover content or focused targets.",
+      "accessibility": "Keep the reading order meaningful and keyboard focus visible when content scrolls. Check zoom, narrow layouts, and reduced viewport height."
+    },
+    {
+      "order": 76,
+      "id": "focus-ring-focus-visible",
+      "name": "Focus Ring (:focus-visible)",
+      "platform": "Web",
+      "category": "Forms and controls",
+      "definition": "A visible indicator for the element currently receiving keyboard focus, commonly shown through the focus-visible state.",
+      "guidance": "Apply a consistent ring to every interactive control and keep it outside clipped containers. Never remove the browser outline without an equally visible replacement.",
+      "accessibility": "Maintain clear contrast on every surface and preserve focus visibility in forced-colors and high-contrast modes. Verify keyboard navigation at zoom."
+    },
+    {
+      "order": 77,
+      "id": "empty-state",
+      "name": "Empty State",
+      "platform": "Web",
+      "category": "Content and data",
+      "definition": "A region that explains why expected content is absent and what a person can do next.",
+      "guidance": "Distinguish no data, no search results, loading, permission limits, and errors. Offer one useful next step when available and keep decoration secondary.",
+      "accessibility": "Use a clear heading and plain-language explanation. Ensure the next action is a real keyboard-accessible control and do not announce static empty text as an urgent alert."
+    },
+    {
+      "order": 78,
+      "id": "hover-card",
+      "name": "Hover Card",
+      "platform": "Web",
+      "category": "Feedback and overlays",
+      "definition": "A contextual preview that appears near a referenced item when it receives hover or focus.",
+      "guidance": "Use for optional preview context, not required content or a hidden action menu. Support touch, avoid flicker between trigger and panel, and close predictably.",
+      "accessibility": "Make the content available on keyboard focus and through a touch-friendly action. If the panel contains interactive controls, use popover behavior rather than tooltip behavior."
+    },
+    {
+      "order": 79,
+      "id": "switch-checkbox-radio",
+      "name": "Switch vs. Checkbox vs. Radio",
+      "platform": "Web",
+      "category": "Forms and controls",
+      "definition": "A switch turns one setting on or off, a checkbox selects independent options, and a radio group selects one option from a set.",
+      "guidance": "Choose by the decision model. Use a switch for an immediate binary setting, checkboxes for independent choices, and radios for a required single choice.",
+      "accessibility": "Prefer native inputs with visible labels. Group related choices with a legend, expose checked state, and keep keyboard behavior consistent with the native control."
+    },
+    {
+      "order": 80,
+      "id": "toggle-group-segmented-control",
+      "name": "Toggle Group (Segmented Control)",
+      "platform": "Web",
+      "category": "Forms and controls",
+      "definition": "A connected group of compact controls for selecting one mode or several related values.",
+      "guidance": "Use for a small set of peer options with persistent selection. Distinguish value selection from tabs that change a content panel and from menus that launch actions.",
+      "accessibility": "Use a radio group for exclusive values or buttons with pressed state for independent toggles. Provide clear labels and keyboard movement appropriate to the chosen pattern."
+    },
+    {
+      "order": 81,
+      "id": "menu-bar-extra",
+      "name": "Menu Bar Extra (Status Item)",
+      "platform": "macOS",
+      "category": "Menus and commands",
+      "definition": "A native app status item placed in the macOS menu bar with a compact icon or value and an optional menu.",
+      "guidance": "Reserve it for a persistent app-level status or quick action. Keep the icon recognizable, menu short, and status current without interrupting other work.",
+      "accessibility": "Provide a native accessible name and value, support keyboard access, and do not rely on icon shape or color alone.",
+      "webGuidance": "A website cannot add a macOS menu bar item. Show status within the product or use a supported installed-app capability only when the user expects it."
+    }
+  ]
+}

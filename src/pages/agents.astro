@@ -1,5 +1,6 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
+import Icon from "../components/Icon.astro";
 ---
 
 <DocsLayout
@@ -8,12 +9,29 @@ import DocsLayout from "../layouts/DocsLayout.astro";
   eyebrow="Agent entry point"
 >
   <div class="rule-callout">
-    <span class="callout-icon" aria-hidden="true">i</span>
+    <Icon name="info" class="callout-icon" />
     <div>
       <strong>This design system is a draft</strong>
       <p>Do not present its guidance as approved VINASIG policy or apply it to another project without checking that project's instructions.</p>
     </div>
   </div>
+
+  <section class="page-section" aria-labelledby="visual-direction-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Default visual direction</p><h2 id="visual-direction-title">Bright Playful Minimalism</h2></div>
+      <p>Use the design system's draft direction unless the task or an approved product decision specifies something more specific.</p>
+    </div>
+    <article class="card">
+      <ul class="usage-list">
+        <li>Build on a flat, content-led, minimal layout with light neutral surfaces.</li>
+        <li>Use identity color selectively, and keep pixel or rounded-square details sparse.</li>
+        <li>Add illustration only when it helps explain the content or a user action.</li>
+        <li>Do not add generic gradients, oversized headings, repeated cards without distinct content, decorative pills, badges, or filler by habit. Use cards when they clarify a real content group.</li>
+        <li>Borrow from Apple, GitHub, or Duolingo only when asked for a specific quality. Do not copy or mix their complete visual styles.</li>
+      </ul>
+      <a class="text-link" href="/foundations/#visual-direction">Read the full visual direction&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
+    </article>
+  </section>
 
   <section class="page-section" aria-labelledby="favicon-check-title">
     <div class="section-heading">
@@ -35,7 +53,7 @@ import DocsLayout from "../layouts/DocsLayout.astro";
         <pre class="code-panel"><code>&lt;link rel="icon" type="image/png" sizes="16x16" href="/brand/favicons/favicon-16.png" /&gt;
 &lt;link rel="icon" type="image/png" sizes="32x32" href="/brand/favicons/favicon-32.png" /&gt;
 &lt;link rel="icon" type="image/png" sizes="48x48" href="/brand/favicons/favicon-48.png" /&gt;</code></pre>
-        <a class="text-link" href="/brand/">See the logo guide and supplied favicon files</a>
+        <a class="text-link" href="/brand/">See the logo guide and supplied favicon files&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
       </article>
     </div>
   </section>
@@ -58,7 +76,7 @@ import DocsLayout from "../layouts/DocsLayout.astro";
       <article class="card">
         <h3>Use the component specification</h3>
         <p class="card-copy">Read <code>docs/components/README.md</code> before implementing a single-select dropdown. Prefer an existing accessible component. Do not ship a visual-only custom control.</p>
-        <a class="text-link" href="/components/">View dropdown guidance and states</a>
+        <a class="text-link" href="/components/">View dropdown guidance and states&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
       </article>
     </div>
   </section>
@@ -70,8 +88,54 @@ import DocsLayout from "../layouts/DocsLayout.astro";
     </div>
     <div class="card-grid">
       <article class="card"><p class="section-kicker">Step 01</p><h3>Read the project guide</h3><p class="card-copy">Start with the consuming website's `AGENTS.md`, then this repository's root `AGENTS.md` if the task calls for this system.</p></article>
-      <article class="card"><p class="section-kicker">Step 02</p><h3>Find the matching rule</h3><p class="card-copy">Use the foundation, component, or pattern page related to the interface being changed.</p></article>
+      <article class="card"><p class="section-kicker">Step 02</p><h3>Find the matching rule</h3><p class="card-copy">Use the matching foundation, component, pattern, or UI element entry. Inspect its rendered example and check the platform label before applying it.</p></article>
       <article class="card"><p class="section-kicker">Step 03</p><h3>Check status and source</h3><p class="card-copy">Follow approved rules when available. Mark these prototype rules as draft and keep token changes in the source file.</p></article>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="ui-quality-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Required interface review</p><h2 id="ui-quality-title">A successful build still needs a browser check</h2></div>
+      <p>Recent Reddit reports describe generic card-heavy layouts, text overflow on small screens, mismatches with visual references, changed control types, and fixes that introduce new defects. Other users report better results with clear design rules and screenshots. These are anecdotes, not failure rates.</p>
+    </div>
+    <div class="two-column-grid">
+      <article class="card">
+        <h3>Before coding</h3>
+        <ul class="usage-list">
+          <li>Read the project brief, relevant UI guidance, tokens, assets, and existing components.</li>
+          <li>Write down the changed route, user action, content edge cases, viewport sizes, and important state transitions.</li>
+          <li>Record the visual direction in concrete layout, color, type, and shape choices. Keep the project identity and do not fill gaps with a generic generated style.</li>
+          <li>Do not add version labels, draft badges, prototype footers, repeated navigation, or AI-index links unless requested, required, or useful to a defined user need. Keep required attributions and legal notices.</li>
+          <li>When a screenshot or URL is supplied, record what must match and preserve the intended control types and behavior.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Before closing the task</h3>
+        <ul class="usage-list">
+          <li>Inspect the real page around 1440, 1024, 768, 390, and 320 CSS px where practical.</li>
+          <li>Compare the rendered result with supplied references at the same viewport. Check small-screen text, overflow, placement, and behavior.</li>
+          <li>Check long content, zoom, open dropdowns, visible focus, keyboard behavior, and page overflow.</li>
+          <li>Inspect changed controls in the browser accessibility tree. Confirm each has the right role, accessible name, and selected or expanded state.</li>
+          <li>Check actual text and icon contrast on rendered backgrounds, plus reduced-motion behavior where relevant.</li>
+          <li>Fix clipping at its source. Do not hide layout defects with global overflow rules.</li>
+          <li>If the same visual issue remains after two scoped fixes, stop and diagnose the layout or conflicting styles before adding another override.</li>
+          <li>Recheck affected routes after the final change and report anything that could not be verified.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Research and standards</h3>
+        <p class="card-copy">Recent measurements found unnamed controls in sampled websites and structural accessibility issues in sampled AI-generated frontends. A separate benchmark also found automated accessibility violations in pages generated by GPT-5.6 Luna. These studies have narrow methods and do not predict every project. They support checking semantics and browser output rather than trusting model choice or screenshots alone.</p>
+        <a class="text-link" href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener">Read WCAG 2.2&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
+        <a class="text-link" href="https://doi.org/10.1007/s10209-025-01250-2" target="_blank" rel="noopener">Read the accessibility benchmark&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
+        <a class="text-link" href="https://aimac.ai/" target="_blank" rel="noopener">Read the recent model benchmark&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
+        <a class="text-link" href="https://accessibility.build/research/ai-agent-readiness" target="_blank" rel="noopener">Read the accessibility tree measurement&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
+        <a class="text-link" href="https://www.designwithclaude.com/design-research/ai-generated-frontends" target="_blank" rel="noopener">Read the generated frontend audit&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
+        <a class="text-link" href="https://www.microsoft.com/en-us/research/publication/interrogating-design-homogenization-in-web-vibe-coding/" target="_blank" rel="noopener">Read the design homogenization study&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
+      </article>
+      <article class="card">
+        <h3>Full checklist and source notes</h3>
+        <p class="card-copy">Read <code>docs/agents/ui-quality.md</code> for the complete workflow, evidence limits, project-specific findings, recent Reddit reports, and annotated sources.</p>
+      </article>
     </div>
   </section>
 
@@ -110,9 +174,11 @@ Design system guidance at https://github.com/VINASIG/web-design-system
     </div>
     <div class="two-column-grid">
       <article class="card"><h3>Project and agent context</h3><p class="card-copy"><code>AGENTS.md</code> defines status, scope, repository map, and working instructions.</p></article>
+      <article class="card"><h3>AI-assisted UI review</h3><p class="card-copy"><code>docs/agents/ui-quality.md</code> defines the research-backed quality workflow and completion gate for interface work.</p></article>
       <article class="card"><h3>Brand identity</h3><p class="card-copy"><code>docs/brand/README.md</code> lists logo variant facts, export paths, and draft usage guidance.</p></article>
       <article class="card"><h3>Design guidance</h3><p class="card-copy"><code>docs/</code> contains source specifications for foundations, components, and patterns.</p></article>
-      <article class="card"><h3>Implementation tokens</h3><p class="card-copy"><code>src/styles/tokens.css</code> defines CSS variables and the locally hosted typeface.</p></article>
+      <article class="card"><h3>UI element library</h3><p class="card-copy"><code>docs/elements/catalog.json</code> defines all 81 entries. Open the matching rendered example and check its platform label before using it.</p></article>
+      <article class="card"><h3>Implementation tokens</h3><p class="card-copy"><code>src/styles/tokens.css</code> defines identity colors, semantic roles, an optional extended palette for specific needs, shared interface tokens, and the locally hosted typeface.</p></article>
       <article class="card"><h3>Published index</h3><p class="card-copy"><code>/llms.txt</code> provides a compact navigation map for tools that can fetch the docs site.</p></article>
     </div>
   </section>

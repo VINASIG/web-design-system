@@ -1,5 +1,6 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
+import Icon from "../components/Icon.astro";
 ---
 
 <DocsLayout
@@ -8,10 +9,10 @@ import DocsLayout from "../layouts/DocsLayout.astro";
   eyebrow="02 Reusable interface"
 >
   <div class="rule-callout">
-    <span class="callout-icon" aria-hidden="true">i</span>
+    <Icon name="info" class="callout-icon" />
     <div>
       <strong>Component guidance is still being shaped</strong>
-      <p>Use these examples to review the format. A future component page should document purpose, variants, states, keyboard behavior, responsive behavior, and accessibility.</p>
+      <p>Use these examples to review the format. A future component page should document purpose, variants, states, keyboard behavior, responsive behavior, and accessibility. <a href="/elements/">Browse the full catalog of 81 interface entries</a>.</p>
     </div>
   </div>
 
@@ -64,7 +65,7 @@ import DocsLayout from "../layouts/DocsLayout.astro";
     <article class="card component-showcase">
       <div class="dropdown-example">
         <div class="dropdown-visual" aria-hidden="true">
-          <div class="dropdown-trigger-visual"><span>Bottom center</span><span class="dropdown-chevron">▾</span></div>
+          <div class="dropdown-trigger-visual"><span>Bottom center</span><Icon name="chevronDown" class="dropdown-chevron" /></div>
           <ul class="dropdown-options-visual">
             <li>Bottom left</li>
             <li class="is-selected">Bottom center</li>
@@ -90,14 +91,39 @@ import DocsLayout from "../layouts/DocsLayout.astro";
     </div>
     <div class="two-column-grid">
       <article class="card status-message status-success" role="group" aria-label="Success message example">
-        <span class="status-icon" aria-hidden="true">✓</span>
+        <Icon name="check" class="status-icon" />
         <div><strong>Changes saved</strong><p>Your draft is up to date.</p></div>
       </article>
       <article class="card status-message status-error" role="group" aria-label="Error message example">
-        <span class="status-icon" aria-hidden="true">!</span>
+        <Icon name="error" class="status-icon" />
         <div><strong>Could not save</strong><p>Check your connection and try again.</p></div>
       </article>
     </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="iconography-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Visual symbols</p><h2 id="iconography-title">Use a shared icon set</h2></div>
+      <p>Use pictographic icons only when they clarify a control or add useful recognition.</p>
+    </div>
+    <article class="card component-showcase">
+      <div class="component-demo iconography-demo" aria-label="Examples of shared interface icons">
+        <span><Icon name="info" /> Information</span>
+        <span><Icon name="check" /> Success</span>
+        <span><Icon name="externalLink" /> Open link</span>
+      </div>
+      <ul class="rule-list">
+        <li><span class="rule-term">Icon set</span><span class="rule-text">Use Flaticon UIcons Round Bold through the shared <code>Icon.astro</code> component.</span></li>
+        <li><span class="rule-term">Icon style</span><span class="rule-text">Use Flaticon UIcons Round Bold for interface arrows and pictographic icons shown alongside each other so their visual style stays consistent.</span></li>
+        <li><span class="rule-term">Wrapped links</span><span class="rule-text">Keep action labels and their icons in the same text flow. At high zoom or narrow widths, the icon stays beside the final word rather than floating to the far edge.</span></li>
+        <li><span class="rule-term">Characters</span><span class="rule-text">Space Grotesk symbols may be used as text or typographic notation. Do not substitute them for interface icons when they look different from the shared icon set.</span></li>
+        <li><span class="rule-term">Custom glyphs</span><span class="rule-text">Do not type emoji, pictographic Unicode symbols, or private-use codepoints into page markup or CSS.</span></li>
+        <li><span class="rule-term">Meaning</span><span class="rule-text">Keep visible text when an icon alone would make a label or action unclear.</span></li>
+        <li><span class="rule-term">Accessibility</span><span class="rule-text">Decorative icons stay hidden from assistive technology. Give icon-only controls an accessible name.</span></li>
+      </ul>
+      <pre class="code-panel"><code>&lt;Icon name="info" /&gt;</code></pre>
+      <p class="card-copy">The shared footer includes the Flaticon attribution required for the free icon pack.</p>
+    </article>
   </section>
 
   <section class="page-section" aria-labelledby="card-title">
@@ -109,7 +135,7 @@ import DocsLayout from "../layouts/DocsLayout.astro";
       <p class="section-kicker">Foundation color</p>
       <h3>Use semantic tokens</h3>
       <p class="card-copy">Semantic tokens connect a component to its role and make system-wide changes easier to apply.</p>
-      <a class="text-link" href="/foundations/">Read color foundations</a>
+      <a class="text-link" href="/foundations/">Read color foundations&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
     </article>
   </section>
 </DocsLayout>

@@ -1,0 +1,28 @@
+---
+const iconClasses = {
+  home: "fi-br-home",
+  agents: "fi-br-robot",
+  brand: "fi-br-palette",
+  foundations: "fi-br-layers",
+  components: "fi-br-apps",
+  patterns: "fi-br-pattern",
+  elements: "fi-br-list-check",
+  info: "fi-br-info",
+  check: "fi-br-check",
+  error: "fi-br-exclamation",
+  chevronDown: "fi-br-angle-small-down",
+  externalLink: "fi-br-arrow-up-right",
+} as const;
+
+type IconName = keyof typeof iconClasses;
+const { name, class: className = "" } = Astro.props as {
+  name: IconName;
+  class?: string;
+};
+
+if (!(name in iconClasses)) {
+  throw new Error(`Unknown icon name: ${name}`);
+}
+---
+
+<span class:list={["ui-icon", iconClasses[name], className]} aria-hidden="true"></span>

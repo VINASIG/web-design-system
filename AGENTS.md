@@ -14,7 +14,7 @@ When a rule is missing or two sources disagree, explain the gap and propose an o
 
 1. Read `README.md` for setup and deployment.
 2. Read the relevant page under `docs/` before editing its website page or component.
-3. Treat `src/styles/tokens.css` as the implementation source for design tokens.
+3. Treat `src/styles/tokens.css` as the implementation source for design tokens. Consult `src/styles/global.css` before changing shared styles or adding a new global component rule.
 4. See `docs/decisions/0001-astro-and-cloudflare.md` for the technology decision.
 
 The documentation site is organized as follows:
@@ -23,6 +23,7 @@ The documentation site is organized as follows:
 - `docs/brand/` holds logo facts, asset mapping, and draft usage recommendations.
 - `docs/components/` holds common interface controls and behavior.
 - `docs/patterns/` holds reusable page-level interaction patterns.
+- `docs/agents/ui-quality.md` records the research-backed workflow for reviewing AI-assisted interface work.
 - `src/pages/` contains the published documentation pages.
 - `src/layouts/` and `src/components/` contain the documentation site's own UI.
 - `public/brand/` contains exact copies of selected exported logo files. Editable artwork remains in the Brand Assets archive.
@@ -30,12 +31,28 @@ The documentation site is organized as follows:
 
 ## Design and implementation rules
 
+When an interface matches an entry in docs/elements/catalog.json, read its definition and inspect the matching rendered example in docs/elements/specimens.json. Apply Web guidance to websites. Treat macOS entries as native desktop concepts and use their web adaptation only when it fits the user need.
+
 - Use Space Grotesk as the only named typeface. Load it from `public/fonts/SpaceGrotesk-VariableFont_wght.ttf`. Do not fetch fonts from a CDN or add another font family.
-- Use the CSS custom properties in `src/styles/tokens.css` instead of repeating brand color values in component styles.
+- Use Flaticon UIcons Round Bold for pictographic interface icons. Load the package locally and render icons through `src/components/Icon.astro`. Do not type pictographic Unicode characters, emoji, or private-use codepoints into page markup or CSS. The icon font is limited to icon artwork and does not add a text typeface.
+- Space Grotesk symbols may appear in prose or typographic notation. Use Flaticon UIcons for interface arrows and pictographic icons shown alongside each other so they share one visual style.
+- Keep the visible `UIcons by Flaticon` attribution in the shared website footer when using the free icon pack.
+- Use semantic color tokens from `src/styles/tokens.css` and follow the color role mapping in `docs/foundations/README.md`. Keep the VINASIG identity color anchors unchanged. Use their soft, border, and strong shades for interface states. Do not add unrelated saturated colors without a documented role.
+- When a component needs additional categories, use the optional extended palette documented in the Foundations guide. Treat it as supporting color, preserve identity aliases, and keep semantic status colors in their established roles.
+- Use **Bright Playful Minimalism** as the draft visual direction for this prototype. Start with a flat, content-led minimal layout, light neutral surfaces, and selective identity color. Use pixel or rounded-square details sparingly, and add illustrations only when they explain content or support a clear user need. Follow `docs/foundations/README.md` for the full direction.
+- Do not fall back to generic AI decoration such as oversized hero type, gradients, card grids without distinct content, or decorative pills and badges. Use cards when they clarify a real content group. Do not imitate or combine Apple, GitHub, or Duolingo as complete visual systems. Borrow a specific quality only when the task names it, then express it through VINASIG's existing tokens and patterns.
 - Keep pages static by default. Add browser JavaScript only for a documented interaction that needs it.
 - Use semantic HTML, visible keyboard focus, descriptive links, and accessible labels for form controls.
+- Do not add version labels, draft badges, prototype-status footers, repeated navigation links, AI-index links, or other template chrome by default. Add visible elements only when the task requests them, an authoritative requirement requires them, or they support a defined user need. Preserve required third-party attributions and legal notices.
+- Check current official framework and browser documentation, plus the project's browser support target, before choosing an unfamiliar or recently released web API. Do not rely on model memory for changing platform behavior.
+- Treat the accessibility tree as part of the interface. Give interactive controls semantic roles, useful accessible names, and accurate selected, expanded, and disabled states. When browser automation is available, prefer locating controls by role and name.
 - For every task that creates or changes a website, inspect the shared `<head>` and confirm a favicon is configured. On VINASIG sites, use the supplied 16, 32, and 48 px favicon exports where available, and confirm the asset paths work for the deployment base URL. A header logo does not replace a browser favicon. If the required source asset is missing, report the gap instead of silently omitting or redrawing it.
 - Before completing UI work, inspect each select control and dropdown in the changed flow. When the design calls for a custom dropdown, style both its closed trigger and open options panel. Preserve keyboard and assistive-technology behavior, and use the component guidance in `docs/components/README.md`.
+- Before creating or changing visible interface code, read `docs/agents/ui-quality.md` and follow its UI workflow. Include the relevant viewport, content, interaction, and accessibility checks in the task plan. Do not treat a successful build or one desktop screenshot as proof that the UI is complete.
+- When the user supplies a screenshot, mockup, or URL, record what must match and preserve the existing control types and behavior. Do not replace a reference with a generic generated layout.
+- Implement visual changes in bounded slices. After each slice, inspect the real page at the target widths and recheck areas that already passed. If the same defect remains after two targeted corrections, diagnose the layout, styles, and project context before adding another override.
+- When visual browser inspection is available, inspect changed pages at wide, medium, and narrow widths, including a 320 CSS px reflow check where practical. Exercise changed controls in their open and keyboard states. Fix the cause of overflow or clipping instead of hiding it with a broad CSS workaround.
+- Keep the existing product identity. Reuse its approved tokens, typeface, icon component, assets, and established patterns. Do not accept a generic generated layout or invent brand choices just to fill gaps. Ask or report the unresolved decision when the source context is insufficient.
 - Keep rules and examples in English in this repository.
 - When adding or changing guidance, keep its draft status visible and update both the source document and its published page.
 - Use only the owner-provided logo exports in `public/brand/`. Do not redraw, alter, or add editable logo source files.

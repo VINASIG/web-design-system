@@ -1,6 +1,8 @@
 ---
 import "../styles/tokens.css";
 import "../styles/global.css";
+import "@flaticon/flaticon-uicons/css/bold/rounded.css";
+import Icon from "../components/Icon.astro";
 
 const { title, description, eyebrow = "Shared interface guidance" } = Astro.props;
 const currentPath = Astro.url.pathname;
@@ -9,17 +11,18 @@ const navigation = [
   {
     label: "Start here",
     links: [
-      { href: "/", title: "Overview", icon: "⌂" },
-      { href: "/agents/", title: "For AI agents", icon: "✳" },
+      { href: "/", title: "Overview", icon: "home" },
+      { href: "/agents/", title: "For AI agents", icon: "agents" },
     ],
   },
   {
     label: "System",
     links: [
-      { href: "/brand/", title: "Brand & logo", icon: "◇" },
-      { href: "/foundations/", title: "Foundations", icon: "◈" },
-      { href: "/components/", title: "Components", icon: "▦" },
-      { href: "/patterns/", title: "Patterns", icon: "▤" },
+      { href: "/brand/", title: "Brand & logo", icon: "brand" },
+      { href: "/foundations/", title: "Foundations", icon: "foundations" },
+      { href: "/components/", title: "Components", icon: "components" },
+      { href: "/patterns/", title: "Patterns", icon: "patterns" },
+      { href: "/elements/", title: "UI elements", icon: "elements" },
     ],
   },
 ];
@@ -61,7 +64,7 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
                   href={link.href}
                   aria-current={currentPath === link.href ? "page" : undefined}
                 >
-                  <span class="nav-icon" aria-hidden="true">{link.icon}</span>
+                  <Icon name={link.icon} class="nav-icon" />
                   {link.title}
                 </a>
               ))}
@@ -69,10 +72,6 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
           ))}
         </nav>
 
-        <div class="sidebar-bottom">
-          <div class="draft-mini"><span class="draft-dot" aria-hidden="true"></span>Prototype draft guidance</div>
-          <a class="agent-entry" href="/agents/">Agent context and usage →</a>
-        </div>
       </aside>
 
       <div class="page-shell">
@@ -81,10 +80,6 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
             <a href="/">VINASIG</a>
             <span class="crumb-divider" aria-hidden="true"></span>
             <span aria-current="page">{breadcrumb}</span>
-          </div>
-          <div class="topbar-right">
-            <span class="version-label">v0.1.0</span>
-            <span class="draft-badge"><span class="draft-dot" aria-hidden="true"></span>Draft</span>
           </div>
         </header>
 
@@ -96,8 +91,7 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
           </div>
           <slot />
           <footer class="page-footer">
-            <p>VINASIG Design System, v0.1.0. Proposal for review.</p>
-            <a href="/llms.txt">Read the AI-friendly index</a>
+            <p><a href="https://www.flaticon.com/uicons/interface-icons">UIcons by Flaticon</a></p>
           </footer>
         </main>
       </div>

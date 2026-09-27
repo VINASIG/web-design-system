@@ -12,6 +12,7 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 
+  /* Keep these identity anchors unchanged. */
   --color-scout-blue: #21497b;
   --color-thinker-orange: #eb7114;
   --color-builder-green: #47a036;
@@ -20,13 +21,84 @@
   --color-black: #000000;
   --color-white: #ffffff;
 
+  /* Optional palette extensions. Keep identity matches as aliases. */
+  --color-palette-citron: #ddd605;
+  --color-palette-porcelain: #e3d4d1;
+  --color-palette-fog: #cecaca;
+  --color-palette-warm-graphite: var(--color-core-graphite);
+  --color-palette-carmine: var(--color-auditor-red);
+  --color-palette-clay: #b4684d;
+  --color-palette-saffron: #deb12d;
+  --color-palette-leaf: var(--color-builder-green);
+  --color-palette-lagoon: #2cbaa8;
+  --color-palette-deep-blue: var(--color-scout-blue);
+  --color-palette-violet: #9a5cc6;
+  --color-palette-tangerine: var(--color-thinker-orange);
+  --color-palette-sky: #8bb3ff;
+  --color-palette-amber: #ffaa00;
+
+  /* Optional deep tones are palette references, not default UI shadows. */
+  --color-palette-citron-shade: #373501;
+  --color-palette-porcelain-shade: #383534;
+  --color-palette-fog-shade: #333232;
+  --color-palette-warm-graphite-shade: #110e0e;
+  --color-palette-carmine-shade: #250501;
+  --color-palette-clay-shade: #2d1a13;
+  --color-palette-saffron-shade: #372c0b;
+  --color-palette-leaf-shade: #04280d;
+  --color-palette-lagoon-shade: #0b2e2a;
+  --color-palette-deep-blue-shade: #08121e;
+  --color-palette-violet-shade: #261731;
+  --color-palette-tangerine-shade: #3b1d05;
+  --color-palette-sky-shade: #232d40;
+  --color-palette-amber-olive-shade: #2a2a00;
+  --color-palette-amber-brown-shade: #402a00;
+
+  /* Restrained shades derived from the identity colors. */
+  --color-scout-blue-soft: #eaf0f6;
+  --color-scout-blue-border: #bdcddd;
+  --color-scout-blue-strong: #17375f;
+  --color-thinker-orange-soft: #fff1df;
+  --color-thinker-orange-border: #f2d3ad;
+  --color-thinker-orange-strong: #70420f;
+  --color-thinker-orange-light: #efb47c;
+  --color-builder-green-soft: #edf5ea;
+  --color-builder-green-border: #bfd9b8;
+  --color-builder-green-strong: #287523;
+  --color-auditor-red-soft: #f8eae8;
+  --color-auditor-red-border: #dfbcb6;
+  --color-auditor-red-strong: #7b1105;
+
+  /* Semantic aliases keep interface states tied to the identity palette. */
+  --color-info: var(--color-scout-blue-strong);
+  --color-info-accent: var(--color-scout-blue);
+  --color-info-background: var(--color-scout-blue-soft);
+  --color-info-border: var(--color-scout-blue-border);
+  --color-success: var(--color-builder-green-strong);
+  --color-success-accent: var(--color-builder-green);
+  --color-success-background: var(--color-builder-green-soft);
+  --color-success-border: var(--color-builder-green-border);
+  --color-warning: var(--color-thinker-orange-strong);
+  --color-warning-accent: var(--color-thinker-orange);
+  --color-warning-background: var(--color-thinker-orange-soft);
+  --color-warning-border: var(--color-thinker-orange-border);
+  --color-error: var(--color-auditor-red-strong);
+  --color-error-accent: var(--color-auditor-red);
+  --color-error-background: var(--color-auditor-red-soft);
+  --color-error-border: var(--color-auditor-red-border);
+
   --color-canvas: #f7f6f4;
   --color-surface: #ffffff;
+  --color-surface-inverse: #292526;
   --color-surface-muted: #f1efed;
+  --color-surface-hover: #f2edeb;
   --color-text: #292526;
   --color-text-muted: #70696a;
+  --color-text-inverse: #f7f4f1;
+  --color-text-on-dark-muted: #e3dcda;
   --color-border: #e1dedd;
-  --color-focus: #21497b;
+  --color-border-strong: #bfb7b5;
+  --color-focus: var(--color-scout-blue);
 
   --font-size-small: 0.875rem;
   --font-size-body: 1rem;

@@ -12,5 +12,8 @@
   "devDependencies": {
     "astro": "7.3.5",
     "wrangler": "4.141.0"
+  },
+  "dependencies": {
+    "@flaticon/flaticon-uicons": "^3.3.1"
   }
 }

@@ -1,5 +1,31 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
+import Icon from "../components/Icon.astro";
+
+type PaletteColor = {
+  name: string;
+  token: string;
+  hex: string;
+  deepTones: { label: string; token: string; hex: string }[];
+  match: string;
+};
+
+const paletteColors: PaletteColor[] = [
+  { name: "Citron", token: "--color-palette-citron", hex: "#DDD605", deepTones: [{ label: "Deep", token: "--color-palette-citron-shade", hex: "#373501" }], match: "Extended accent" },
+  { name: "Porcelain", token: "--color-palette-porcelain", hex: "#E3D4D1", deepTones: [{ label: "Deep", token: "--color-palette-porcelain-shade", hex: "#383534" }], match: "Extended neutral" },
+  { name: "Fog", token: "--color-palette-fog", hex: "#CECACA", deepTones: [{ label: "Deep", token: "--color-palette-fog-shade", hex: "#333232" }], match: "Extended neutral" },
+  { name: "Warm Graphite", token: "--color-palette-warm-graphite", hex: "#443A3B", deepTones: [{ label: "Deep", token: "--color-palette-warm-graphite-shade", hex: "#110E0E" }], match: "Core Graphite alias" },
+  { name: "Carmine", token: "--color-palette-carmine", hex: "#971607", deepTones: [{ label: "Deep", token: "--color-palette-carmine-shade", hex: "#250501" }], match: "Auditor Red alias" },
+  { name: "Clay", token: "--color-palette-clay", hex: "#B4684D", deepTones: [{ label: "Deep", token: "--color-palette-clay-shade", hex: "#2D1A13" }], match: "Extended accent" },
+  { name: "Saffron", token: "--color-palette-saffron", hex: "#DEB12D", deepTones: [{ label: "Deep", token: "--color-palette-saffron-shade", hex: "#372C0B" }], match: "Extended accent" },
+  { name: "Leaf", token: "--color-palette-leaf", hex: "#47A036", deepTones: [{ label: "Deep", token: "--color-palette-leaf-shade", hex: "#04280D" }], match: "Builder Green alias" },
+  { name: "Lagoon", token: "--color-palette-lagoon", hex: "#2CBAA8", deepTones: [{ label: "Deep", token: "--color-palette-lagoon-shade", hex: "#0B2E2A" }], match: "Extended accent" },
+  { name: "Deep Blue", token: "--color-palette-deep-blue", hex: "#21497B", deepTones: [{ label: "Deep", token: "--color-palette-deep-blue-shade", hex: "#08121E" }], match: "Scout Blue alias" },
+  { name: "Violet", token: "--color-palette-violet", hex: "#9A5CC6", deepTones: [{ label: "Deep", token: "--color-palette-violet-shade", hex: "#261731" }], match: "Extended accent" },
+  { name: "Tangerine", token: "--color-palette-tangerine", hex: "#EB7114", deepTones: [{ label: "Deep", token: "--color-palette-tangerine-shade", hex: "#3B1D05" }], match: "Thinker Orange alias" },
+  { name: "Sky", token: "--color-palette-sky", hex: "#8BB3FF", deepTones: [{ label: "Deep", token: "--color-palette-sky-shade", hex: "#232D40" }], match: "Extended accent" },
+  { name: "Amber", token: "--color-palette-amber", hex: "#FFAA00", deepTones: [{ label: "Olive deep", token: "--color-palette-amber-olive-shade", hex: "#2A2A00" }, { label: "Brown deep", token: "--color-palette-amber-brown-shade", hex: "#402A00" }], match: "Extended accent" },
+];
 ---
 
 <DocsLayout
@@ -8,12 +34,32 @@ import DocsLayout from "../layouts/DocsLayout.astro";
   eyebrow="01 System foundations"
 >
   <div class="rule-callout">
-    <span class="callout-icon" aria-hidden="true">i</span>
+    <Icon name="info" class="callout-icon" />
     <div>
       <strong>Use these as a review baseline</strong>
       <p>Each guidance item is provisional. The CSS custom properties in <code>src/styles/tokens.css</code> are the implementation source for this prototype.</p>
     </div>
   </div>
+
+  <section class="page-section" aria-labelledby="visual-direction-title" id="visual-direction">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">Visual direction</p>
+        <h2 id="visual-direction-title">Bright Playful Minimalism</h2>
+      </div>
+      <p>Flat design and minimalism keep the interface clear. Restrained color, simple geometry, and purposeful illustration add personality.</p>
+    </div>
+    <article class="card">
+      <ul class="usage-list">
+        <li>Keep layouts content-led, with clear hierarchy, measured typography, and useful spacing.</li>
+        <li>Use light neutral surfaces by default and reserve saturated identity colors for a few deliberate accents.</li>
+        <li>Use pixel-inspired or rounded-square details sparingly. Add illustrations only when they explain content or support a user need.</li>
+        <li>Avoid decorative gradients, oversized headings, repeated cards without distinct content, pill shapes, and badges. Use cards when they clarify a real content group.</li>
+        <li>Use Apple, GitHub, or Duolingo only as a reference for one named quality. Do not imitate or combine their full visual systems.</li>
+      </ul>
+      <p class="source-note">This is a draft proposal. Follow more specific task requirements and approved product decisions.</p>
+    </article>
+  </section>
 
   <section class="page-section" aria-labelledby="color-title">
     <div class="section-heading">
@@ -21,33 +67,145 @@ import DocsLayout from "../layouts/DocsLayout.astro";
         <p class="section-kicker">Color system</p>
         <h2 id="color-title">Identity colors with clear roles</h2>
       </div>
-      <p>Use semantic tokens in components. Pair color with text or an icon whenever it communicates status.</p>
+      <p>Use semantic tokens for interface states and pair status color with text or an icon.</p>
     </div>
     <div class="color-grid">
       <article class="color-card">
         <span class="color-chip" style="background: var(--color-scout-blue)" aria-hidden="true"></span>
-        <div><h3>Scout Blue</h3><span class="token-name">--color-scout-blue</span><p>Primary actions and links</p></div>
+        <div><h3>Scout Blue</h3><div class="color-card-meta"><span class="token-name">--color-scout-blue</span><code class="color-hex">#21497B</code></div><p>Primary actions and links</p></div>
       </article>
       <article class="color-card">
         <span class="color-chip" style="background: var(--color-thinker-orange)" aria-hidden="true"></span>
-        <div><h3>Thinker Orange</h3><span class="token-name">--color-thinker-orange</span><p>Attention and secondary emphasis</p></div>
+        <div><h3>Thinker Orange</h3><div class="color-card-meta"><span class="token-name">--color-thinker-orange</span><code class="color-hex">#EB7114</code></div><p>Attention and secondary emphasis</p></div>
       </article>
       <article class="color-card">
         <span class="color-chip" style="background: var(--color-builder-green)" aria-hidden="true"></span>
-        <div><h3>Builder Green</h3><span class="token-name">--color-builder-green</span><p>Success and confirmation</p></div>
+        <div><h3>Builder Green</h3><div class="color-card-meta"><span class="token-name">--color-builder-green</span><code class="color-hex">#47A036</code></div><p>Success and confirmation</p></div>
       </article>
       <article class="color-card">
         <span class="color-chip" style="background: var(--color-auditor-red)" aria-hidden="true"></span>
-        <div><h3>Auditor Red</h3><span class="token-name">--color-auditor-red</span><p>Errors and destructive actions</p></div>
+        <div><h3>Auditor Red</h3><div class="color-card-meta"><span class="token-name">--color-auditor-red</span><code class="color-hex">#971607</code></div><p>Errors and destructive actions</p></div>
       </article>
       <article class="color-card">
         <span class="color-chip" style="background: var(--color-core-graphite)" aria-hidden="true"></span>
-        <div><h3>Core Graphite</h3><span class="token-name">--color-core-graphite</span><p>Primary text and dark surfaces</p></div>
+        <div><h3>Core Graphite</h3><div class="color-card-meta"><span class="token-name">--color-core-graphite</span><code class="color-hex">#443A3B</code></div><p>Primary text and dark surfaces</p></div>
       </article>
       <article class="color-card">
         <span class="color-chip" style="background: var(--color-surface-muted)" aria-hidden="true"></span>
-        <div><h3>Quiet Surface</h3><span class="token-name">--color-surface-muted</span><p>Grouped content and subtle examples</p></div>
+        <div><h3>Quiet Surface</h3><div class="color-card-meta"><span class="token-name">--color-surface-muted</span><code class="color-hex">#F1EFED</code></div><p>Grouped content and subtle examples</p></div>
       </article>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="color-variants-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">Color roles</p>
+        <h2 id="color-variants-title">Useful shades from the identity</h2>
+      </div>
+      <p>The identity colors remain the anchors. Use softer shades for surfaces, base colors for accents, and stronger shades when text needs more contrast.</p>
+    </div>
+    <div class="color-tone-grid">
+      <article class="card color-tone-card">
+        <div><h3>Scout Blue</h3><p>Information, primary actions, and links.</p></div>
+        <div class="color-tone-steps">
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-scout-blue-soft)" aria-hidden="true"></span><span>Soft</span><code class="color-tone-hex">#EAF0F6</code></div>
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-scout-blue)" aria-hidden="true"></span><span>Base</span><code class="color-tone-hex">#21497B</code></div>
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-scout-blue-border)" aria-hidden="true"></span><span>Border</span><code class="color-tone-hex">#BDCDDD</code></div>
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-scout-blue-strong)" aria-hidden="true"></span><span>Strong</span><code class="color-tone-hex">#17375F</code></div>
+        </div>
+      </article>
+      <article class="card color-tone-card">
+        <div><h3>Thinker Orange</h3><p>Warnings and secondary emphasis.</p></div>
+        <div class="color-tone-steps">
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-thinker-orange-soft)" aria-hidden="true"></span><span>Soft</span><code class="color-tone-hex">#FFF1DF</code></div>
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-thinker-orange)" aria-hidden="true"></span><span>Base</span><code class="color-tone-hex">#EB7114</code></div>
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-thinker-orange-border)" aria-hidden="true"></span><span>Border</span><code class="color-tone-hex">#F2D3AD</code></div>
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-thinker-orange-strong)" aria-hidden="true"></span><span>Strong</span><code class="color-tone-hex">#70420F</code></div>
+        </div>
+      </article>
+      <article class="card color-tone-card">
+        <div><h3>Builder Green</h3><p>Success and confirmation.</p></div>
+        <div class="color-tone-steps">
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-builder-green-soft)" aria-hidden="true"></span><span>Soft</span><code class="color-tone-hex">#EDF5EA</code></div>
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-builder-green)" aria-hidden="true"></span><span>Base</span><code class="color-tone-hex">#47A036</code></div>
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-builder-green-border)" aria-hidden="true"></span><span>Border</span><code class="color-tone-hex">#BFD9B8</code></div>
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-builder-green-strong)" aria-hidden="true"></span><span>Strong</span><code class="color-tone-hex">#287523</code></div>
+        </div>
+      </article>
+      <article class="card color-tone-card">
+        <div><h3>Auditor Red</h3><p>Errors and destructive actions.</p></div>
+        <div class="color-tone-steps">
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-auditor-red-soft)" aria-hidden="true"></span><span>Soft</span><code class="color-tone-hex">#F8EAE8</code></div>
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-auditor-red)" aria-hidden="true"></span><span>Base</span><code class="color-tone-hex">#971607</code></div>
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-auditor-red-border)" aria-hidden="true"></span><span>Border</span><code class="color-tone-hex">#DFBCB6</code></div>
+          <div class="color-tone-step"><span class="color-tone-swatch" style="background: var(--color-auditor-red-strong)" aria-hidden="true"></span><span>Strong</span><code class="color-tone-hex">#7B1105</code></div>
+        </div>
+      </article>
+    </div>
+    <div class="two-column-grid color-role-notes">
+      <article class="card">
+        <h3>Use each shade intentionally</h3>
+        <ul class="usage-list">
+          <li>Use soft shades for subtle message backgrounds and selected surfaces.</li>
+          <li>Use base shades for brand accents, links, and indicators.</li>
+          <li>Use strong shades for colored text, icons, and interaction states that need contrast.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Map semantic states</h3>
+        <ul class="usage-list">
+          <li>Information uses Scout Blue through <code>--color-info</code>.</li>
+          <li>Success uses Builder Green through <code>--color-success</code>.</li>
+          <li>Warnings use Thinker Orange through <code>--color-warning</code>.</li>
+          <li>Errors use Auditor Red through <code>--color-error</code>.</li>
+          <li>Pair each semantic color with its matching background and border tokens.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="palette-colors-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">Optional palette</p>
+        <h2 id="palette-colors-title">Extended colors for specific cases</h2>
+      </div>
+      <p>Use these supporting colors only when content needs more category choices. They do not replace VINASIG identity colors.</p>
+    </div>
+    <p class="palette-credit">Palette inspired by Minecraft.</p>
+
+    <div class="two-column-grid color-role-notes">
+      <article class="card">
+        <h3>Keep brand and semantic roles clear</h3>
+        <p class="card-copy">Warm Graphite, Carmine, Leaf, Deep Blue, and Tangerine reuse existing identity colors.</p>
+        <p class="card-copy">Use the existing identity and semantic tokens for navigation, actions, and status messages. Choose extra colors only when their meaning helps people distinguish content.</p>
+      </article>
+      <article class="card">
+        <h3>Check contrast before use</h3>
+        <p class="card-copy">The darker swatches are palette references, not general interface shadows or guaranteed text colors. Check contrast for each actual use.</p>
+      </article>
+    </div>
+
+    <h3 class="palette-color-section-title">Extended palette</h3>
+    <div class="palette-color-grid">
+      {paletteColors.map((color) => (
+        <article class="card palette-color-card">
+          <div class="palette-color-swatches" style={`--swatch-count: ${1 + color.deepTones.length}`} aria-hidden="true">
+            <span style={`background: var(${color.token})`}></span>
+            {color.deepTones.map((tone) => <span style={`background: var(${tone.token})`}></span>)}
+          </div>
+          <div class="palette-color-copy">
+            <div class="palette-color-title"><h3>{color.name}</h3></div>
+            <p class="palette-color-match">{color.match}</p>
+            <div class="palette-color-values">
+              <span>Base <code>{color.hex}</code></span>
+              {color.deepTones.map((tone) => <span>{tone.label} <code>{tone.hex}</code></span>)}
+            </div>
+            <code class="palette-color-token">{color.token}</code>
+          </div>
+        </article>
+      ))}
     </div>
   </section>
 
@@ -120,8 +278,8 @@ import DocsLayout from "../layouts/DocsLayout.astro";
       </div>
     </div>
     <div class="card-grid">
-      <article class="card"><h3>Small screens under 640 px</h3><p class="card-copy">Stack content, keep actions easy to reach, and avoid horizontal page scrolling.</p></article>
-      <article class="card"><h3>Medium screens from 640-959 px</h3><p class="card-copy">Reflow multi-column layouts when the content starts to feel constrained.</p></article>
+      <article class="card"><h3>Small screens below 761 px</h3><p class="card-copy">Stack content, keep actions easy to reach, and avoid horizontal page scrolling.</p></article>
+      <article class="card"><h3>Medium screens from 761-959 px</h3><p class="card-copy">Reflow multi-column layouts when the content starts to feel constrained.</p></article>
       <article class="card"><h3>Large screens from 960 px</h3><p class="card-copy">Use available space for navigation and comparison without stretching text lines.</p></article>
     </div>
   </section>
