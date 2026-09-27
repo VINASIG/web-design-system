@@ -35,6 +35,7 @@ The documentation site is organized as follows:
 - Keep pages static by default. Add browser JavaScript only for a documented interaction that needs it.
 - Use semantic HTML, visible keyboard focus, descriptive links, and accessible labels for form controls.
 - For every task that creates or changes a website, MUST inspect the shared `<head>` and confirm a favicon is configured. On VINASIG sites, use the supplied 16, 32, and 48 px favicon exports where available, and confirm the asset paths work for the deployment base URL. A header logo does not replace a browser favicon. If the required source asset is missing, report the gap instead of silently omitting or redrawing it.
+- Before completing UI work, inspect each select/dropdown in the changed flow. When the design calls for a custom dropdown, style both its closed trigger and open options panel; do not stop at the trigger or leave the browser's default popup. Preserve keyboard and assistive-technology behavior, and use the component guidance in `docs/components/README.md`.
 - Keep rules and examples in English in this repository.
 - When adding or changing guidance, keep its draft status visible and update both the source document and its published page.
 - Use only the owner-provided logo exports in `public/brand/`. Do not redraw, alter, or add editable logo source files.

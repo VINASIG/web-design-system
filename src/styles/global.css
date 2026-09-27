@@ -801,6 +801,67 @@ h3 {
   font-size: 0.76rem;
 }
 
+.dropdown-example {
+  display: grid;
+  justify-items: start;
+  gap: 0.65rem;
+}
+
+.dropdown-visual {
+  display: grid;
+  width: min(100%, 28rem);
+  min-height: 13rem;
+  align-content: start;
+  justify-items: center;
+  padding: 2rem 1rem;
+  background: var(--color-core-graphite);
+  border-radius: var(--radius-sm);
+}
+
+.dropdown-trigger-visual {
+  display: flex;
+  width: min(100%, 13rem);
+  min-height: 2.35rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0.6rem;
+  color: var(--color-white);
+  background: var(--color-core-graphite);
+  border: 1px solid var(--color-white);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  font-size: 0.86rem;
+}
+
+.dropdown-chevron {
+  color: var(--color-white);
+  font-size: 0.72rem;
+}
+
+.dropdown-options-visual {
+  width: min(100%, 13rem);
+  margin: 0;
+  padding: 0.25rem;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-top: 0;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  box-shadow: var(--shadow-soft);
+  list-style: none;
+}
+
+.dropdown-options-visual li {
+  padding: 0.38rem 0.6rem;
+  color: var(--color-text);
+  font-size: 0.84rem;
+}
+
+.dropdown-options-visual li.is-selected {
+  color: var(--color-white);
+  background: var(--color-scout-blue);
+  border-radius: 0.2rem;
+}
+
 .status-message {
   display: flex;
   align-items: start;

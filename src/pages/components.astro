@@ -56,6 +56,33 @@ import DocsLayout from "../layouts/DocsLayout.astro";
     </article>
   </section>
 
+  <section class="page-section" aria-labelledby="dropdown-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Selection</p><h2 id="dropdown-title">Single-select dropdown</h2></div>
+      <p>A custom dropdown needs a considered trigger and an equally considered open options panel.</p>
+    </div>
+    <article class="card component-showcase">
+      <div class="dropdown-example">
+        <div class="dropdown-visual" aria-hidden="true">
+          <div class="dropdown-trigger-visual"><span>Bottom center</span><span class="dropdown-chevron">▾</span></div>
+          <ul class="dropdown-options-visual">
+            <li>Bottom left</li>
+            <li class="is-selected">Bottom center</li>
+            <li>Bottom right</li>
+          </ul>
+        </div>
+        <p class="card-copy">Static visual reference only. A production dropdown must implement the interaction and accessibility behavior specified below.</p>
+      </div>
+      <ul class="rule-list">
+        <li><span class="rule-term">Both states</span><span class="rule-text">Customize the closed trigger and opened options panel when the design calls for a branded menu. Native select popup styling varies by browser and operating system.</span></li>
+        <li><span class="rule-term">Keyboard</span><span class="rule-text">Support opening, arrow-key navigation, Enter or Space to select, Escape to close, visible focus, and normal focus exit.</span></li>
+        <li><span class="rule-term">Accessibility</span><span class="rule-text">Use a visible label and an established accessible select/listbox pattern. Announce the current value and selected option.</span></li>
+        <li><span class="rule-term">Responsive</span><span class="rule-text">Keep the popup attached to its trigger and inside the viewport on narrow screens.</span></li>
+      </ul>
+      <p class="card-copy">This visual example is a draft. Read the complete single-select dropdown specification before implementing a control.</p>
+    </article>
+  </section>
+
   <section class="page-section" aria-labelledby="status-message-title">
     <div class="section-heading">
       <div><p class="section-kicker">Feedback</p><h2 id="status-message-title">Status messages</h2></div>
