@@ -1,0 +1,48 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+---
+
+<DocsLayout
+  title="Patterns"
+  description="Reusable solutions for common page-level tasks. Patterns combine foundations and components into complete user flows."
+  eyebrow="03 · Interface patterns"
+>
+  <div class="rule-callout">
+    <span class="callout-icon" aria-hidden="true">i</span>
+    <div>
+      <strong>Patterns are proposals for review</strong>
+      <p>They should remain flexible enough to serve different VINASIG products while keeping their core interaction clear.</p>
+    </div>
+  </div>
+
+  <section class="page-section" aria-labelledby="layout-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Page structure</p><h2 id="layout-title">Stable navigation, focused content</h2></div>
+      <p>Keep orientation predictable and let the main task lead each page.</p>
+    </div>
+    <article class="card">
+      <div class="pattern-preview" role="img" aria-label="Illustration of a common website page layout">
+        <div class="mock-page" aria-hidden="true">
+          <div class="mock-nav"><div class="mock-line mock-line-short mock-line-accent"></div><div class="mock-line"></div><div class="mock-line mock-line-short"></div><div class="mock-line"></div></div>
+          <div class="mock-content"><div class="mock-title"></div><div class="mock-line"></div><div class="mock-line mock-line-short"></div><div class="mock-card-grid"><div class="mock-card"><div class="mock-dot"></div><div class="mock-line"></div></div><div class="mock-card"><div class="mock-dot"></div><div class="mock-line mock-line-short"></div></div></div></div>
+        </div>
+      </div>
+      <ul class="rule-list">
+        <li><span class="rule-term">Orient</span><span class="rule-text">Keep the product or section identity and primary navigation in a consistent place.</span></li>
+        <li><span class="rule-term">Focus</span><span class="rule-text">Give each page one clear title and group content around user tasks.</span></li>
+        <li><span class="rule-term">Reflow</span><span class="rule-text">Let the page adapt to narrow screens without horizontal scrolling for ordinary content.</span></li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="page-section" aria-labelledby="patterns-list-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Common situations</p><h2 id="patterns-list-title">Patterns to document next</h2></div>
+    </div>
+    <div class="card-grid">
+      <article class="card"><h3>Forms</h3><p class="card-copy">Group related inputs, state requirements early, and help users fix errors without losing work.</p></article>
+      <article class="card"><h3>Empty states</h3><p class="card-copy">Explain why content is missing and offer a useful next step when one is available.</p></article>
+      <article class="card"><h3>Loading and errors</h3><p class="card-copy">Set expectations during longer work and offer a recovery action when something fails.</p></article>
+    </div>
+  </section>
+</DocsLayout>

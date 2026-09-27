@@ -1,0 +1,70 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+---
+
+<DocsLayout
+  title="For AI agents"
+  description="A predictable path to project context, the relevant UI rule, and the correct implementation source."
+  eyebrow="Agent entry point"
+>
+  <div class="rule-callout">
+    <span class="callout-icon" aria-hidden="true">i</span>
+    <div>
+      <strong>This design system is a draft</strong>
+      <p>Do not present its guidance as approved VINASIG policy or apply it to another project without checking that project's instructions.</p>
+    </div>
+  </div>
+
+  <section class="page-section" aria-labelledby="workflow-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Recommended workflow</p><h2 id="workflow-title">Load context in a few deliberate steps</h2></div>
+      <p>Use the narrowest source that answers the task, then check its authority and status.</p>
+    </div>
+    <div class="card-grid">
+      <article class="card"><p class="section-kicker">Step 01</p><h3>Read the project guide</h3><p class="card-copy">Start with the consuming website's `AGENTS.md`, then this repository's root `AGENTS.md` if the task calls for this system.</p></article>
+      <article class="card"><p class="section-kicker">Step 02</p><h3>Find the matching rule</h3><p class="card-copy">Use the foundation, component, or pattern page related to the interface being changed.</p></article>
+      <article class="card"><p class="section-kicker">Step 03</p><h3>Check status and source</h3><p class="card-copy">Follow approved rules when available. Mark these prototype rules as draft and keep token changes in the source file.</p></article>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="consuming-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Add to a website repository</p><h2 id="consuming-title">Keep the context close to the code</h2></div>
+      <p>Each VINASIG website should identify its system version and its own approved exceptions.</p>
+    </div>
+    <pre class="code-panel"><code># AGENTS.md in a consuming website repository
+
+## VINASIG interface guidance
+- Design system: https://github.com/VINASIG/web-design-system
+- Read the relevant foundation and component specification before editing UI.
+- Confirm the version used by this website before applying a change.
+- Current v0.1 guidance is draft and requires owner approval.
+- Prefer tokens and components from the installed design-system package.</code></pre>
+  </section>
+
+  <section class="page-section" aria-labelledby="writing-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Write agent-readable rules</p><h2 id="writing-title">Make each instruction direct and traceable</h2></div>
+    </div>
+    <article class="card">
+      <ul class="rule-list">
+        <li><span class="rule-term">MUST</span><span class="rule-text">A requirement that applies whenever its stated scope is met.</span></li>
+        <li><span class="rule-term">SHOULD</span><span class="rule-text">The preferred choice; document the reason when a project needs an exception.</span></li>
+        <li><span class="rule-term">MAY</span><span class="rule-text">An allowed option that the implementation can choose when useful.</span></li>
+      </ul>
+      <p class="card-copy">For every rule, name its scope, the source file, and its approval status. Include a small working example when a rule affects code or interaction.</p>
+    </article>
+  </section>
+
+  <section class="page-section" aria-labelledby="source-map-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Source map</p><h2 id="source-map-title">Where to find the canonical information</h2></div>
+    </div>
+    <div class="two-column-grid">
+      <article class="card"><h3>Project and agent context</h3><p class="card-copy"><code>AGENTS.md</code> · status, scope, repository map, and working instructions.</p></article>
+      <article class="card"><h3>Design guidance</h3><p class="card-copy"><code>docs/</code> · source specifications for foundations, components, and patterns.</p></article>
+      <article class="card"><h3>Implementation tokens</h3><p class="card-copy"><code>src/styles/tokens.css</code> · CSS variables and the locally hosted typeface declaration.</p></article>
+      <article class="card"><h3>Published index</h3><p class="card-copy"><code>/llms.txt</code> · compact navigation map for tools that can fetch the docs site.</p></article>
+    </div>
+  </section>
+</DocsLayout>

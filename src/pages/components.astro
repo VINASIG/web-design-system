@@ -1,0 +1,88 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+---
+
+<DocsLayout
+  title="Components"
+  description="Common controls with understandable behavior, accessible states, and reusable examples. These specifications are draft proposals."
+  eyebrow="02 · Reusable UI"
+>
+  <div class="rule-callout">
+    <span class="callout-icon" aria-hidden="true">i</span>
+    <div>
+      <strong>Component guidance is still being shaped</strong>
+      <p>Use these examples to review the format. A future component page should document purpose, variants, states, keyboard behavior, responsive behavior, and accessibility.</p>
+    </div>
+  </div>
+
+  <section class="page-section" aria-labelledby="button-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Actions</p><h2 id="button-title">Buttons</h2></div>
+      <p>Use a button to perform an action. Use a link to navigate to another page.</p>
+    </div>
+    <article class="card component-showcase">
+      <div class="component-demo" aria-label="Button examples">
+        <button class="button button-primary" type="button">Primary action</button>
+        <button class="button button-secondary" type="button">Secondary action</button>
+        <button class="button button-danger" type="button">Delete draft</button>
+        <a class="button button-secondary" href="/patterns/">Link action</a>
+      </div>
+      <ul class="rule-list">
+        <li><span class="rule-term">Purpose</span><span class="rule-text">Perform an action in the current context.</span></li>
+        <li><span class="rule-term">Label</span><span class="rule-text">Use a concise verb that describes the outcome.</span></li>
+        <li><span class="rule-term">Keyboard</span><span class="rule-text">Preserve native button and link keyboard behavior. Keep the focus outline visible.</span></li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="page-section" aria-labelledby="input-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Data entry</p><h2 id="input-title">Text input</h2></div>
+      <p>Keep the label visible and close to its control. Helper text should explain format or next steps.</p>
+    </div>
+    <article class="card component-showcase">
+      <div class="component-demo">
+        <div class="field-demo">
+          <label for="project-name">Project name</label>
+          <input id="project-name" name="project-name" type="text" placeholder="e.g. Design System" aria-describedby="project-name-help" />
+          <small id="project-name-help">Use a short, recognizable name.</small>
+        </div>
+      </div>
+      <ul class="rule-list">
+        <li><span class="rule-term">Label</span><span class="rule-text">Associate a persistent, visible label with each field.</span></li>
+        <li><span class="rule-term">Helper text</span><span class="rule-text">Connect hints or errors with the field using <code>aria-describedby</code>.</span></li>
+        <li><span class="rule-term">Error</span><span class="rule-text">Explain what needs correction and preserve the user's existing entry.</span></li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="page-section" aria-labelledby="status-message-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Feedback</p><h2 id="status-message-title">Status messages</h2></div>
+      <p>Use a text label with the status color so meaning remains clear without color perception.</p>
+    </div>
+    <div class="two-column-grid">
+      <article class="card status-message status-success" role="group" aria-label="Success message example">
+        <span class="status-icon" aria-hidden="true">✓</span>
+        <div><strong>Changes saved</strong><p>Your draft is up to date.</p></div>
+      </article>
+      <article class="card status-message status-error" role="group" aria-label="Error message example">
+        <span class="status-icon" aria-hidden="true">!</span>
+        <div><strong>Could not save</strong><p>Check your connection and try again.</p></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="card-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Content grouping</p><h2 id="card-title">Cards</h2></div>
+      <p>Cards group related content. Keep interactive targets explicit and avoid nested clickable regions.</p>
+    </div>
+    <article class="card">
+      <p class="section-kicker">Foundation · color</p>
+      <h3>Use semantic tokens</h3>
+      <p class="card-copy">Semantic tokens connect a component to its role and make system-wide changes easier to apply.</p>
+      <a class="text-link" href="/foundations/">Read color foundations</a>
+    </article>
+  </section>
+</DocsLayout>

@@ -1,0 +1,116 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+---
+
+<DocsLayout
+  title="Foundations"
+  description="The shared visual and behavioral choices that components can build on. Everything here is a draft proposal."
+  eyebrow="01 · System foundations"
+>
+  <div class="rule-callout">
+    <span class="callout-icon" aria-hidden="true">i</span>
+    <div>
+      <strong>Use these as a review baseline</strong>
+      <p>Each guidance item is provisional. The CSS custom properties in <code>src/styles/tokens.css</code> are the implementation source for this prototype.</p>
+    </div>
+  </div>
+
+  <section class="page-section" aria-labelledby="color-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">Color system</p>
+        <h2 id="color-title">Identity colors with clear roles</h2>
+      </div>
+      <p>Use semantic tokens in components. Pair color with text or an icon whenever it communicates status.</p>
+    </div>
+    <div class="color-grid">
+      <article class="color-card">
+        <span class="color-chip" style="background: var(--color-scout-blue)" aria-hidden="true"></span>
+        <div><h3>Scout Blue</h3><span class="token-name">--color-scout-blue</span><p>Primary actions and links</p></div>
+      </article>
+      <article class="color-card">
+        <span class="color-chip" style="background: var(--color-thinker-orange)" aria-hidden="true"></span>
+        <div><h3>Thinker Orange</h3><span class="token-name">--color-thinker-orange</span><p>Attention and secondary emphasis</p></div>
+      </article>
+      <article class="color-card">
+        <span class="color-chip" style="background: var(--color-builder-green)" aria-hidden="true"></span>
+        <div><h3>Builder Green</h3><span class="token-name">--color-builder-green</span><p>Success and confirmation</p></div>
+      </article>
+      <article class="color-card">
+        <span class="color-chip" style="background: var(--color-auditor-red)" aria-hidden="true"></span>
+        <div><h3>Auditor Red</h3><span class="token-name">--color-auditor-red</span><p>Errors and destructive actions</p></div>
+      </article>
+      <article class="color-card">
+        <span class="color-chip" style="background: var(--color-core-graphite)" aria-hidden="true"></span>
+        <div><h3>Core Graphite</h3><span class="token-name">--color-core-graphite</span><p>Primary text and dark surfaces</p></div>
+      </article>
+      <article class="color-card">
+        <span class="color-chip" style="background: var(--color-surface-muted)" aria-hidden="true"></span>
+        <div><h3>Quiet Surface</h3><span class="token-name">--color-surface-muted</span><p>Grouped content and subtle examples</p></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="type-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">Typography</p>
+        <h2 id="type-title">One family, a flexible range</h2>
+      </div>
+      <p>Space Grotesk is self-hosted from the approved asset folder. Pages do not request fonts from external services.</p>
+    </div>
+    <article class="card type-specimen">
+      <div class="type-row"><span class="type-label">Display</span><span class="type-display-xl">Clear by design.</span></div>
+      <div class="type-row"><span class="type-label">Heading</span><span class="type-display-lg">A consistent interface language</span></div>
+      <div class="type-row"><span class="type-label">Body</span><span class="type-body">Readable guidance helps people and agents make the same interface decisions.</span></div>
+      <div class="type-row"><span class="type-label">Supporting</span><span class="type-meta">The variable font supports weights from 300 to 700.</span></div>
+    </article>
+  </section>
+
+  <section class="page-section" aria-labelledby="space-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">Spacing scale</p>
+        <h2 id="space-title">A small, repeatable rhythm</h2>
+      </div>
+      <p>The prototype uses a 4 px base. Prefer the shared steps before reaching for one-off spacing values.</p>
+    </div>
+    <article class="card space-list">
+      <div class="space-row"><span class="space-label">--space-1</span><div class="space-bar-wrap"><div class="space-bar" style="width: var(--space-1)"></div></div><span class="space-value">4 px</span></div>
+      <div class="space-row"><span class="space-label">--space-2</span><div class="space-bar-wrap"><div class="space-bar" style="width: var(--space-2)"></div></div><span class="space-value">8 px</span></div>
+      <div class="space-row"><span class="space-label">--space-4</span><div class="space-bar-wrap"><div class="space-bar" style="width: var(--space-4)"></div></div><span class="space-value">16 px</span></div>
+      <div class="space-row"><span class="space-label">--space-8</span><div class="space-bar-wrap"><div class="space-bar" style="width: var(--space-8)"></div></div><span class="space-value">32 px</span></div>
+      <div class="space-row"><span class="space-label">--space-16</span><div class="space-bar-wrap"><div class="space-bar" style="width: var(--space-16)"></div></div><span class="space-value">64 px</span></div>
+    </article>
+  </section>
+
+  <section class="page-section" aria-labelledby="responsive-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">Responsive behavior</p>
+        <h2 id="responsive-title">Let content choose the breakpoint</h2>
+      </div>
+    </div>
+    <div class="card-grid">
+      <article class="card"><h3>Small · under 640 px</h3><p class="card-copy">Stack content, keep actions easy to reach, and avoid horizontal page scrolling.</p></article>
+      <article class="card"><h3>Medium · 640–959 px</h3><p class="card-copy">Reflow multi-column layouts when the content starts to feel constrained.</p></article>
+      <article class="card"><h3>Large · 960 px and above</h3><p class="card-copy">Use available space for navigation and comparison without stretching text lines.</p></article>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="accessibility-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">Accessibility</p>
+        <h2 id="accessibility-title">Make the interface usable in more ways</h2>
+      </div>
+    </div>
+    <article class="card">
+      <ul class="rule-list">
+        <li><span class="rule-term">MUST · draft</span><span class="rule-text">Use semantic landmarks, a logical heading order, and visible labels for form controls.</span></li>
+        <li><span class="rule-term">MUST · draft</span><span class="rule-text">Keep keyboard focus visible and avoid using color as the only way to convey meaning.</span></li>
+        <li><span class="rule-term">SHOULD · draft</span><span class="rule-text">Check text and control contrast on every chosen surface before release.</span></li>
+      </ul>
+    </article>
+  </section>
+</DocsLayout>

@@ -1,0 +1,21 @@
+# VINASIG Design System
+
+> A draft, AI-readable source of shared UI guidance for VINASIG websites. All rules are proposals pending approval.
+
+Start with the repository's `AGENTS.md` for agent instructions and project context. Read the source specification linked for the task; do not assume draft rules are approved policy.
+
+## Published guides
+
+- [Overview](/): purpose and current status.
+- [Foundations](/foundations/): color, typography, spacing, responsive behavior, and accessibility.
+- [Components](/components/): buttons, text inputs, status messages, and cards.
+- [Patterns](/patterns/): forms, empty states, loading, errors, and page layout.
+- [AI agent guide](/agents/): how an agent should use this system.
+
+## Source files
+
+- `AGENTS.md`: project context and working rules.
+- `docs/foundations/README.md`: foundation specification.
+- `docs/components/README.md`: component specification.
+- `docs/patterns/README.md`: pattern specification.
+- `src/styles/tokens.css`: implemented CSS design tokens.

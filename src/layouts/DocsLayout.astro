@@ -1,0 +1,102 @@
+---
+import "../styles/tokens.css";
+import "../styles/global.css";
+
+const { title, description, eyebrow = "Shared interface guidance" } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+const navigation = [
+  {
+    label: "Start here",
+    links: [
+      { href: "/", title: "Overview", icon: "⌂" },
+      { href: "/agents/", title: "For AI agents", icon: "✳" },
+    ],
+  },
+  {
+    label: "System",
+    links: [
+      { href: "/foundations/", title: "Foundations", icon: "◈" },
+      { href: "/components/", title: "Components", icon: "▦" },
+      { href: "/patterns/", title: "Patterns", icon: "▤" },
+    ],
+  },
+];
+
+const isHome = currentPath === "/";
+const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).at(-1)?.replaceAll("-", " ");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#443a3b" />
+    <meta name="description" content={description} />
+    <title>{title} · VINASIG Design System</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Documentation sidebar">
+        <a class="brand-lockup" href="/" aria-label="VINASIG Design System home">
+          <span class="brand-copy">
+            <span class="brand-name">VINASIG</span>
+            <span class="brand-product">Design System</span>
+          </span>
+        </a>
+
+        <nav class="nav-groups" aria-label="Primary navigation">
+          {navigation.map((group) => (
+            <div class="nav-group">
+              <p class="nav-label">{group.label}</p>
+              {group.links.map((link) => (
+                <a
+                  class={currentPath === link.href ? "nav-link is-active" : "nav-link"}
+                  href={link.href}
+                  aria-current={currentPath === link.href ? "page" : undefined}
+                >
+                  <span class="nav-icon" aria-hidden="true">{link.icon}</span>
+                  {link.title}
+                </a>
+              ))}
+            </div>
+          ))}
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="draft-mini"><span class="draft-dot" aria-hidden="true"></span>Prototype · draft guidance</div>
+          <a class="agent-entry" href="/agents/">Agent context and usage →</a>
+        </div>
+      </aside>
+
+      <div class="page-shell">
+        <header class="topbar">
+          <div class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="/">VINASIG</a>
+            <span class="crumb-divider" aria-hidden="true">/</span>
+            <span aria-current="page">{breadcrumb}</span>
+          </div>
+          <div class="topbar-right">
+            <span class="version-label">v0.1.0</span>
+            <span class="draft-badge"><span class="draft-dot" aria-hidden="true"></span>Draft</span>
+          </div>
+        </header>
+
+        <main id="main" class="docs-main">
+          <div class="page-heading">
+            <p class="eyebrow">{eyebrow}</p>
+            <h1>{title}</h1>
+            <p class="page-description">{description}</p>
+          </div>
+          <slot />
+          <footer class="page-footer">
+            <p>VINASIG Design System · v0.1.0 · Proposal for review</p>
+            <a href="/llms.txt">Read the AI-friendly index</a>
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
