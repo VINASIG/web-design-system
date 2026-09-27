@@ -38,7 +38,7 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
     <link rel="icon" type="image/png" sizes="16x16" href="/brand/favicons/favicon-16.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicons/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="48x48" href="/brand/favicons/favicon-48.png" />
-    <title>{title} · VINASIG Design System</title>
+    <title>{title} | VINASIG Design System</title>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -70,7 +70,7 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
         </nav>
 
         <div class="sidebar-bottom">
-          <div class="draft-mini"><span class="draft-dot" aria-hidden="true"></span>Prototype · draft guidance</div>
+          <div class="draft-mini"><span class="draft-dot" aria-hidden="true"></span>Prototype draft guidance</div>
           <a class="agent-entry" href="/agents/">Agent context and usage →</a>
         </div>
       </aside>
@@ -79,7 +79,7 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
         <header class="topbar">
           <div class="breadcrumbs" aria-label="Breadcrumb">
             <a href="/">VINASIG</a>
-            <span class="crumb-divider" aria-hidden="true">/</span>
+            <span class="crumb-divider" aria-hidden="true"></span>
             <span aria-current="page">{breadcrumb}</span>
           </div>
           <div class="topbar-right">
@@ -96,7 +96,7 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
           </div>
           <slot />
           <footer class="page-footer">
-            <p>VINASIG Design System · v0.1.0 · Proposal for review</p>
+            <p>VINASIG Design System, v0.1.0. Proposal for review.</p>
             <a href="/llms.txt">Read the AI-friendly index</a>
           </footer>
         </main>

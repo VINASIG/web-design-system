@@ -42,14 +42,14 @@ import DocsLayout from "../layouts/DocsLayout.astro";
 
   <section class="page-section" aria-labelledby="dropdown-check-title">
     <div class="section-heading">
-      <div><p class="section-kicker">Required UI completion check</p><h2 id="dropdown-check-title">Customise the open dropdown too</h2></div>
+      <div><p class="section-kicker">Required UI completion check</p><h2 id="dropdown-check-title">Customize the open dropdown too</h2></div>
       <p>A styled closed control is only half of a custom dropdown. The open options panel can still fall back to browser or operating-system styling.</p>
     </div>
     <div class="two-column-grid">
       <article class="card">
         <h3>Before closing a UI task</h3>
         <ul class="usage-list">
-          <li>Open every select/dropdown touched by the task and inspect the actual options panel.</li>
+          <li>Open every select control and dropdown touched by the task. Inspect the actual options panel.</li>
           <li>When the design calls for custom UI, style the trigger and popup states together.</li>
           <li>Preserve visible focus, keyboard selection, Escape-to-close, and accessible selected-state announcements.</li>
           <li>Check that the popup stays attached to its control and fits on narrow screens.</li>
@@ -57,7 +57,7 @@ import DocsLayout from "../layouts/DocsLayout.astro";
       </article>
       <article class="card">
         <h3>Use the component specification</h3>
-        <p class="card-copy">Read <code>docs/components/README.md</code> before implementing a single-select dropdown. Prefer an existing accessible component; do not ship a visual-only custom control.</p>
+        <p class="card-copy">Read <code>docs/components/README.md</code> before implementing a single-select dropdown. Prefer an existing accessible component. Do not ship a visual-only custom control.</p>
         <a class="text-link" href="/components/">View dropdown guidance and states</a>
       </article>
     </div>
@@ -83,7 +83,7 @@ import DocsLayout from "../layouts/DocsLayout.astro";
     <pre class="code-panel"><code># AGENTS.md in a consuming website repository
 
 ## VINASIG interface guidance
-- Design system: https://github.com/VINASIG/web-design-system
+Design system guidance at https://github.com/VINASIG/web-design-system
 - Read the relevant foundation and component specification before editing UI.
 - Confirm the version used by this website before applying a change.
 - Current v0.1 guidance is draft and requires owner approval.
@@ -96,11 +96,11 @@ import DocsLayout from "../layouts/DocsLayout.astro";
     </div>
     <article class="card">
       <ul class="rule-list">
-        <li><span class="rule-term">MUST</span><span class="rule-text">A requirement that applies whenever its stated scope is met.</span></li>
-        <li><span class="rule-term">SHOULD</span><span class="rule-text">The preferred choice; document the reason when a project needs an exception.</span></li>
-        <li><span class="rule-term">MAY</span><span class="rule-text">An allowed option that the implementation can choose when useful.</span></li>
+        <li><span class="rule-term">Required</span><span class="rule-text">A rule that applies whenever its stated scope is met.</span></li>
+        <li><span class="rule-term">Preferred</span><span class="rule-text">The recommended choice. Document the reason when a project needs an exception.</span></li>
+        <li><span class="rule-term">Optional</span><span class="rule-text">An allowed option that the implementation can choose when useful.</span></li>
       </ul>
-      <p class="card-copy">For every rule, name its scope, the source file, and its approval status. Include a small working example when a rule affects code or interaction.</p>
+      <p class="card-copy">For every rule, name its scope, source file, and approval status. Include a small working example when a rule affects code or interaction.</p>
     </article>
   </section>
 
@@ -109,11 +109,11 @@ import DocsLayout from "../layouts/DocsLayout.astro";
       <div><p class="section-kicker">Source map</p><h2 id="source-map-title">Where to find the canonical information</h2></div>
     </div>
     <div class="two-column-grid">
-      <article class="card"><h3>Project and agent context</h3><p class="card-copy"><code>AGENTS.md</code> · status, scope, repository map, and working instructions.</p></article>
-      <article class="card"><h3>Brand identity</h3><p class="card-copy"><code>docs/brand/README.md</code> · logo variant facts, export paths, and draft usage guidance.</p></article>
-      <article class="card"><h3>Design guidance</h3><p class="card-copy"><code>docs/</code> · source specifications for foundations, components, and patterns.</p></article>
-      <article class="card"><h3>Implementation tokens</h3><p class="card-copy"><code>src/styles/tokens.css</code> · CSS variables and the locally hosted typeface declaration.</p></article>
-      <article class="card"><h3>Published index</h3><p class="card-copy"><code>/llms.txt</code> · compact navigation map for tools that can fetch the docs site.</p></article>
+      <article class="card"><h3>Project and agent context</h3><p class="card-copy"><code>AGENTS.md</code> defines status, scope, repository map, and working instructions.</p></article>
+      <article class="card"><h3>Brand identity</h3><p class="card-copy"><code>docs/brand/README.md</code> lists logo variant facts, export paths, and draft usage guidance.</p></article>
+      <article class="card"><h3>Design guidance</h3><p class="card-copy"><code>docs/</code> contains source specifications for foundations, components, and patterns.</p></article>
+      <article class="card"><h3>Implementation tokens</h3><p class="card-copy"><code>src/styles/tokens.css</code> defines CSS variables and the locally hosted typeface.</p></article>
+      <article class="card"><h3>Published index</h3><p class="card-copy"><code>/llms.txt</code> provides a compact navigation map for tools that can fetch the docs site.</p></article>
     </div>
   </section>
 </DocsLayout>

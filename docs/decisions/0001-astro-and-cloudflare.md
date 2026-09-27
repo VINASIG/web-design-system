@@ -21,7 +21,7 @@ Use Astro with static output and deploy the generated `dist/` assets to Cloudfla
 
 ## Consequences
 
-- Keep the initial site static; do not add a backend preemptively.
+- Keep the initial site static. Do not add a backend preemptively.
 - Add server behavior only for a concrete feature that needs it, such as authenticated editing or user-specific content.
 - Revisit the deployment configuration when the first dynamic route is approved.
 

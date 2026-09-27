@@ -2,22 +2,22 @@
 
 > A draft, AI-readable source of shared UI guidance for VINASIG websites. All rules are proposals pending approval.
 
-Start with the repository's `AGENTS.md` for agent instructions and project context. Read the source specification linked for the task; do not assume draft rules are approved policy.
+Start with the repository's `AGENTS.md` for agent instructions and project context. Read the source specification linked for the task. Do not assume draft rules are approved policy.
 
 ## Published guides
 
-- [Overview](/): purpose and current status.
-- [Brand and logo](/brand/): logo variants, asset downloads, and draft usage recommendations.
-- [Foundations](/foundations/): color, typography, spacing, responsive behavior, and accessibility.
-- [Components](/components/): buttons, text inputs, status messages, and cards.
-- [Patterns](/patterns/): forms, empty states, loading, errors, and page layout.
-- [AI agent guide](/agents/): how an agent should use this system.
+- [Overview](/) explains the purpose and current status.
+- [Brand and logo](/brand/) describes logo variants, asset downloads, and draft usage recommendations.
+- [Foundations](/foundations/) covers color, typography, spacing, responsive behavior, accessibility, and writing style.
+- [Components](/components/) describes buttons, text inputs, status messages, and cards.
+- [Patterns](/patterns/) covers forms, empty states, loading, errors, and page layout.
+- [AI agent guide](/agents/) explains how an agent should use this system.
 
 ## Source files
 
-- `AGENTS.md`: project context and working rules.
-- `docs/foundations/README.md`: foundation specification.
-- `docs/brand/README.md`: logo source facts, file mapping, and draft usage guidance.
-- `docs/components/README.md`: component specification.
-- `docs/patterns/README.md`: pattern specification.
-- `src/styles/tokens.css`: implemented CSS design tokens.
+- `AGENTS.md` describes project context and working rules.
+- `docs/foundations/README.md` specifies the foundations.
+- `docs/brand/README.md` records logo source facts, file mapping, and draft usage guidance.
+- `docs/components/README.md` specifies common interface components.
+- `docs/patterns/README.md` specifies reusable page patterns.
+- `src/styles/tokens.css` contains the implemented CSS design tokens.

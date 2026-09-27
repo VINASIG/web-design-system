@@ -1,12 +1,12 @@
 # VINASIG Design System
 
-An AI-readable design-system website for shared interface guidance across VINASIG projects. This is a first prototype; all rules and examples are proposals pending approval.
+An AI-readable design-system website for shared interface guidance across VINASIG projects. This is a first prototype. All rules and examples are proposals pending approval.
 
 ## Technology
 
 - **Astro** generates a static site by default, with very little browser-side JavaScript.
 - **Cloudflare Workers** serves the generated static files. Astro's Cloudflare adapter can be added later if a route needs server rendering, sessions, or API behavior.
-- **Space Grotesk** is the only typeface used. The variable font is served locally; the included `public/fonts/OFL.txt` is its license notice.
+- **Space Grotesk** is the only typeface used. The variable font is served locally. The included `public/fonts/OFL.txt` is its license notice.
 
 ## Run locally
 
@@ -39,10 +39,10 @@ The static site can stay pre-rendered as it grows. If a future page needs reques
 
 - Start with [`AGENTS.md`](AGENTS.md) for project context, authority, and navigation.
 - Use [`llms.txt`](public/llms.txt) as a compact index of the published guidance.
-- The source specifications live under [`docs/`](docs/); the website pages under [`src/pages/`](src/pages/) publish them.
+- The source specifications live under [`docs/`](docs/). The website pages under [`src/pages/`](src/pages/) publish them.
 - Tokens are implemented in [`src/styles/tokens.css`](src/styles/tokens.css).
 - Logo facts and usage guidance are in [`docs/brand/README.md`](docs/brand/README.md), published at `/brand/`.
 
 ## Rights and provenance
 
-The font file is Space Grotesk under the SIL Open Font License; its notice is included alongside the file. `public/brand/` contains exact copies of selected logo exports supplied in the VINASIG Brand Assets archive, for project documentation and use examples. This repository adds no license for VINASIG names, marks, or logo artwork; do not infer an author name or extra licensing terms.
+The font file is Space Grotesk under the SIL Open Font License. Its notice is included alongside the file. `public/brand/` contains exact copies of selected logo exports supplied in the VINASIG Brand Assets archive, for project documentation and use examples. This repository adds no license for VINASIG names, marks, or logo artwork. Do not infer an author name or extra licensing terms.

@@ -5,7 +5,7 @@ import DocsLayout from "../layouts/DocsLayout.astro";
 <DocsLayout
   title="Foundations"
   description="The shared visual and behavioral choices that components can build on. Everything here is a draft proposal."
-  eyebrow="01 · System foundations"
+  eyebrow="01 System foundations"
 >
   <div class="rule-callout">
     <span class="callout-icon" aria-hidden="true">i</span>
@@ -67,6 +67,34 @@ import DocsLayout from "../layouts/DocsLayout.astro";
     </article>
   </section>
 
+  <section class="page-section" aria-labelledby="type-guidance-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">Type and copy</p>
+        <h2 id="type-guidance-title">Keep reading clear and steady</h2>
+      </div>
+    </div>
+    <div class="two-column-grid">
+      <article class="card">
+        <h3>Use a measured type scale</h3>
+        <ul class="usage-list">
+          <li>Keep body text near 1rem and supporting text readable.</li>
+          <li>Keep page titles at or below 2.75rem.</li>
+          <li>Build hierarchy with weight and spacing instead of oversized type.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Write concise interface copy</h3>
+        <ul class="usage-list">
+          <li>Use clear sentences, straight quotes, and restrained capitalization.</li>
+          <li>Avoid em dashes, en dashes, semicolons, slash separators, and unexplained abbreviations.</li>
+          <li>Use hyphens or custom layouts for lists, never round, square, arrow, or chevron glyphs.</li>
+          <li>Rephrase copy when only one or two short words sit on the final line.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
   <section class="page-section" aria-labelledby="space-title">
     <div class="section-heading">
       <div>
@@ -92,9 +120,9 @@ import DocsLayout from "../layouts/DocsLayout.astro";
       </div>
     </div>
     <div class="card-grid">
-      <article class="card"><h3>Small · under 640 px</h3><p class="card-copy">Stack content, keep actions easy to reach, and avoid horizontal page scrolling.</p></article>
-      <article class="card"><h3>Medium · 640–959 px</h3><p class="card-copy">Reflow multi-column layouts when the content starts to feel constrained.</p></article>
-      <article class="card"><h3>Large · 960 px and above</h3><p class="card-copy">Use available space for navigation and comparison without stretching text lines.</p></article>
+      <article class="card"><h3>Small screens under 640 px</h3><p class="card-copy">Stack content, keep actions easy to reach, and avoid horizontal page scrolling.</p></article>
+      <article class="card"><h3>Medium screens from 640-959 px</h3><p class="card-copy">Reflow multi-column layouts when the content starts to feel constrained.</p></article>
+      <article class="card"><h3>Large screens from 960 px</h3><p class="card-copy">Use available space for navigation and comparison without stretching text lines.</p></article>
     </div>
   </section>
 
@@ -107,9 +135,9 @@ import DocsLayout from "../layouts/DocsLayout.astro";
     </div>
     <article class="card">
       <ul class="rule-list">
-        <li><span class="rule-term">MUST · draft</span><span class="rule-text">Use semantic landmarks, a logical heading order, and visible labels for form controls.</span></li>
-        <li><span class="rule-term">MUST · draft</span><span class="rule-text">Keep keyboard focus visible and avoid using color as the only way to convey meaning.</span></li>
-        <li><span class="rule-term">SHOULD · draft</span><span class="rule-text">Check text and control contrast on every chosen surface before release.</span></li>
+        <li><span class="rule-term">Required</span><span class="rule-text">Use semantic landmarks, a logical heading order, and visible labels for form controls.</span></li>
+        <li><span class="rule-term">Required</span><span class="rule-text">Keep keyboard focus visible and avoid using color as the only way to convey meaning.</span></li>
+        <li><span class="rule-term">Preferred</span><span class="rule-text">Check text and control contrast on every chosen surface before release.</span></li>
       </ul>
     </article>
   </section>
