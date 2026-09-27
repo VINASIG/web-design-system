@@ -15,6 +15,31 @@ import DocsLayout from "../layouts/DocsLayout.astro";
     </div>
   </div>
 
+  <section class="page-section" aria-labelledby="favicon-check-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Required website completion check</p><h2 id="favicon-check-title">Do not forget the favicon</h2></div>
+      <p>A logo in the page header does not configure the icon shown in browser tabs, bookmarks, and other browser surfaces.</p>
+    </div>
+    <div class="two-column-grid">
+      <article class="card">
+        <h3>Before closing a website task</h3>
+        <ul class="usage-list">
+          <li>Inspect the shared document head or layout and confirm favicon references exist.</li>
+          <li>Use the official 16 × 16, 32 × 32, and 48 × 48 px exports when they are available.</li>
+          <li>Check that the icon URLs account for the deployment base path and that each file is included in the output.</li>
+          <li>Report a missing source icon instead of silently skipping it or drawing a substitute.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>VINASIG favicon references</h3>
+        <pre class="code-panel"><code>&lt;link rel="icon" type="image/png" sizes="16x16" href="/brand/favicons/favicon-16.png" /&gt;
+&lt;link rel="icon" type="image/png" sizes="32x32" href="/brand/favicons/favicon-32.png" /&gt;
+&lt;link rel="icon" type="image/png" sizes="48x48" href="/brand/favicons/favicon-48.png" /&gt;</code></pre>
+        <a class="text-link" href="/brand/">See the logo guide and supplied favicon files</a>
+      </article>
+    </div>
+  </section>
+
   <section class="page-section" aria-labelledby="workflow-title">
     <div class="section-heading">
       <div><p class="section-kicker">Recommended workflow</p><h2 id="workflow-title">Load context in a few deliberate steps</h2></div>

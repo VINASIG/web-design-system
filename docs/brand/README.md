@@ -29,6 +29,20 @@ The logo package records **Space Grotesk** as the typeface and these master size
 
 The five named identity colors recorded in the logo story are Scout Blue `#21497B`, Thinker Orange `#EB7114`, Builder Green `#47A036`, Auditor Red `#971607`, and Core Graphite `#443A3B`. White and black are also used by the exported reversed and monochrome variants.
 
+## Favicon implementation requirement
+
+**Agent completion check:** Whenever an agent creates or changes a VINASIG website, it MUST inspect the shared document `<head>` and confirm that a favicon is configured. Do this even when the site already displays the logo in its header. Put the references in the shared layout or document template so every route inherits them; do not duplicate the tags on individual pages.
+
+Use the supplied favicon exports at all three provided sizes and verify that the URLs match the site's deployment base path:
+
+```html
+<link rel="icon" type="image/png" sizes="16x16" href="/brand/favicons/favicon-16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/brand/favicons/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="48x48" href="/brand/favicons/favicon-48.png" />
+```
+
+Before considering the website task complete, check that each referenced file is present in the build or deployment output. If a project has a non-root base path, adapt the URLs to that base. If a needed favicon export is missing, report the gap and request the proper asset instead of omitting the favicon or inventing a replacement.
+
 ## Draft usage recommendations
 
 - Use an exported file from `public/brand/`; do not redraw, re-typeset, crop, stretch, recolor, or add effects to the logo.

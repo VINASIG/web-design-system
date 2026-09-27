@@ -34,6 +34,7 @@ The documentation site is organized as follows:
 - Use the CSS custom properties in `src/styles/tokens.css` instead of repeating brand color values in component styles.
 - Keep pages static by default. Add browser JavaScript only for a documented interaction that needs it.
 - Use semantic HTML, visible keyboard focus, descriptive links, and accessible labels for form controls.
+- For every task that creates or changes a website, MUST inspect the shared `<head>` and confirm a favicon is configured. On VINASIG sites, use the supplied 16, 32, and 48 px favicon exports where available, and confirm the asset paths work for the deployment base URL. A header logo does not replace a browser favicon. If the required source asset is missing, report the gap instead of silently omitting or redrawing it.
 - Keep rules and examples in English in this repository.
 - When adding or changing guidance, keep its draft status visible and update both the source document and its published page.
 - Use only the owner-provided logo exports in `public/brand/`. Do not redraw, alter, or add editable logo source files.
