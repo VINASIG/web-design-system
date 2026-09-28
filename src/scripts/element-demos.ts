@@ -1379,6 +1379,9 @@ function enhanceSample(sample: HTMLElement) {
       if (create) asButton(create, "create-project", "Create project");
       break;
     }
+    case "hover-card":
+      initializeHoverCard(sample);
+      break;
     case "switch-checkbox-radio": {
       const rows = sample.querySelectorAll<HTMLElement>(".sample-choice-set > div");
       rows.forEach((row, index) => {
@@ -1810,6 +1813,109 @@ const lightboxPhotos = [
   { name: "Forest calm", location: "Dolomites · Italy", alt: "Misty pines in the morning", scene: "forest" },
 ] as const;
 
+type HoverCardState = {
+  openTimer?: number;
+  closeTimer?: number;
+  pointerInside: boolean;
+  focusInside: boolean;
+  pinned: boolean;
+  suppressed: boolean;
+  pointerType?: string;
+};
+
+const hoverCardStates = new WeakMap<HTMLElement, HoverCardState>();
+
+function hoverCardState(owner: HTMLElement) {
+  let state = hoverCardStates.get(owner);
+  if (!state) {
+    state = { pointerInside: false, focusInside: false, pinned: false, suppressed: false };
+    hoverCardStates.set(owner, state);
+  }
+  return state;
+}
+
+function syncHoverCard(owner: HTMLElement, openDelay = 100) {
+  const trigger = owner.querySelector<HTMLElement>(".sample-hover-trigger");
+  const card = owner.querySelector<HTMLElement>(".sample-hover-card");
+  if (!trigger || !card) return;
+
+  const state = hoverCardState(owner);
+  const shouldOpen = !state.suppressed && (state.pointerInside || state.focusInside || state.pinned);
+  if (shouldOpen) {
+    if (state.closeTimer !== undefined) window.clearTimeout(state.closeTimer);
+    state.closeTimer = undefined;
+    if (!card.hidden) {
+      trigger.setAttribute("aria-expanded", "true");
+      card.dataset.state = "open";
+      return;
+    }
+    if (state.openTimer !== undefined) return;
+    state.openTimer = window.setTimeout(() => {
+      state.openTimer = undefined;
+      if (card.isConnected && !state.suppressed && (state.pointerInside || state.focusInside || state.pinned)) {
+        card.hidden = false;
+        card.dataset.state = "closed";
+        trigger.setAttribute("aria-expanded", "true");
+        requestAnimationFrame(() => {
+          if (!card.hidden) card.dataset.state = "open";
+        });
+      }
+    }, openDelay);
+    return;
+  }
+
+  if (state.openTimer !== undefined) window.clearTimeout(state.openTimer);
+  state.openTimer = undefined;
+  if (card.hidden || state.closeTimer !== undefined) return;
+
+  trigger.setAttribute("aria-expanded", "false");
+  card.dataset.state = "closing";
+  state.closeTimer = window.setTimeout(() => {
+    state.closeTimer = undefined;
+    if (state.suppressed || (!state.pointerInside && !state.focusInside && !state.pinned)) {
+      card.hidden = true;
+      card.dataset.state = "closed";
+    } else {
+      syncHoverCard(owner);
+    }
+  }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 210);
+}
+
+function dismissHoverCard(owner: HTMLElement) {
+  const state = hoverCardState(owner);
+  state.suppressed = true;
+  state.pinned = false;
+  state.pointerInside = false;
+  state.focusInside = false;
+  syncHoverCard(owner, 0);
+}
+
+function initializeHoverCard(sample: HTMLElement) {
+  const owner = sample.querySelector<HTMLElement>(".sample-hover");
+  const trigger = owner?.querySelector<HTMLElement>(".sample-hover-trigger");
+  const card = owner?.querySelector<HTMLElement>(".sample-hover-card");
+  const title = owner?.querySelector<HTMLElement>("[data-hover-title]");
+  const description = owner?.querySelector<HTMLElement>("[data-hover-description]");
+  if (!owner || !trigger || !card) return;
+  const id = `sample-hover-card-${sample.dataset.sampleInstance ?? "example"}`;
+  const titleId = `${id}-title`;
+  const descriptionId = `${id}-description`;
+  card.id = id;
+  if (title) {
+    title.id = titleId;
+    card.setAttribute("aria-labelledby", titleId);
+  }
+  if (description) {
+    description.id = descriptionId;
+    trigger.setAttribute("aria-describedby", descriptionId);
+  }
+  trigger.setAttribute("aria-controls", id);
+  trigger.setAttribute("aria-expanded", "false");
+  card.hidden = true;
+  card.dataset.state = "closed";
+  hoverCardStates.set(owner, { pointerInside: false, focusInside: false, pinned: false, suppressed: false });
+}
+
 const lightboxDialogOwners = new WeakMap<HTMLDialogElement, HTMLElement>();
 const lightboxDialogPlaceholders = new WeakMap<HTMLDialogElement, Comment>();
 const initializedLightboxDialogs = new WeakSet<HTMLDialogElement>();
@@ -1878,7 +1984,7 @@ function closeLightbox(dialog: HTMLDialogElement) {
   root?.querySelector<HTMLButtonElement>(`[data-action='toggle-lightbox'][data-lightbox-index='${index}']`)?.focus();
 }
 
-function runAction(sample: HTMLElement, button: HTMLElement) {
+function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent) {
   const action = button.dataset.action;
   const id = sample.dataset.specimenId;
 
@@ -2276,12 +2382,15 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       break;
     }
     case "toggle-hover-card": {
-      const trigger = button;
-      const card = trigger.parentElement?.querySelector<HTMLElement>(".sample-hover-card");
-      if (!card) break;
-      const open = trigger.getAttribute("aria-expanded") !== "true";
-      trigger.setAttribute("aria-expanded", String(open));
-      card.hidden = !open;
+      const owner = button.closest<HTMLElement>(".sample-hover");
+      if (!owner) break;
+      const state = hoverCardState(owner);
+      if (state.pointerType === "touch" || event?.detail === 0) {
+        state.suppressed = false;
+        state.pinned = !state.pinned;
+        if (!state.pinned && (state.pointerInside || state.focusInside)) state.suppressed = true;
+        syncHoverCard(owner, 0);
+      }
       break;
     }
     case "toggle-lightbox": {
@@ -2756,6 +2865,11 @@ document.addEventListener("submit", (event) => {
 
 document.addEventListener("pointerdown", (event) => {
   const target = event.target instanceof Element ? event.target : null;
+  const hoverTrigger = target?.closest<HTMLElement>(".sample-hover-trigger");
+  if (hoverTrigger) {
+    const owner = hoverTrigger.closest<HTMLElement>(".sample-hover");
+    if (owner) hoverCardState(owner).pointerType = event.pointerType;
+  }
   const option = target?.closest<HTMLElement>(".sample-combobox-popup [role='option']");
   if (option && event.button === 0) {
     const input = option.closest<HTMLElement>(".sample-combobox")?.querySelector<HTMLInputElement>(".sample-combo-input");
@@ -2863,6 +2977,7 @@ document.addEventListener("click", (event) => {
           refreshColorWellIds(well, `${clone.dataset.sampleInstance}-${index + 1}`);
         });
         if (clone.dataset.specimenId === "disclosure-triangle") initializeDisclosureSample(clone);
+        if (clone.dataset.specimenId === "hover-card") initializeHoverCard(clone);
         if (clone.dataset.specimenId === "date-picker") enhanceCalendar(clone);
         if (clone.dataset.specimenId === "sign-in-form") initializeLoginSample(clone);
         if (clone.dataset.specimenId === "multi-select") initializeMultiSelectIds(clone, clone.dataset.sampleInstance);
@@ -2930,7 +3045,7 @@ document.addEventListener("click", (event) => {
     ?? (actionLightboxDialog ? lightboxDialogOwners.get(actionLightboxDialog)?.closest<HTMLElement>(".ui-sample") : null);
   if (actionButton && sample) {
     if (actionButton.dataset.action === "submit-demo" && actionButton instanceof HTMLButtonElement && actionButton.type === "submit") return;
-    runAction(sample, actionButton);
+    runAction(sample, actionButton, event);
   }
 });
 
@@ -3240,8 +3355,7 @@ document.addEventListener("keydown", (event) => {
     const hoverTrigger = hover?.querySelector<HTMLElement>(".sample-hover-trigger");
     const hoverCard = hover?.querySelector<HTMLElement>(".sample-hover-card");
     if (hoverTrigger?.getAttribute("aria-expanded") === "true" && hoverCard) {
-      hoverTrigger.setAttribute("aria-expanded", "false");
-      hoverCard.hidden = true;
+      if (hover) dismissHoverCard(hover);
       hoverTrigger.focus();
       event.preventDefault();
       return;
@@ -3278,20 +3392,24 @@ document.addEventListener("keydown", (event) => {
 
 document.addEventListener("pointerover", (event) => {
   const target = event.target instanceof Element ? event.target : null;
-  const trigger = target?.closest<HTMLElement>(".sample-hover-trigger");
-  const card = trigger?.parentElement?.querySelector<HTMLElement>(".sample-hover-card");
-  if (!trigger || !card) return;
-  trigger.setAttribute("aria-expanded", "true");
-  card.hidden = false;
+  const owner = target?.closest<HTMLElement>(".sample-hover");
+  if (!owner || event.pointerType === "touch") return;
+  if (event.relatedTarget instanceof Node && owner.contains(event.relatedTarget)) return;
+  const state = hoverCardState(owner);
+  state.pointerType = event.pointerType;
+  state.pointerInside = true;
+  state.suppressed = false;
+  syncHoverCard(owner);
 });
 
 document.addEventListener("pointerout", (event) => {
   const target = event.target instanceof Element ? event.target : null;
   const owner = target?.closest<HTMLElement>(".sample-hover");
-  if (!owner || (event.relatedTarget instanceof Node && owner.contains(event.relatedTarget))) return;
-  owner.querySelector<HTMLElement>(".sample-hover-trigger")?.setAttribute("aria-expanded", "false");
-  const card = owner.querySelector<HTMLElement>(".sample-hover-card");
-  if (card) card.hidden = true;
+  if (!owner || event.pointerType === "touch") return;
+  if (event.relatedTarget instanceof Node && owner.contains(event.relatedTarget)) return;
+  const state = hoverCardState(owner);
+  state.pointerInside = false;
+  syncHoverCard(owner);
 });
 
 document.addEventListener("focusin", (event) => {
@@ -3306,11 +3424,12 @@ document.addEventListener("focusin", (event) => {
     tokenPanel.hidden = false;
     refreshMultiSelectShowcase(tokenShowcase);
   }
-  const trigger = target?.closest<HTMLElement>(".sample-hover-trigger");
-  const card = trigger?.parentElement?.querySelector<HTMLElement>(".sample-hover-card");
-  if (!trigger || !card) return;
-  trigger.setAttribute("aria-expanded", "true");
-  card.hidden = false;
+  const owner = target?.closest<HTMLElement>(".sample-hover");
+  if (!owner) return;
+  const state = hoverCardState(owner);
+  state.focusInside = target?.matches(":focus-visible") ?? false;
+  state.suppressed = false;
+  syncHoverCard(owner, 70);
 });
 
 document.addEventListener("focusout", (event) => {
@@ -3319,9 +3438,9 @@ document.addEventListener("focusout", (event) => {
   if (target instanceof HTMLInputElement && target.matches(".sample-combo-input")) closeCombobox(target);
   const owner = target?.closest<HTMLElement>(".sample-hover");
   if (!owner || (event.relatedTarget instanceof Node && owner.contains(event.relatedTarget))) return;
-  owner.querySelector<HTMLElement>(".sample-hover-trigger")?.setAttribute("aria-expanded", "false");
-  const card = owner.querySelector<HTMLElement>(".sample-hover-card");
-  if (card) card.hidden = true;
+  const state = hoverCardState(owner);
+  state.focusInside = false;
+  syncHoverCard(owner);
 });
 
 document.addEventListener("dragstart", (event) => {

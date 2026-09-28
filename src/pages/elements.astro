@@ -256,6 +256,15 @@ const slugify = (value: string) =>
     padding: 1rem;
   }
 
+  .element-preview:has(.sample-hover) {
+    min-height: 17rem;
+    overflow: visible;
+  }
+
+  .element-preview .ui-sample:has(.sample-hover) {
+    min-height: 15rem;
+  }
+
   .element-preview .ui-sample {
     width: 100%;
     max-width: 44rem;
@@ -341,12 +350,13 @@ const slugify = (value: string) =>
   .element-demo-stage:has(.sample-multi-select-showcase) { min-height: 29rem; }
   .element-demo-stage:has(.sample-multi-select-showcase) .ui-sample { max-width: 54rem; min-height: 25rem; }
 
-  .element-demo-stage:has(.sample-hover-card:not([hidden])) {
-    min-height: 24rem;
+  .element-demo-stage:has(.sample-hover) {
+    min-height: 25rem;
   }
 
-  .element-demo-stage:has(.sample-hover-card:not([hidden])) .sample-hover {
-    transform: translateY(-1rem);
+  .element-demo-stage .ui-sample:has(.sample-hover) {
+    max-width: 34rem;
+    min-height: 19rem;
   }
 
   .element-demo-stage:has(.sample-control-trio) {
@@ -1506,11 +1516,32 @@ const slugify = (value: string) =>
   .sample-empty { display: grid; justify-items: center; gap: 0.35rem; padding: 0.5rem; text-align: center; }
   .sample-empty > i { margin-bottom: 0.2rem; color: var(--color-scout-blue); font-size: 1.4rem; }
 
-  .sample-hover { position: relative; }
-  .sample-hover-trigger { min-height: 2.4rem; padding: 0.45rem 0.7rem; color: var(--color-scout-blue-strong); background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-sm); }
-  .sample-hover-card { position: absolute; z-index: 4; top: calc(100% + 0.5rem); left: 50%; display: grid; width: min(18rem, calc(100vw - 3rem)); gap: 0.25rem; padding: 0.75rem; transform: translateX(-50%); background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-sm); box-shadow: 0 0.4rem 1rem rgb(68 58 59 / 9%); }
-  .sample-hover-card p { margin: 0.2rem 0; color: var(--color-text-muted); font-size: 0.75rem; }
-  .sample-hover-card > span { color: var(--color-scout-blue); font-size: 0.72rem; font-weight: 600; }
+  .sample-hover { position: relative; z-index: 1; display: grid; justify-items: center; }
+  .sample-hover-trigger { display: inline-flex; min-height: 2.5rem; align-items: center; gap: 0.5rem; padding: 0.45rem 0.8rem; color: var(--color-scout-blue-strong); background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-sm); box-shadow: 0 1px 2px rgb(68 58 59 / 5%); transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease; }
+  .sample-hover-trigger:hover,
+  .sample-hover-trigger[aria-expanded='true'] { background: var(--color-scout-blue-soft); border-color: var(--color-scout-blue-border); box-shadow: 0 3px 10px rgb(33 73 123 / 9%); }
+  .sample-hover-trigger > i { color: var(--color-text-muted) !important; font-size: 0.9rem !important; transition: transform 160ms ease; }
+  .sample-hover-trigger[aria-expanded='true'] > i { transform: rotate(180deg); }
+  .sample-hover-trigger:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
+  .sample-hover-card { position: absolute; z-index: 5; top: calc(100% + 0.65rem); left: 50%; display: grid; width: min(20rem, calc(100vw - 3rem)); gap: 0.7rem; padding: 0.9rem; color: var(--color-text); background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: 0 0.8rem 2rem rgb(39 49 67 / 15%), 0 2px 6px rgb(39 49 67 / 7%); opacity: 0; transform: translate(-50%, 0.5rem) scale(0.98); transform-origin: top center; transition: opacity 160ms ease, transform 200ms cubic-bezier(0.2, 0.75, 0.25, 1); }
+  .sample-hover-card::before { position: absolute; top: -0.75rem; right: 0; left: 0; height: 0.75rem; content: ''; }
+  .sample-hover-card[data-state='open'] { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  .sample-hover-card[data-state='closing'] { opacity: 0; transform: translate(-50%, 0.35rem) scale(0.99); }
+  .sample-hover-card-head { display: grid; min-width: 0; align-items: center; gap: 0.65rem; grid-template-columns: auto minmax(0, 1fr) auto; }
+  .sample-hover-avatar { display: grid; width: 2.55rem; height: 2.55rem; place-items: center; color: var(--color-white); background: linear-gradient(145deg, var(--color-scout-blue), var(--color-scout-blue-strong)); border-radius: 0.7rem; font-size: 0.88rem; font-weight: 700; }
+  .sample-hover-card-head > div { display: grid; min-width: 0; gap: 0.08rem; }
+  .sample-hover-card-head b { font-size: 0.85rem; line-height: 1.25; }
+  .sample-hover-card-head small { overflow: hidden; color: var(--color-text-muted); font-size: 0.68rem; text-overflow: ellipsis; white-space: nowrap; }
+  .sample-hover-live { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.42rem; color: var(--color-builder-green-strong); background: var(--color-builder-green-soft); border-radius: var(--radius-pill); font-size: 0.62rem; font-weight: 600; }
+  .sample-hover-live i { width: 0.38rem; height: 0.38rem; background: var(--color-builder-green-strong); border-radius: 50%; }
+  .sample-hover-card p { margin: 0; color: var(--color-text-muted); font-size: 0.75rem; line-height: 1.5; }
+  .sample-hover-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; padding-top: 0.55rem; color: var(--color-text-muted); border-top: 1px solid var(--color-border); font-size: 0.65rem; }
+  .sample-hover-chip { padding: 0.18rem 0.4rem; color: var(--color-scout-blue-strong); background: var(--color-scout-blue-soft); border-radius: var(--radius-pill); font-weight: 600; }
+  @media (prefers-reduced-motion: reduce) {
+    .sample-hover-trigger,
+    .sample-hover-trigger > i,
+    .sample-hover-card { transition: none; }
+  }
 
   .sample-choice-set { display: grid; width: min(100%, 22rem); gap: 0.7rem; }
   .sample-choice-set > div { display: flex; align-items: center; gap: 0.55rem; }
@@ -1807,6 +1838,24 @@ const slugify = (value: string) =>
   .element-demo-stage .ui-sample :is(span, b, strong, button, label, p) { font-size: 1.05rem; }
   .element-demo-stage .ui-sample small { font-size: 0.95rem; }
   .element-demo-stage .ui-sample i[class^="fi-br-"] { font-size: 1.25rem; }
+  .element-preview .ui-sample .sample-hover-trigger,
+  .element-demo-stage .ui-sample .sample-hover-trigger { font-size: 0.9rem; }
+  .element-preview .ui-sample .sample-hover-trigger > i,
+  .element-demo-stage .ui-sample .sample-hover-trigger > i { font-size: 0.9rem !important; }
+  .element-preview .ui-sample .sample-hover-card-head b,
+  .element-demo-stage .ui-sample .sample-hover-card-head b { font-size: 0.85rem; }
+  .element-preview .ui-sample .sample-hover-card-head small,
+  .element-demo-stage .ui-sample .sample-hover-card-head small { font-size: 0.68rem; }
+  .element-preview .ui-sample .sample-hover-card p,
+  .element-demo-stage .ui-sample .sample-hover-card p { font-size: 0.75rem; }
+  .element-preview .ui-sample .sample-hover-avatar,
+  .element-demo-stage .ui-sample .sample-hover-avatar { font-size: 0.88rem; }
+  .element-preview .ui-sample .sample-hover-live,
+  .element-preview .ui-sample .sample-hover-chip,
+  .element-preview .ui-sample .sample-hover-card-foot,
+  .element-demo-stage .ui-sample .sample-hover-live,
+  .element-demo-stage .ui-sample .sample-hover-chip,
+  .element-demo-stage .ui-sample .sample-hover-card-foot { font-size: 0.65rem; }
   .element-preview .ui-sample .sample-scrim-eyebrow,
   .element-preview .ui-sample .sample-scrim-dialog-kicker { font-size: 0.52rem; }
   .element-preview .ui-sample .sample-scrim-workspace-header strong { font-size: 0.78rem; }
