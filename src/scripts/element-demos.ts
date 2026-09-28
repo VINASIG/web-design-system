@@ -54,6 +54,19 @@ function visibleStatus(className: string) {
   return status;
 }
 
+function initializeDisclosureSample(sample: HTMLElement) {
+  sample.querySelectorAll<HTMLButtonElement>(".sample-disclosure-row[data-action='toggle-disclosure']").forEach((button, index) => {
+    const branch = button.closest<HTMLElement>(".sample-disclosure-branch");
+    const children = branch?.querySelector<HTMLElement>(":scope > .sample-disclosure-children");
+    if (!children) return;
+
+    const contentId = `sample-disclosure-${sample.dataset.sampleInstance}-${index + 1}`;
+    children.id = contentId;
+    button.setAttribute("aria-controls", contentId);
+    children.hidden = button.getAttribute("aria-expanded") !== "true";
+  });
+}
+
 function showDropResult(zone: HTMLElement, files: FileList | File[]) {
   let result = zone.querySelector<HTMLElement>(".sample-drop-feedback");
   if (!result) {
@@ -664,18 +677,7 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "disclosure-triangle": {
-      const disclosure = sample.querySelector<HTMLElement>(".sample-disclosure");
-      if (!disclosure) break;
-      const title = disclosure.querySelector<HTMLElement>("b");
-      if (title) {
-        const button = asButton(title, "toggle-disclosure", "Project files");
-        button.setAttribute("aria-expanded", "false");
-      }
-      const children = document.createElement("div");
-      children.className = "sample-disclosure-children";
-      children.hidden = true;
-      children.textContent = "Brand guide, Logo exports, Color tokens, Type files";
-      disclosure.after(children);
+      initializeDisclosureSample(sample);
       break;
     }
     case "delete-sheet": {
@@ -1246,8 +1248,9 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       break;
     }
     case "toggle-disclosure": {
-      const children = button.closest(".sample-disclosure")?.nextElementSibling;
-      if (!(children instanceof HTMLElement)) break;
+      const branch = button.closest<HTMLElement>(".sample-disclosure-branch");
+      const children = branch?.querySelector<HTMLElement>(":scope > .sample-disclosure-children");
+      if (!children) break;
       const expanded = button.getAttribute("aria-expanded") !== "true";
       button.setAttribute("aria-expanded", String(expanded));
       children.hidden = !expanded;
@@ -1280,6 +1283,7 @@ document.addEventListener("click", (event) => {
       const clone = sample.cloneNode(true);
       if (clone instanceof HTMLElement) {
         clone.dataset.sampleInstance = `dialog-${++sampleInstance}`;
+        if (clone.dataset.specimenId === "disclosure-triangle") initializeDisclosureSample(clone);
         clone.querySelectorAll<HTMLInputElement>("input[type='radio']").forEach((input) => {
           input.name = `${input.name}-${sampleInstance}`;
         });
