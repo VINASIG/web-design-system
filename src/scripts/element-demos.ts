@@ -466,6 +466,12 @@ function enhanceSample(sample: HTMLElement) {
         button.classList.add("sample-option");
         button.setAttribute("role", "option");
       });
+      const emptyState = document.createElement("div");
+      emptyState.className = "sample-combobox-empty";
+      emptyState.setAttribute("role", "status");
+      emptyState.textContent = "No matching people";
+      emptyState.hidden = true;
+      combobox.append(emptyState);
       break;
     }
     case "command-palette": {
@@ -1270,7 +1276,10 @@ document.addEventListener("input", (event) => {
       const value = input.value.toLocaleLowerCase();
       const options = Array.from(sample.querySelectorAll<HTMLElement>(".sample-option"));
       options.forEach((option) => { option.hidden = !option.textContent?.toLocaleLowerCase().includes(value); });
-      input.setAttribute("aria-expanded", String(options.some((option) => !option.hidden)));
+      const hasMatches = options.some((option) => !option.hidden);
+      const emptyState = sample.querySelector<HTMLElement>(".sample-combobox-empty");
+      if (emptyState) emptyState.hidden = hasMatches;
+      input.setAttribute("aria-expanded", "true");
       break;
     }
     case "command-filter": {
@@ -1393,8 +1402,9 @@ document.addEventListener("keydown", (event) => {
   }
 
   if (target.matches("[role='combobox']") && ["ArrowDown", "ArrowUp"].includes(event.key) && sample) {
-    event.preventDefault();
     const options = Array.from(sample.querySelectorAll<HTMLElement>(".sample-option:not([hidden])"));
+    if (options.length === 0) return;
+    event.preventDefault();
     const active = options.indexOf(document.activeElement as HTMLElement);
     const next = (active + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
     options[next]?.focus();
