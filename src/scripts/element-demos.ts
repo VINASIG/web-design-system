@@ -1029,6 +1029,24 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       announce(sample, `Sorted by ${button.textContent?.trim() ?? key}, ${direction}.`);
       break;
     }
+    case "timeline-complete": {
+      const item = button.closest<HTMLElement>(".sample-timeline-item.is-current");
+      if (!item || button.getAttribute("aria-disabled") === "true") break;
+      item.classList.remove("is-current");
+      item.classList.add("is-complete");
+      button.setAttribute("aria-disabled", "true");
+      button.setAttribute("aria-label", "Order #4821 delivered");
+      const title = item.querySelector<HTMLElement>("[data-timeline-title]");
+      const detail = item.querySelector<HTMLElement>("[data-timeline-detail]");
+      const status = sample.querySelector<HTMLElement>("[data-timeline-status]");
+      const hint = sample.querySelector<HTMLElement>(".sample-timeline-hint");
+      if (title) title.textContent = "Delivered";
+      if (detail) detail.textContent = "The package arrived at your address.";
+      if (status) status.textContent = "Delivered";
+      if (hint) hint.textContent = "Order delivered.";
+      announce(sample, "Order #4821 marked as delivered.");
+      break;
+    }
     case "table-page-prev":
     case "table-page-next": {
       const table = button.closest<HTMLElement>(".sample-data-table");
