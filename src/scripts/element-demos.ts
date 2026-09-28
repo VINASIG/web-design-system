@@ -358,6 +358,114 @@ function makeInput(placeholder: string, label: string, className = "sample-input
   return input;
 }
 
+function comboboxOptions(input: HTMLInputElement) {
+  const owner = input.closest<HTMLElement>(".sample-combobox");
+  return Array.from(owner?.querySelectorAll<HTMLElement>(".sample-combobox-popup [role='option']") ?? []);
+}
+
+function setComboboxActive(input: HTMLInputElement, option: HTMLElement | null) {
+  const options = comboboxOptions(input);
+  options.forEach((item) => { item.dataset.active = String(item === option); });
+  if (option?.id) input.setAttribute("aria-activedescendant", option.id);
+  else input.removeAttribute("aria-activedescendant");
+}
+
+function filterCombobox(input: HTMLInputElement) {
+  const owner = input.closest<HTMLElement>(".sample-combobox");
+  const listbox = owner?.querySelector<HTMLElement>(".sample-combobox-popup");
+  const emptyState = owner?.querySelector<HTMLElement>(".sample-combobox-empty");
+  if (!owner || !listbox) return [];
+
+  const query = input.value.trim().toLocaleLowerCase();
+  const options = comboboxOptions(input);
+  const visibleOptions = options.filter((option) => {
+    const label = option.querySelector<HTMLElement>(".sample-option-label")?.textContent?.trim() ?? option.textContent?.trim() ?? "";
+    const matches = label.toLocaleLowerCase().includes(query);
+    option.hidden = !matches;
+    return matches;
+  });
+
+  listbox.hidden = false;
+  input.setAttribute("aria-expanded", "true");
+  if (emptyState) emptyState.hidden = visibleOptions.length > 0;
+
+  const activeOption = query
+    ? visibleOptions[0]
+    : visibleOptions.find((option) => option.getAttribute("aria-selected") === "true") ?? visibleOptions[0];
+  setComboboxActive(input, activeOption ?? null);
+  return visibleOptions;
+}
+
+function openCombobox(input: HTMLInputElement) {
+  const owner = input.closest<HTMLElement>(".sample-combobox");
+  const selected = owner?.querySelector<HTMLElement>(".sample-combobox-popup [role='option'][aria-selected='true']");
+  const selectedLabel = selected?.querySelector<HTMLElement>(".sample-option-label")?.textContent?.trim();
+  if (input.dataset.selectionCommitted === "true" && selectedLabel === input.value) {
+    input.value = "";
+    input.dataset.selectionCommitted = "false";
+  }
+  filterCombobox(input);
+}
+
+function closeCombobox(input: HTMLInputElement) {
+  const owner = input.closest<HTMLElement>(".sample-combobox");
+  const listbox = owner?.querySelector<HTMLElement>(".sample-combobox-popup");
+  if (!listbox) return;
+  listbox.hidden = true;
+  input.setAttribute("aria-expanded", "false");
+  setComboboxActive(input, null);
+}
+
+function selectComboboxOption(input: HTMLInputElement, option: HTMLElement) {
+  const owner = input.closest<HTMLElement>(".sample-combobox");
+  const sample = input.closest<HTMLElement>(".ui-sample");
+  if (!owner || !sample || option.hidden || !owner.contains(option)) return;
+
+  const label = option.querySelector<HTMLElement>(".sample-option-label")?.textContent?.trim() ?? option.textContent?.trim() ?? "";
+  comboboxOptions(input).forEach((item) => item.setAttribute("aria-selected", String(item === option)));
+  owner.dataset.selectedValue = option.dataset.optionKey ?? label;
+  input.value = label;
+  input.dataset.selectionCommitted = "true";
+  closeCombobox(input);
+  announce(sample, `${label} selected.`);
+  input.focus({ preventScroll: true });
+}
+
+function initializeComboboxSample(sample: HTMLElement, instance = sample.dataset.sampleInstance ?? "example") {
+  const owner = sample.querySelector<HTMLElement>(".sample-combobox");
+  const label = owner?.querySelector<HTMLLabelElement>("[data-combobox-label]");
+  const input = owner?.querySelector<HTMLInputElement>(".sample-combo-input");
+  const listbox = owner?.querySelector<HTMLElement>(".sample-combobox-popup");
+  if (!owner || !label || !input || !listbox) return;
+
+  const prefix = `sample-combobox-${instance.replace(/[^a-z0-9_-]/gi, "-")}`;
+  label.id = `${prefix}-label`;
+  input.id = `${prefix}-input`;
+  label.htmlFor = input.id;
+  input.setAttribute("aria-labelledby", label.id);
+  input.setAttribute("aria-controls", `${prefix}-options`);
+  input.setAttribute("aria-autocomplete", "list");
+  input.dataset.inputAction = "combobox-filter";
+  listbox.id = `${prefix}-options`;
+
+  const options = comboboxOptions(input);
+  options.forEach((option, index) => {
+    const key = option.dataset.optionKey ?? String(index + 1);
+    option.id = `${prefix}-option-${key.replace(/[^a-z0-9_-]/gi, "-")}`;
+    option.setAttribute("role", "option");
+    if (!option.hasAttribute("aria-selected")) option.setAttribute("aria-selected", "false");
+  });
+  listbox.setAttribute("role", "listbox");
+  if (!input.hasAttribute("aria-expanded")) input.setAttribute("aria-expanded", "true");
+  if (input.getAttribute("aria-expanded") === "true") {
+    listbox.hidden = false;
+    filterCombobox(input);
+  } else {
+    listbox.hidden = true;
+    setComboboxActive(input, null);
+  }
+}
+
 function updateFormFieldState(input: HTMLInputElement, touched = false) {
   const field = input.closest<HTMLElement>(".sample-form-field");
   const helper = field?.querySelector<HTMLElement>("[data-form-helper]");
@@ -868,29 +976,7 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "combobox-autocomplete-typeahead": {
-      const combobox = sample.querySelector<HTMLElement>(".sample-combobox");
-      const oldInput = combobox?.querySelector<HTMLElement>(".sample-input-line");
-      if (!combobox || !oldInput) break;
-      const input = makeInput("Search people", "Search people", "sample-input-line sample-editable-input");
-      input.value = "Lan";
-      input.setAttribute("role", "combobox");
-      input.setAttribute("aria-autocomplete", "list");
-      input.setAttribute("aria-expanded", "true");
-      input.dataset.inputAction = "combobox-filter";
-      oldInput.replaceWith(input);
-      const options = Array.from(combobox.children).filter((child) => child !== input) as HTMLElement[];
-      options.forEach((option) => {
-        const label = option.querySelector("b")?.textContent?.trim() ?? option.textContent?.trim() ?? "Suggestion";
-        const button = asButton(option, "combobox-option", label);
-        button.classList.add("sample-option");
-        button.setAttribute("role", "option");
-      });
-      const emptyState = document.createElement("div");
-      emptyState.className = "sample-combobox-empty";
-      emptyState.setAttribute("role", "status");
-      emptyState.textContent = "No matching people";
-      emptyState.hidden = true;
-      combobox.append(emptyState);
+      initializeComboboxSample(sample);
       break;
     }
     case "command-palette": {
@@ -1918,17 +2004,6 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       trigger?.focus();
       break;
     }
-    case "combobox-option": {
-      const input = sample.querySelector<HTMLInputElement>(".sample-combobox [role='combobox']");
-      if (input) {
-        input.value = button.querySelector("b")?.textContent?.trim() ?? button.textContent?.trim() ?? "";
-        input.setAttribute("aria-expanded", "false");
-      }
-      sample.querySelectorAll<HTMLElement>(".sample-option").forEach((option) => { option.hidden = true; });
-      announce(sample, `${input?.value} selected.`);
-      input?.focus();
-      break;
-    }
     case "command-select":
       announce(sample, `${button.textContent?.trim()} command selected.`);
       break;
@@ -2107,9 +2182,41 @@ document.addEventListener("submit", (event) => {
   if (sample && submit) runAction(sample, submit);
 });
 
+document.addEventListener("pointerdown", (event) => {
+  const target = event.target instanceof Element ? event.target : null;
+  const option = target?.closest<HTMLElement>(".sample-combobox-popup [role='option']");
+  if (option && event.button === 0) {
+    const input = option.closest<HTMLElement>(".sample-combobox")?.querySelector<HTMLInputElement>(".sample-combo-input");
+    if (!input) return;
+    event.preventDefault();
+    selectComboboxOption(input, option);
+    return;
+  }
+
+  const control = target?.closest<HTMLElement>(".sample-combobox-control");
+  const input = control?.querySelector<HTMLInputElement>(".sample-combo-input");
+  if (input && input.getAttribute("aria-expanded") !== "true") {
+    input.focus({ preventScroll: true });
+    openCombobox(input);
+  }
+});
+
 document.addEventListener("click", (event) => {
   const target = event.target instanceof Element ? event.target : null;
   if (!target) return;
+
+  const comboOption = target.closest<HTMLElement>(".sample-combobox-popup [role='option']");
+  if (comboOption && event.detail === 0) {
+    const input = comboOption.closest<HTMLElement>(".sample-combobox")?.querySelector<HTMLInputElement>(".sample-combo-input");
+    if (input) selectComboboxOption(input, comboOption);
+    return;
+  }
+
+  document.querySelectorAll<HTMLElement>(".sample-combobox").forEach((owner) => {
+    if (owner.contains(target)) return;
+    const input = owner.querySelector<HTMLInputElement>(".sample-combo-input");
+    if (input?.getAttribute("aria-expanded") === "true") closeCombobox(input);
+  });
 
   document.querySelectorAll<HTMLElement>(".sample-date-picker[data-calendar-open='true']").forEach((picker) => {
     if (!picker.contains(target)) setCalendarOpen(picker, false);
@@ -2159,6 +2266,7 @@ document.addEventListener("click", (event) => {
         if (clone.dataset.specimenId === "date-picker") enhanceCalendar(clone);
         if (clone.dataset.specimenId === "sign-in-form") initializeLoginSample(clone);
         if (clone.dataset.specimenId === "multi-select") initializeMultiSelectIds(clone, clone.dataset.sampleInstance);
+        if (clone.dataset.specimenId === "combobox-autocomplete-typeahead") initializeComboboxSample(clone, clone.dataset.sampleInstance);
         if (clone.dataset.specimenId === "form-field") initializeFormFieldSample(clone, clone.dataset.sampleInstance);
         if (clone.dataset.specimenId === "drag-and-drop") initializeDragDropSample(clone);
         clone.querySelectorAll<HTMLInputElement>("input[type='radio']").forEach((input) => {
@@ -2168,6 +2276,10 @@ document.addEventListener("click", (event) => {
       dialogStage.replaceChildren(clone);
       if (clone instanceof HTMLElement && clone.dataset.specimenId === "scrollspy") initializeScrollspy(clone);
       dialog.showModal();
+      if (clone instanceof HTMLElement && clone.dataset.specimenId === "combobox-autocomplete-typeahead") {
+        const input = clone.querySelector<HTMLInputElement>(".sample-combo-input");
+        if (input) openCombobox(input);
+      }
     }
     return;
   }
@@ -2234,13 +2346,8 @@ document.addEventListener("input", (event) => {
       break;
     }
     case "combobox-filter": {
-      const value = input.value.toLocaleLowerCase();
-      const options = Array.from(sample.querySelectorAll<HTMLElement>(".sample-option"));
-      options.forEach((option) => { option.hidden = !option.textContent?.toLocaleLowerCase().includes(value); });
-      const hasMatches = options.some((option) => !option.hidden);
-      const emptyState = sample.querySelector<HTMLElement>(".sample-combobox-empty");
-      if (emptyState) emptyState.hidden = hasMatches;
-      input.setAttribute("aria-expanded", "true");
+      input.dataset.selectionCommitted = "false";
+      filterCombobox(input);
       break;
     }
     case "command-filter": {
@@ -2273,6 +2380,47 @@ document.addEventListener("keydown", (event) => {
   const target = event.target instanceof HTMLElement ? event.target : null;
   if (!target) return;
   const sample = target.closest<HTMLElement>(".ui-sample");
+
+  if (target.matches(".sample-combo-input")) {
+    const input = target as HTMLInputElement;
+    const expanded = input.getAttribute("aria-expanded") === "true";
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      if (!expanded) {
+        openCombobox(input);
+        if (event.key === "ArrowUp") {
+          const options = comboboxOptions(input).filter((option) => !option.hidden);
+          setComboboxActive(input, options.at(-1) ?? null);
+        }
+        return;
+      }
+
+      const options = comboboxOptions(input).filter((option) => !option.hidden);
+      if (options.length === 0) return;
+      const activeIndex = options.findIndex((option) => option.id === input.getAttribute("aria-activedescendant"));
+      const nextIndex = (activeIndex + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
+      setComboboxActive(input, options[nextIndex] ?? null);
+      return;
+    }
+
+    if (event.key === "Enter" && expanded) {
+      const activeId = input.getAttribute("aria-activedescendant");
+      const activeOption = comboboxOptions(input).find((option) => option.id === activeId && !option.hidden);
+      if (activeOption) {
+        event.preventDefault();
+        selectComboboxOption(input, activeOption);
+      }
+      return;
+    }
+
+    if (event.key === "Escape" && expanded) {
+      event.preventDefault();
+      closeCombobox(input);
+      return;
+    }
+
+    return;
+  }
 
   const calendarDay = target.closest<HTMLButtonElement>(".sample-calendar-grid [data-date]");
   const calendar = calendarDay?.closest<HTMLElement>(".sample-calendar");
@@ -2485,6 +2633,8 @@ document.addEventListener("pointerout", (event) => {
 
 document.addEventListener("focusin", (event) => {
   const target = event.target instanceof Element ? event.target : null;
+  const comboInput = target?.closest<HTMLInputElement>(".sample-combo-input");
+  if (comboInput) openCombobox(comboInput);
   const tokenInput = target?.closest<HTMLInputElement>(".sample-multi-token-input");
   const tokenField = tokenInput?.closest<HTMLElement>(".sample-multi-token-field");
   const tokenPanel = tokenField?.querySelector<HTMLElement>(".sample-multi-token-options");
@@ -2503,6 +2653,7 @@ document.addEventListener("focusin", (event) => {
 document.addEventListener("focusout", (event) => {
   const target = event.target instanceof Element ? event.target : null;
   if (target instanceof HTMLInputElement && target.hasAttribute("data-form-field")) updateFormFieldState(target, true);
+  if (target instanceof HTMLInputElement && target.matches(".sample-combo-input")) closeCombobox(target);
   const owner = target?.closest<HTMLElement>(".sample-hover");
   if (!owner || (event.relatedTarget instanceof Node && owner.contains(event.relatedTarget))) return;
   owner.querySelector<HTMLElement>(".sample-hover-trigger")?.setAttribute("aria-expanded", "false");
