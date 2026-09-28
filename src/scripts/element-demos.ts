@@ -106,6 +106,44 @@ function initializeToastSample(sample: HTMLElement) {
   });
 }
 
+function initializeOverlayTrio(sample: HTMLElement) {
+  const instance = sample.dataset.sampleInstance ?? "example";
+  const popoverTrigger = sample.querySelector<HTMLButtonElement>(".sample-overlay-popover-example .sample-anchor");
+  const popover = sample.querySelector<HTMLElement>(".sample-overlay-popover");
+  if (popoverTrigger && popover) {
+    const id = `sample-overlay-popover-${instance}`;
+    popover.id = id;
+    popoverTrigger.setAttribute("aria-controls", id);
+    popoverTrigger.setAttribute("aria-expanded", String(!popover.hidden));
+    popoverTrigger.setAttribute("aria-haspopup", "dialog");
+    setAction(popoverTrigger, "toggle-popover");
+  }
+
+  const menuTrigger = sample.querySelector<HTMLButtonElement>(".sample-overlay-menu-example .sample-anchor");
+  const menu = sample.querySelector<HTMLElement>(".sample-overlay-menu-example [role='menu']");
+  if (menuTrigger && menu) {
+    const id = `sample-overlay-menu-${instance}`;
+    menu.id = id;
+    menuTrigger.setAttribute("aria-controls", id);
+    menuTrigger.setAttribute("aria-expanded", String(!menu.hidden));
+    menuTrigger.setAttribute("aria-haspopup", "menu");
+    setAction(menuTrigger, "toggle-popover");
+    menu.querySelectorAll<HTMLButtonElement>("[role='menuitem']").forEach((item) => {
+      setAction(item, "menu-command");
+    });
+  }
+
+  const tooltipTrigger = sample.querySelector<HTMLButtonElement>(".sample-overlay-tooltip-example [data-tooltip-trigger]");
+  const tooltip = sample.querySelector<HTMLElement>(".sample-overlay-tooltip-example [role='tooltip']");
+  if (tooltipTrigger && tooltip) {
+    tooltip.id = `sample-overlay-tooltip-${instance}`;
+    tooltipTrigger.setAttribute("aria-describedby", tooltip.id);
+    tooltipTrigger.removeAttribute("aria-expanded");
+    tooltipTrigger.removeAttribute("aria-haspopup");
+    tooltipTrigger.removeAttribute("data-action");
+  }
+}
+
 function initializeSurfaceDemo(sample: HTMLElement) {
   const demo = sample.querySelector<HTMLElement>(".sample-surface-demo");
   const controls = demo?.querySelectorAll<HTMLButtonElement>(".sample-surface-options [data-action='surface-select']");
@@ -1215,45 +1253,7 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "popover-dropdown-tooltip": {
-      const examples = sample.querySelectorAll<HTMLElement>(".sample-overlay-trio > div");
-      examples.forEach((example, index) => {
-        const anchor = example.querySelector<HTMLElement>(".sample-anchor");
-        if (!anchor) return;
-        const button = asButton(anchor, index === 2 ? "toggle-tooltip" : "toggle-popover");
-        button.setAttribute("aria-expanded", "false");
-        if (index === 0) {
-          button.setAttribute("aria-haspopup", "dialog");
-          const panel = example.querySelector<HTMLElement>("b");
-          if (panel) panel.hidden = true;
-        } else if (index === 1) {
-          button.setAttribute("aria-haspopup", "menu");
-          const oldPanel = example.querySelector<HTMLElement>("small");
-          if (oldPanel) {
-            const menu = document.createElement("div");
-            menu.className = "sample-menu";
-            menu.setAttribute("role", "menu");
-            menu.hidden = true;
-            for (const label of ["Edit", "Move", "Archive"]) {
-              const item = document.createElement("button");
-              item.type = "button";
-              item.textContent = label;
-              item.setAttribute("role", "menuitem");
-              setAction(item, "menu-command", label);
-              menu.append(item);
-            }
-            oldPanel.replaceWith(menu);
-          }
-        } else {
-          const tooltip = example.querySelector<HTMLElement>("small");
-          if (tooltip) {
-            tooltip.className = "sample-tooltip";
-            tooltip.id = `sample-tooltip-${sample.dataset.sampleInstance}`;
-            tooltip.setAttribute("role", "tooltip");
-            tooltip.hidden = true;
-            button.setAttribute("aria-describedby", tooltip.id);
-          }
-        }
-      });
+      initializeOverlayTrio(sample);
       break;
     }
     case "popover-macos": {
@@ -2307,6 +2307,7 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
     case "toggle-popover": {
       const group = button.parentElement;
       const panel = group?.querySelector<HTMLElement>(".sample-control-options")
+        ?? group?.querySelector<HTMLElement>(".sample-overlay-popover")
         ?? group?.querySelector<HTMLElement>(":scope > b, :scope > small, :scope > div:not(button)");
       if (!panel) break;
       const expanded = button.getAttribute("aria-expanded") !== "true";
@@ -2320,7 +2321,7 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
         const below = stageBounds ? stageBounds.bottom - triggerBounds.bottom : window.innerHeight - triggerBounds.bottom;
         const above = stageBounds ? triggerBounds.top - stageBounds.top : triggerBounds.top;
         panel.classList.toggle("opens-up", below < panelHeight + 8 && above > below);
-        panel.querySelector<HTMLElement>("[role='option'], [role='menuitem']")?.focus();
+        panel.querySelector<HTMLElement>("input:not([disabled]), button:not([disabled]), [role='option'], [role='menuitem']")?.focus();
       } else {
         panel.classList.remove("opens-up");
       }
@@ -2355,6 +2356,14 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       break;
     }
     case "menu-command": {
+      if (id === "popover-dropdown-tooltip") {
+        const feedback = sample.querySelector<HTMLElement>("[data-overlay-feedback]");
+        const command = button.textContent?.trim() ?? "Action";
+        if (feedback) {
+          feedback.textContent = `${command} selected in the demo. The menu closed.`;
+          feedback.hidden = false;
+        }
+      }
       if (id === "desktop-sidebar-source-list") {
         selectOne(sample, ".sample-source-list > button[data-action='menu-command']", button, "is-current");
         button.setAttribute("aria-current", "page");
@@ -2717,6 +2726,16 @@ document.addEventListener("click", (event) => {
     if (!well.contains(target)) closeColorWellPanels(well);
   });
 
+  document.querySelectorAll<HTMLElement>(".sample-overlay-trio > div").forEach((owner) => {
+    if (owner.contains(target)) return;
+    const trigger = owner.querySelector<HTMLButtonElement>("[aria-haspopup='dialog'], [aria-haspopup='menu']");
+    const panel = owner.querySelector<HTMLElement>(".sample-overlay-popover, [role='menu']");
+    if (trigger && panel && !panel.hidden) {
+      panel.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+    }
+  });
+
   const opener = target.closest<HTMLElement>("[data-open-demo]");
   if (opener && dialog && dialogTitle && dialogDescription && dialogStage) {
     const entry = opener.closest<HTMLElement>(".element-entry");
@@ -2742,6 +2761,7 @@ document.addEventListener("click", (event) => {
         if (clone.dataset.specimenId === "drag-and-drop") initializeDragDropSample(clone);
         if (clone.dataset.specimenId === "toast-snackbar") initializeToastSample(clone);
         if (clone.dataset.specimenId === "modal-dialog-drawer-sheet") initializeSurfaceDemo(clone);
+        if (clone.dataset.specimenId === "popover-dropdown-tooltip") initializeOverlayTrio(clone);
         if (clone.dataset.specimenId === "progress-ring-spinner-bar") {
           initializeProgressDemo(clone, { autoStart: true, reset: true });
         }
@@ -3055,6 +3075,15 @@ document.addEventListener("keydown", (event) => {
   }
 
   if (event.key === "Escape" && target.closest(".ui-sample")) {
+    const tooltipExample = sample?.querySelector<HTMLElement>(".sample-overlay-tooltip-example");
+    const tooltipTrigger = tooltipExample?.querySelector<HTMLButtonElement>("[data-tooltip-trigger]");
+    const tooltip = tooltipExample?.querySelector<HTMLElement>("[role='tooltip']");
+    if (tooltipTrigger && tooltip && !tooltip.hidden) {
+      tooltipTrigger.dataset.tooltipDismissed = "true";
+      tooltip.hidden = true;
+      event.preventDefault();
+      return;
+    }
     const datePicker = target.closest<HTMLElement>(".sample-date-picker[data-calendar-open='true']");
     if (datePicker) {
       setCalendarOpen(datePicker, false);
@@ -3103,7 +3132,7 @@ document.addEventListener("keydown", (event) => {
     }
     const expanded = target.closest<HTMLElement>(".sample-overflow, .sample-combo-button, .sample-overlay-trio > div, .sample-popover-macos, .sample-control-trio > div, .sample-menu-bar");
     const trigger = expanded?.querySelector<HTMLElement>("[aria-expanded='true']");
-    const panel = expanded?.querySelector<HTMLElement>(".sample-menu, .sample-control-options, [role='tooltip']");
+    const panel = expanded?.querySelector<HTMLElement>(".sample-menu, .sample-control-options, .sample-overlay-popover, [role='tooltip']");
     if (trigger && panel) {
       event.preventDefault();
       trigger.setAttribute("aria-expanded", "false");
@@ -3245,6 +3274,18 @@ document.addEventListener("change", (event) => {
   const input = event.target instanceof HTMLInputElement ? event.target : null;
   const sample = input?.closest<HTMLElement>(".ui-sample");
   if (!input || !sample) return;
+  if (input.dataset.inputAction === "overlay-filter") {
+    const selected = Array.from(sample.querySelectorAll<HTMLInputElement>(".sample-overlay-popover input[data-input-action='overlay-filter']:checked"))
+      .map((option) => option.value);
+    const message = selected.length ? `${selected.join(" and ")} filters are active.` : "No project filters are active.";
+    const feedback = sample.querySelector<HTMLElement>("[data-overlay-feedback]");
+    if (feedback) {
+      feedback.textContent = message;
+      feedback.hidden = false;
+    }
+    announce(sample, message);
+    return;
+  }
   if (input.dataset.inputAction === "multi-checkbox-option") {
     const showcase = input.closest<HTMLElement>(".sample-multi-select-showcase");
     if (!showcase) return;
@@ -3291,46 +3332,44 @@ reducedMotionPreference.addEventListener("change", () => {
   document.querySelectorAll<HTMLElement>(".sample-parallax-viewport").forEach(updateParallaxLayers);
 });
 
+function syncOverlayTooltip(example: HTMLElement) {
+  const trigger = example.querySelector<HTMLButtonElement>("[data-tooltip-trigger]");
+  const tooltip = example.querySelector<HTMLElement>("[role='tooltip']");
+  if (!trigger || !tooltip) return;
+  const dismissed = trigger.dataset.tooltipDismissed === "true";
+  tooltip.hidden = dismissed || !(trigger.matches(":hover") || document.activeElement === trigger);
+}
+
 document.addEventListener("pointerover", (event) => {
   const target = event.target instanceof Element ? event.target : null;
-  const trigger = target?.closest<HTMLElement>("[data-action='toggle-tooltip']");
-  const tooltip = trigger?.parentElement?.querySelector<HTMLElement>("[role='tooltip']");
-  if (trigger && tooltip) {
-    tooltip.hidden = false;
-    trigger.setAttribute("aria-expanded", "true");
+  const trigger = target?.closest<HTMLElement>("[data-tooltip-trigger]");
+  const example = trigger?.closest<HTMLElement>(".sample-overlay-tooltip-example");
+  if (trigger && example) {
+    delete trigger.dataset.tooltipDismissed;
+    syncOverlayTooltip(example);
   }
 });
 
 document.addEventListener("pointerout", (event) => {
   const target = event.target instanceof Element ? event.target : null;
-  const example = target?.closest<HTMLElement>(".sample-overlay-trio > div");
-  const trigger = example?.querySelector<HTMLElement>("[data-action='toggle-tooltip']");
-  const tooltip = example?.querySelector<HTMLElement>("[role='tooltip']");
-  if (trigger && tooltip && !example?.contains(event.relatedTarget as Node | null)) {
-    tooltip.hidden = true;
-    trigger.setAttribute("aria-expanded", "false");
-  }
+  const example = target?.closest<HTMLElement>(".sample-overlay-tooltip-example");
+  if (example && !example.contains(event.relatedTarget as Node | null)) syncOverlayTooltip(example);
 });
 
 document.addEventListener("focusin", (event) => {
   const target = event.target instanceof Element ? event.target : null;
-  const trigger = target?.closest<HTMLElement>("[data-action='toggle-tooltip']");
-  const tooltip = trigger?.parentElement?.querySelector<HTMLElement>("[role='tooltip']");
-  if (trigger && tooltip) {
-    tooltip.hidden = false;
-    trigger.setAttribute("aria-expanded", "true");
+  const trigger = target?.closest<HTMLElement>("[data-tooltip-trigger]");
+  const example = trigger?.closest<HTMLElement>(".sample-overlay-tooltip-example");
+  if (trigger && example) {
+    delete trigger.dataset.tooltipDismissed;
+    syncOverlayTooltip(example);
   }
 });
 
 document.addEventListener("focusout", (event) => {
   const target = event.target instanceof Element ? event.target : null;
-  const example = target?.closest<HTMLElement>(".sample-overlay-trio > div");
-  const trigger = example?.querySelector<HTMLElement>("[data-action='toggle-tooltip']");
-  const tooltip = example?.querySelector<HTMLElement>("[role='tooltip']");
-  if (trigger && tooltip && !example?.contains(event.relatedTarget as Node | null)) {
-    tooltip.hidden = true;
-    trigger.setAttribute("aria-expanded", "false");
-  }
+  const example = target?.closest<HTMLElement>(".sample-overlay-tooltip-example");
+  if (example && !example.contains(event.relatedTarget as Node | null)) syncOverlayTooltip(example);
 });
 
 document.querySelectorAll<HTMLDialogElement>(".element-demo-dialog").forEach((elementDialog) => {
