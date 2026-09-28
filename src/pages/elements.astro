@@ -357,6 +357,14 @@ const slugify = (value: string) =>
     font-size: 1.05rem;
   }
 
+  .element-demo-stage .ui-sample:has(.sample-parallax) {
+    max-width: 40rem;
+  }
+
+  .element-demo-stage .sample-parallax-viewport {
+    height: 13rem;
+  }
+
   .element-demo-stage .ui-sample small {
     font-size: 0.82rem;
   }
@@ -551,10 +559,28 @@ const slugify = (value: string) =>
   .sample-calendar-grid .is-selected,
   .sample-calendar-grid button.is-selected { color: var(--color-white); background: var(--color-scout-blue); border-radius: var(--radius-sm); }
 
-  .sample-parallax { position: relative; display: grid; width: 100%; min-height: 8rem; align-content: center; justify-items: center; overflow: hidden; background: var(--color-surface-muted); }
-  .sample-parallax-back { position: absolute; top: 0.4rem; color: var(--color-scout-blue); font-size: 1.1rem; font-weight: 700; letter-spacing: 0.12em; }
-  .sample-parallax-mid { width: 8rem; height: 3.5rem; background: var(--color-builder-green-soft); border: 1px solid var(--color-builder-green-border); transform: skew(-16deg); }
-  .sample-parallax-front { position: absolute; bottom: 0.5rem; padding: 0.35rem 0.7rem; background: var(--color-white); }
+  .sample-parallax { display: grid; width: 100%; min-height: 15rem; align-content: center; gap: 0.55rem; }
+  .sample-parallax-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.85rem; color: var(--color-text-muted); font-size: 0.7rem; }
+  .sample-parallax-key { display: inline-flex; align-items: center; gap: 0.35rem; white-space: nowrap; }
+  .sample-parallax-key::before { width: 0.5rem; height: 0.5rem; flex: 0 0 auto; background: var(--color-scout-blue); border-radius: 1px; content: ""; }
+  .sample-parallax-key-back::before { background: var(--color-scout-blue); }
+  .sample-parallax-key-middle::before { background: var(--color-builder-green); }
+  .sample-parallax-key-front::before { background: var(--color-thinker-orange); }
+  .sample-parallax-key b { color: var(--color-text); font-size: inherit; }
+  .sample-parallax-viewport { height: 9.5rem; overflow: auto; overscroll-behavior: contain; background: var(--color-scout-blue-soft); border: 1px solid var(--color-scout-blue-border); border-radius: var(--radius-sm); scrollbar-color: var(--color-scout-blue-border) transparent; scrollbar-width: thin; }
+  .sample-parallax-viewport:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+  .sample-parallax-track { position: relative; min-height: 27rem; isolation: isolate; overflow: clip; background: var(--color-scout-blue-soft); }
+  .sample-parallax-layer { position: absolute; inset: 0; pointer-events: none; transform: translate3d(0, var(--parallax-offset-y, 0), 0); will-change: transform; }
+  .sample-parallax-background { z-index: 0; }
+  .sample-parallax-sun { position: absolute; top: 1.15rem; right: 16%; width: 1.4rem; aspect-ratio: 1; background: var(--color-thinker-orange); border-radius: 50%; }
+  .sample-parallax-mountain { position: absolute; top: 3.1rem; right: -4%; left: -4%; height: 8rem; background: var(--color-scout-blue-border); clip-path: polygon(0 72%, 14% 42%, 27% 66%, 44% 24%, 58% 62%, 77% 35%, 100% 72%, 100% 100%, 0 100%); }
+  .sample-parallax-middle { z-index: 1; }
+  .sample-parallax-hill { position: absolute; top: 7rem; right: -7%; left: -7%; height: 8rem; background: var(--color-builder-green-soft); clip-path: polygon(0 38%, 18% 18%, 39% 52%, 61% 22%, 81% 48%, 100% 28%, 100% 100%, 0 100%); }
+  .sample-parallax-content { position: relative; z-index: 2; display: grid; justify-items: center; gap: 2.1rem; padding: 2.4rem 1rem 1.25rem; }
+  .sample-parallax-card { display: grid; width: min(78%, 19rem); gap: 0.1rem; padding: 0.55rem 0.7rem; background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-sm); box-shadow: 0 0.2rem 0.55rem rgb(68 58 59 / 8%); }
+  .sample-parallax-card:nth-child(2) { margin-inline: auto; }
+  .sample-parallax-card:nth-child(3) { margin-inline-start: auto; }
+  .sample-parallax-card p { margin: 0; color: var(--color-text-muted); font-size: 0.75rem; }
 
   .sample-carousel { display: flex; width: 100%; gap: 0.65rem; overflow: hidden; }
   .sample-carousel-card { display: grid; min-width: 8rem; min-height: 6rem; align-content: space-between; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: 0.7rem; }
@@ -1220,6 +1246,11 @@ const slugify = (value: string) =>
   }
 
   @media (max-width: 420px) {
+    .sample-parallax-legend { gap: 0.3rem 0.55rem; font-size: 0.66rem; }
+    .sample-parallax-key { gap: 0.25rem; }
+    .sample-parallax-viewport { height: 9rem; }
+    .sample-parallax-card { width: min(88%, 19rem); }
+
     .element-demo-stage:has(.sample-control-trio) {
       min-height: 14rem;
     }

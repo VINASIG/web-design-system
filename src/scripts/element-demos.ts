@@ -1507,6 +1507,25 @@ document.addEventListener("change", (event) => {
   }
 });
 
+const reducedMotionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+function updateParallaxLayers(viewport: HTMLElement) {
+  const scrollPosition = reducedMotionPreference.matches ? 0 : viewport.scrollTop;
+  viewport.querySelectorAll<HTMLElement>("[data-parallax-speed]").forEach((layer) => {
+    const speed = Number(layer.dataset.parallaxSpeed ?? "1");
+    layer.style.setProperty("--parallax-offset-y", `${scrollPosition * (1 - speed)}px`);
+  });
+}
+
+document.addEventListener("scroll", (event) => {
+  const viewport = event.target instanceof HTMLElement ? event.target : null;
+  if (viewport?.matches(".sample-parallax-viewport")) updateParallaxLayers(viewport);
+}, true);
+
+reducedMotionPreference.addEventListener("change", () => {
+  document.querySelectorAll<HTMLElement>(".sample-parallax-viewport").forEach(updateParallaxLayers);
+});
+
 document.addEventListener("pointerover", (event) => {
   const target = event.target instanceof Element ? event.target : null;
   const trigger = target?.closest<HTMLElement>("[data-action='toggle-tooltip']");
