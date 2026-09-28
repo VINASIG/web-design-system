@@ -75,7 +75,7 @@
   "segmented-control-macos": "<div class='sample-segmented'><b>Icons</b><span>List</span><span>Columns</span></div>",
   "delete-sheet": "<div class='sample-delete-sheet'><b>Delete this item?</b><small>This action cannot be undone.</small><footer><span>Cancel</span><b>Delete</b></footer></div>",
   "desktop-sidebar-source-list": "<div class='sample-source-list'><small>LIBRARY</small><b><i class='fi-br-folder'></i>Projects</b><span><i class='fi-br-clock'></i>Recent</span><span><i class='fi-br-star'></i>Favorites</span><small>LOCATIONS</small><span>Documents</span></div>",
-  "stepper": "<div class='sample-stepper'><span><i class='fi-br-minus'></i></span><b>3</b><span>+</span><small>Quantity</small></div>",
+  "stepper": "<div class='sample-stepper'><span>−</span><b>3</b><span>+</span><small>Quantity</small></div>",
   "toolbar-unified-title-bar": "<div class='sample-toolbar'><div><i class='fi-br-angle-left'></i><i class='fi-br-angle-right'></i></div><b>Brand guidelines</b><div><i class='fi-br-search'></i><i class='fi-br-share'></i></div></div>",
   "traffic-lights-window-controls": "<div class='sample-traffic-window'><div class='sample-traffic-lights'><i></i><i></i><i></i><b>Project notes</b></div><div><strong>Window controls</strong><small>Workspace content is ready.</small></div></div>",
   "visual-effect-material-vibrancy": "<div class='sample-vibrancy'><div><small>TRANSCRIPTION</small><b>Meeting notes</b><span>Summary and next actions</span></div></div>",
