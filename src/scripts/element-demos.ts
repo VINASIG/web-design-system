@@ -654,26 +654,12 @@ function enhanceSample(sample: HTMLElement) {
     }
     case "combo-button": {
       sample.classList.add("sample-combo-demo");
-      const trigger = sample.querySelector<HTMLElement>(".sample-combo-button > span");
-      const description = sample.querySelector<HTMLElement>(".sample-combo-button > small");
-      if (trigger) {
-        const button = asButton(trigger, "toggle-menu", "More publish options");
-        button.setAttribute("aria-haspopup", "menu");
-        button.setAttribute("aria-expanded", "false");
-      }
-      if (description) {
-        const menu = document.createElement("div");
-        menu.className = "sample-menu sample-combo-menu";
-        menu.hidden = true;
-        for (const label of ["Publish now", "Schedule", "Save as draft"]) {
-          const item = document.createElement("button");
-          item.type = "button";
-          item.textContent = label;
-          setAction(item, "menu-command", label);
-          menu.append(item);
-        }
-        description.replaceWith(menu);
-      }
+      const primary = sample.querySelector<HTMLElement>(".sample-combo-button > button[data-action='combo-primary']");
+      const trigger = sample.querySelector<HTMLElement>(".sample-combo-button > button[aria-haspopup='menu']");
+      const menu = sample.querySelector<HTMLElement>(".sample-combo-menu");
+      menu?.querySelectorAll<HTMLElement>("[role='menuitem']").forEach((item) => { item.tabIndex = -1; });
+      primary?.setAttribute("aria-label", "Save");
+      trigger?.setAttribute("aria-expanded", "false");
       sample.append(visibleStatus("sample-combo-feedback"));
       break;
     }
@@ -794,6 +780,21 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
   const id = sample.dataset.specimenId;
 
   switch (action) {
+    case "combo-primary": {
+      const group = button.closest<HTMLElement>(".sample-combo-button");
+      const menu = group?.querySelector<HTMLElement>(".sample-combo-menu");
+      const trigger = group?.querySelector<HTMLElement>("[aria-haspopup='menu']");
+      const feedback = sample.querySelector<HTMLElement>(".sample-combo-feedback");
+      if (menu) menu.hidden = true;
+      trigger?.setAttribute("aria-expanded", "false");
+      if (feedback) {
+        feedback.textContent = "Saved.";
+        feedback.hidden = false;
+        feedback.focus();
+      }
+      announce(sample, "Saved.");
+      break;
+    }
     case "toggle-marquee": {
       const marquee = button.closest<HTMLElement>(".sample-marquee");
       if (!marquee) break;
@@ -966,7 +967,14 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       button.setAttribute("aria-expanded", String(expanded));
       const menu = button.closest(".sample-overflow, .sample-combo-button")?.querySelector<HTMLElement>(".sample-menu");
       if (menu) menu.hidden = !expanded;
-      if (expanded) button.closest(".sample-overflow, .sample-combo-button")?.querySelector<HTMLElement>(".sample-menu button")?.focus();
+      if (expanded) {
+        const owner = button.closest<HTMLElement>(".sample-overflow, .sample-combo-button");
+        if (owner?.matches(".sample-combo-button")) {
+          const feedback = owner.parentElement?.querySelector<HTMLElement>(".sample-combo-feedback");
+          if (feedback) feedback.hidden = true;
+        }
+        owner?.querySelector<HTMLElement>(".sample-menu button")?.focus();
+      }
       break;
     }
     case "toggle-menubar": {
@@ -1417,6 +1425,7 @@ document.addEventListener("keydown", (event) => {
     const trigger = expanded?.querySelector<HTMLElement>("[aria-expanded='true']");
     const panel = expanded?.querySelector<HTMLElement>(".sample-menu, .sample-control-options, [role='tooltip']");
     if (trigger && panel) {
+      event.preventDefault();
       trigger.setAttribute("aria-expanded", "false");
       panel.hidden = true;
       trigger.focus();

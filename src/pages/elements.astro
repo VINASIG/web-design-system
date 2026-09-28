@@ -919,12 +919,12 @@ const slugify = (value: string) =>
   .sample-token-field > div b { display: flex; gap: 0.35rem; padding: 0.25rem 0.4rem; color: var(--color-scout-blue-strong); background: var(--color-scout-blue-soft); border-radius: 3px; font-size: 0.68rem; }
   .sample-token-field > div small { padding-inline: 0.3rem; }
 
-  .sample-combo-button { position: relative; display: flex; align-items: center; color: var(--color-white); background: var(--color-scout-blue); border-radius: var(--radius-sm); }
+  .sample-combo-button { position: relative; display: inline-flex; align-items: stretch; color: var(--color-white); background: var(--color-scout-blue); border-radius: var(--radius-sm); }
   .ui-sample.sample-combo-demo { display: grid; align-content: center; justify-items: center; gap: 0.7rem; }
-  .sample-combo-button > b,
-  .sample-combo-button > span { padding: 0.55rem 0.7rem; }
-  .sample-combo-button > span { border-left: 1px solid rgb(255 255 255 / 35%); }
-  .sample-combo-button > small { position: absolute; top: 2.8rem; left: 0; padding: 0.35rem 0.5rem; color: var(--color-text); background: var(--color-white); border: 1px solid var(--color-border); }
+  .sample-combo-button > button:first-child { min-width: 4.5rem; padding: 0.55rem 0.85rem; border-radius: var(--radius-sm) 0 0 var(--radius-sm); font-weight: 600; }
+  .sample-combo-button > button[aria-haspopup="menu"] { display: grid; width: 2.65rem; flex: 0 0 auto; place-items: center; padding: 0; border-left: 1px solid rgb(255 255 255 / 35%); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+  .sample-combo-button > button:hover { background: rgb(255 255 255 / 12%); }
+  .sample-combo-menu { position: absolute; z-index: 8; top: calc(100% + 0.3rem); left: 0; width: max-content; min-width: min(11rem, calc(100vw - 2rem)); max-width: min(15rem, calc(100vw - 2rem)); box-sizing: border-box; }
   .sample-combo-button i { color: var(--color-white) !important; }
 
   .sample-capacity { display: grid; width: min(100%, 18rem); gap: 0.4rem; }
@@ -1098,9 +1098,7 @@ const slugify = (value: string) =>
   .sample-delete-sheet footer > button[data-action="confirm-delete"] { color: var(--color-white); background: var(--color-scout-blue); }
   .sample-token-field > div > button { font-size: 0.88rem; }
   .sample-combo-button > button { min-height: 2.5rem; color: var(--color-white); }
-  .sample-combo-button > button[aria-haspopup="menu"] { padding: 0.55rem 0.7rem; border-left: 1px solid rgb(255 255 255 / 35%); }
   .sample-combo-menu button { color: var(--color-text); }
-  .sample-combo-menu button[aria-selected="true"] { color: var(--color-scout-blue-strong); background: var(--color-scout-blue-soft); }
   .sample-control-trio > div { position: relative; min-width: 0; }
   .sample-control-trio > div > button { min-height: 2.4rem; padding: 0.4rem 0.55rem; background: var(--color-white); border: 1px solid var(--color-border); border-radius: 3px; text-align: left; }
   .sample-control-options { position: absolute; z-index: 8; top: calc(100% + 0.25rem); left: 0; width: max-content; min-width: 100%; max-width: min(15rem, calc(100vw - 2rem)); padding: 0.25rem; color: var(--color-text); background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-sm); box-shadow: 0 0.5rem 1rem rgb(68 58 59 / 14%); }
