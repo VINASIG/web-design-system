@@ -1471,6 +1471,80 @@ function setColorWellValue(well: HTMLElement, color: string, name: string) {
   });
 }
 
+const lightboxPhotos = [
+  { name: "Dune light", location: "Erg Chebbi · Morocco", alt: "Sunset over golden dunes", scene: "dunes" },
+  { name: "Coastal road", location: "Algarve · Portugal", alt: "A quiet road above the blue coast", scene: "coast" },
+  { name: "Forest calm", location: "Dolomites · Italy", alt: "Misty pines in the morning", scene: "forest" },
+] as const;
+
+const lightboxDialogOwners = new WeakMap<HTMLDialogElement, HTMLElement>();
+const lightboxDialogPlaceholders = new WeakMap<HTMLDialogElement, Comment>();
+const initializedLightboxDialogs = new WeakSet<HTMLDialogElement>();
+
+function lightboxRootFor(element: Element) {
+  const dialog = element.closest<HTMLDialogElement>(".sample-lightbox-dialog");
+  return dialog
+    ? lightboxDialogOwners.get(dialog) ?? dialog.closest<HTMLElement>(".sample-lightbox")
+    : element.closest<HTMLElement>(".sample-lightbox");
+}
+
+function prepareLightboxSample(root: HTMLElement) {
+  const viewer = root.querySelector<HTMLDialogElement>(".sample-lightbox-dialog");
+  if (!viewer) return;
+  lightboxDialogOwners.set(viewer, root);
+  if (initializedLightboxDialogs.has(viewer)) return;
+  initializedLightboxDialogs.add(viewer);
+  viewer.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeLightbox(viewer);
+  });
+}
+
+function portalLightboxDialog(root: HTMLElement, viewer: HTMLDialogElement) {
+  lightboxDialogOwners.set(viewer, root);
+  if (!root.closest(".element-demo-dialog[open]") || viewer.parentElement === document.body) return;
+  const placeholder = document.createComment("Lightbox viewer position");
+  viewer.before(placeholder);
+  lightboxDialogPlaceholders.set(viewer, placeholder);
+  document.body.append(viewer);
+}
+
+function restoreLightboxDialog(viewer: HTMLDialogElement) {
+  const placeholder = lightboxDialogPlaceholders.get(viewer);
+  if (placeholder?.parentNode) placeholder.replaceWith(viewer);
+  lightboxDialogPlaceholders.delete(viewer);
+}
+
+function updateLightbox(root: HTMLElement, index: number, viewer = root.querySelector<HTMLDialogElement>(".sample-lightbox-dialog")) {
+  const photoIndex = (index + lightboxPhotos.length) % lightboxPhotos.length;
+  const photo = lightboxPhotos[photoIndex];
+  if (!photo) return;
+
+  root.dataset.lightboxIndex = String(photoIndex);
+  const image = viewer?.querySelector<HTMLElement>("[data-lightbox-art]");
+  if (image) {
+    image.className = `sample-lightbox-art sample-lightbox-art--${photo.scene} sample-lightbox-hero`;
+    image.setAttribute("aria-label", photo.alt);
+  }
+  const title = viewer?.querySelector<HTMLElement>("[data-lightbox-title]");
+  const location = viewer?.querySelector<HTMLElement>("[data-lightbox-location]");
+  const count = viewer?.querySelector<HTMLElement>("[data-lightbox-count]");
+  if (title) title.textContent = photo.name;
+  if (location) location.textContent = photo.location;
+  if (count) count.textContent = `${String(photoIndex + 1).padStart(2, "0")} / ${String(lightboxPhotos.length).padStart(2, "0")}`;
+  viewer?.querySelectorAll<HTMLButtonElement>("[data-action='lightbox-select']").forEach((thumbnail, thumbnailIndex) => {
+    thumbnail.setAttribute("aria-pressed", String(thumbnailIndex === photoIndex));
+  });
+}
+
+function closeLightbox(dialog: HTMLDialogElement) {
+  const root = lightboxDialogOwners.get(dialog) ?? dialog.closest<HTMLElement>(".sample-lightbox");
+  const index = root?.dataset.lightboxIndex ?? "0";
+  if (dialog.open) dialog.close();
+  restoreLightboxDialog(dialog);
+  root?.querySelector<HTMLButtonElement>(`[data-action='toggle-lightbox'][data-lightbox-index='${index}']`)?.focus();
+}
+
 function runAction(sample: HTMLElement, button: HTMLElement) {
   const action = button.dataset.action;
   const id = sample.dataset.specimenId;
@@ -1859,19 +1933,33 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
     }
     case "toggle-lightbox": {
       const root = button.closest<HTMLElement>(".sample-lightbox");
-      const viewer = root?.querySelector<HTMLElement>(".sample-lightbox-viewer");
-      if (viewer) {
-        viewer.hidden = false;
-        viewer.querySelector<HTMLElement>("[data-action='close-lightbox']")?.focus();
-      }
+      const viewer = root?.querySelector<HTMLDialogElement>(".sample-lightbox-dialog");
+      if (!root || !viewer) break;
+      prepareLightboxSample(root);
+      updateLightbox(root, Number(button.dataset.lightboxIndex ?? 0), viewer);
+      portalLightboxDialog(root, viewer);
+      if (!viewer.open) viewer.showModal();
+      viewer.querySelector<HTMLElement>("[data-action='close-lightbox']")?.focus();
       break;
     }
     case "close-lightbox": {
-      const root = button.closest<HTMLElement>(".sample-lightbox");
-      const viewer = root?.querySelector<HTMLElement>(".sample-lightbox-viewer");
-      const thumbnail = root?.querySelector<HTMLElement>(".sample-lightbox-thumbnail");
-      if (viewer) viewer.hidden = true;
-      thumbnail?.focus();
+      const root = lightboxRootFor(button);
+      const viewer = button.closest<HTMLDialogElement>(".sample-lightbox-dialog")
+        ?? root?.querySelector<HTMLDialogElement>(".sample-lightbox-dialog");
+      if (viewer) closeLightbox(viewer);
+      break;
+    }
+    case "lightbox-previous":
+    case "lightbox-next":
+    case "lightbox-select": {
+      const root = lightboxRootFor(button);
+      if (!root) break;
+      const viewer = button.closest<HTMLDialogElement>(".sample-lightbox-dialog");
+      const current = Number(root.dataset.lightboxIndex ?? 0);
+      const next = action === "lightbox-select"
+        ? Number(button.dataset.lightboxIndex ?? 0)
+        : current + (action === "lightbox-next" ? 1 : -1);
+      updateLightbox(root, next, viewer);
       break;
     }
     case "toggle-outline": {
@@ -2272,6 +2360,17 @@ document.addEventListener("click", (event) => {
   const target = event.target instanceof Element ? event.target : null;
   if (!target) return;
 
+  const lightboxDialog = target.closest<HTMLDialogElement>(".sample-lightbox-dialog[open]");
+  if (lightboxDialog && target === lightboxDialog) {
+    const bounds = lightboxDialog.getBoundingClientRect();
+    const outsideDialog = event.clientX < bounds.left || event.clientX > bounds.right
+      || event.clientY < bounds.top || event.clientY > bounds.bottom;
+    if (outsideDialog) {
+      closeLightbox(lightboxDialog);
+      return;
+    }
+  }
+
   const comboOption = target.closest<HTMLElement>(".sample-combobox-popup [role='option']");
   if (comboOption && event.detail === 0) {
     const input = comboOption.closest<HTMLElement>(".sample-combobox")?.querySelector<HTMLInputElement>(".sample-combo-input");
@@ -2381,7 +2480,9 @@ document.addEventListener("click", (event) => {
   }
 
   const actionButton = target.closest<HTMLElement>("[data-action]");
-  const sample = actionButton?.closest<HTMLElement>(".ui-sample");
+  const actionLightboxDialog = actionButton?.closest<HTMLDialogElement>(".sample-lightbox-dialog");
+  const sample = actionButton?.closest<HTMLElement>(".ui-sample")
+    ?? (actionLightboxDialog ? lightboxDialogOwners.get(actionLightboxDialog)?.closest<HTMLElement>(".ui-sample") : null);
   if (actionButton && sample) {
     if (actionButton.dataset.action === "submit-demo" && actionButton instanceof HTMLButtonElement && actionButton.type === "submit") return;
     runAction(sample, actionButton);
@@ -2448,6 +2549,17 @@ document.addEventListener("keydown", (event) => {
   const target = event.target instanceof HTMLElement ? event.target : null;
   if (!target) return;
   const sample = target.closest<HTMLElement>(".ui-sample");
+
+  const lightboxDialog = target.closest<HTMLDialogElement>(".sample-lightbox-dialog[open]");
+  if (lightboxDialog && ["ArrowLeft", "ArrowRight"].includes(event.key)) {
+    const root = lightboxDialogOwners.get(lightboxDialog) ?? lightboxDialog.closest<HTMLElement>(".sample-lightbox");
+    if (root) {
+      event.preventDefault();
+      const current = Number(root.dataset.lightboxIndex ?? 0);
+      updateLightbox(root, current + (event.key === "ArrowRight" ? 1 : -1), lightboxDialog);
+    }
+    return;
+  }
 
   if (target.matches(".sample-combo-input")) {
     const input = target as HTMLInputElement;
@@ -2648,12 +2760,6 @@ document.addEventListener("keydown", (event) => {
       multiTokenPanel.hidden = true;
       multiTokenInput.setAttribute("aria-expanded", "false");
       multiTokenInput.focus();
-      event.preventDefault();
-      return;
-    }
-    const viewer = target.closest<HTMLElement>(".sample-lightbox-viewer");
-    if (viewer) {
-      viewer.querySelector<HTMLElement>("[data-action='close-lightbox']")?.click();
       event.preventDefault();
       return;
     }

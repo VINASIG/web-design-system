@@ -268,8 +268,8 @@
       "platform": "Web",
       "category": "Feedback and overlays",
       "definition": "An overlay that presents an enlarged image or media item above the page.",
-      "guidance": "Use when inspecting the media is the task. Provide an obvious close action, keep captions and next or previous controls near the media, and adapt the viewer to the available viewport.",
-      "accessibility": "Use a labeled dialog, place and restore focus, support Escape, and expose useful media alternatives or captions. Do not trap focus in a non-modal overlay."
+      "guidance": "Use when inspecting the media is the task. Open a modal viewer from a clear thumbnail, keep the caption and next or previous controls beside the media, and adapt the image to the available viewport.",
+      "accessibility": "Open a labeled native dialog modally so the page behind it is inert. Support Escape and backdrop dismissal, return focus to the selected thumbnail, and provide useful media alternatives or captions. Arrow-key gallery navigation should not scroll the page."
     },
     {
       "order": 26,
