@@ -98,7 +98,11 @@ function addChip(container: HTMLElement, label: string, className = "sample-sele
   const multiSelectInput = container.matches(".sample-multiselect")
     ? container.querySelector<HTMLElement>(".sample-input-line")
     : null;
+  const tokenFieldInput = container.matches(".sample-token-field > div")
+    ? container.querySelector<HTMLElement>(".sample-token-input")
+    : null;
   if (multiSelectInput) container.insertBefore(chip, multiSelectInput);
+  else if (tokenFieldInput) container.insertBefore(chip, tokenFieldInput);
   else container.append(chip);
 }
 
