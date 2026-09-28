@@ -695,7 +695,27 @@ const slugify = (value: string) =>
   .sample-lightbox-image { width: min(32rem, 78vw); height: auto; aspect-ratio: 1.4; padding: 0.65rem; gap: 0.45rem; }
   .sample-lightbox-viewer p { margin: 0; }
 
-  .sample-marquee { display: flex; width: 100%; align-items: center; justify-content: space-around; gap: 1rem; overflow: hidden; padding: 0.75rem; color: var(--color-scout-blue); background: var(--color-scout-blue-soft); white-space: nowrap; }
+  .sample-marquee { display: grid; width: 100%; gap: 0.5rem; color: var(--color-scout-blue); }
+  .sample-marquee-window { width: 100%; overflow: hidden; padding: 0.75rem; background: var(--color-scout-blue-soft); }
+  .sample-marquee-track { display: flex; width: max-content; }
+  .sample-marquee-group { display: flex; flex: none; align-items: center; gap: 1rem; padding-inline-end: 2rem; white-space: nowrap; }
+  .sample-marquee-accessible { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
+  .sample-marquee-toggle { justify-self: end; min-height: 2rem; padding: 0.35rem 0.65rem; color: var(--color-scout-blue-strong); background: var(--color-scout-blue-soft); border: 1px solid var(--color-scout-blue-border); border-radius: var(--radius-sm); font-size: 0.82rem; }
+  .element-preview .sample-marquee { max-width: 100%; }
+  .element-preview .sample-marquee-window { padding: 0.6rem; }
+  .element-preview .sample-marquee-track { width: 100%; }
+  .element-preview .sample-marquee-group { width: 100%; justify-content: center; flex-wrap: wrap; gap: 0.5rem; padding: 0; white-space: normal; }
+  .element-preview .sample-marquee-group[aria-hidden="true"] { display: none; }
+  .element-preview .sample-marquee-toggle { display: none; }
+  .element-demo-stage .sample-marquee { width: min(100%, 40rem); }
+  .element-demo-stage .sample-marquee-track { animation: sample-marquee-scroll 18s linear infinite; }
+  .element-demo-stage .sample-marquee-window:hover .sample-marquee-track,
+  .element-demo-stage .sample-marquee.is-paused .sample-marquee-track { animation-play-state: paused; }
+  @keyframes sample-marquee-scroll { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .element-demo-stage .sample-marquee-track { animation: none; }
+    .element-demo-stage .sample-marquee-toggle { display: none; }
+  }
 
   .sample-editor-line { display: flex; width: 100%; align-items: center; gap: 0.2rem; padding: 0.65rem; background: var(--color-white); border: 1px solid var(--color-border); }
   .sample-editor-line i { width: 1px; height: 1rem; background: var(--color-scout-blue); }

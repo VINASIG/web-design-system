@@ -794,6 +794,15 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
   const id = sample.dataset.specimenId;
 
   switch (action) {
+    case "toggle-marquee": {
+      const marquee = button.closest<HTMLElement>(".sample-marquee");
+      if (!marquee) break;
+      const paused = marquee.classList.toggle("is-paused");
+      button.setAttribute("aria-pressed", String(paused));
+      button.setAttribute("aria-label", paused ? "Resume marquee motion" : "Pause marquee motion");
+      button.textContent = paused ? "Resume motion" : "Pause motion";
+      break;
+    }
     case "select-nav":
       selectOne(button.parentElement ?? sample, ".sample-nav-item", button);
       announce(sample, `${button.getAttribute("aria-label")} selected.`);
