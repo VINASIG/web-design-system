@@ -331,15 +331,15 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "color-well": {
-      const swatch = sample.querySelector<HTMLElement>(".sample-color-well > span");
-      if (!swatch) break;
-      const picker = document.createElement("input");
-      picker.type = "color";
-      picker.className = "sample-color-input";
-      picker.value = "#21497b";
-      picker.setAttribute("aria-label", "Choose a color");
-      picker.dataset.inputAction = "color";
-      swatch.replaceWith(picker);
+      sample.querySelectorAll<HTMLElement>(".sample-color-well").forEach((well, index) => {
+        refreshColorWellIds(well, `${sample.dataset.sampleInstance}-${index + 1}`);
+        setColorWellValue(well, well.dataset.color ?? "#21497B", well.dataset.colorName ?? "Scout Blue");
+        well.querySelectorAll<HTMLElement>(".sample-color-grid [data-color]").forEach((option) => {
+          setAction(option, "select-color");
+          const swatch = option.querySelector<HTMLElement>("span");
+          if (swatch) swatch.style.backgroundColor = option.dataset.color ?? "transparent";
+        });
+      });
       break;
     }
     case "form-field": {
@@ -777,6 +777,74 @@ function setCalendarMonth(calendar: HTMLElement, offset: number) {
   renderCalendar(calendar);
 }
 
+function refreshColorWellIds(well: HTMLElement, instance: string) {
+  const palette = well.querySelector<HTMLElement>(".sample-color-popover");
+  const customPanel = well.querySelector<HTMLElement>(".sample-color-custom");
+  const paletteTrigger = well.querySelector<HTMLElement>("[data-action='toggle-color-palette']");
+  const customTrigger = well.querySelector<HTMLElement>(".sample-color-more");
+  const customLink = well.querySelector<HTMLElement>(".sample-color-custom-link");
+  const input = well.querySelector<HTMLInputElement>(".sample-color-hex");
+  const label = well.querySelector<HTMLLabelElement>(".sample-color-custom label");
+  const help = well.querySelector<HTMLElement>(".sample-color-help");
+  const prefix = `color-well-${instance}`;
+
+  if (palette) palette.id = `${prefix}-palette`;
+  if (customPanel) customPanel.id = `${prefix}-custom`;
+  if (paletteTrigger && palette) paletteTrigger.setAttribute("aria-controls", palette.id);
+  if (customTrigger && customPanel) customTrigger.setAttribute("aria-controls", customPanel.id);
+  if (customLink && customPanel) customLink.setAttribute("aria-controls", customPanel.id);
+  if (input) {
+    input.id = `${prefix}-hex`;
+    if (help) {
+      help.id = `${prefix}-help`;
+      input.setAttribute("aria-describedby", help.id);
+    }
+    if (label) label.htmlFor = input.id;
+  }
+}
+
+function closeColorWellPanels(well: HTMLElement) {
+  well.querySelectorAll<HTMLElement>(".sample-color-popover, .sample-color-custom").forEach((panel) => {
+    panel.hidden = true;
+    panel.classList.remove("opens-up");
+  });
+  well.querySelectorAll<HTMLElement>("[data-action='toggle-color-palette'], [data-action='toggle-color-custom']")
+    .forEach((trigger) => trigger.setAttribute("aria-expanded", "false"));
+}
+
+function positionColorWellPanel(well: HTMLElement, trigger: HTMLElement, panel: HTMLElement) {
+  const bounds = well.closest<HTMLElement>(".element-demo-stage, .element-preview")?.getBoundingClientRect();
+  const triggerBounds = trigger.getBoundingClientRect();
+  const panelHeight = panel.getBoundingClientRect().height;
+  const below = bounds ? bounds.bottom - triggerBounds.bottom : window.innerHeight - triggerBounds.bottom;
+  const above = bounds ? triggerBounds.top - bounds.top : triggerBounds.top;
+  panel.classList.toggle("opens-up", below < panelHeight + 8 && above > below);
+}
+
+function setColorWellValue(well: HTMLElement, color: string, name: string) {
+  const normalized = color.toUpperCase();
+  const swatch = well.querySelector<HTMLElement>(".sample-color-swatch > span");
+  const title = well.querySelector<HTMLElement>(".sample-color-value b");
+  const hex = well.querySelector<HTMLElement>(".sample-color-value small");
+  const trigger = well.querySelector<HTMLElement>("[data-action='toggle-color-palette']");
+  const input = well.querySelector<HTMLInputElement>(".sample-color-hex");
+
+  well.dataset.color = normalized;
+  well.dataset.colorName = name;
+  if (swatch) swatch.style.backgroundColor = normalized;
+  if (title) title.textContent = name;
+  if (hex) hex.textContent = normalized;
+  if (trigger) trigger.setAttribute("aria-label", `Choose fill color. Current color: ${name}, ${normalized}`);
+  if (input) {
+    input.value = normalized;
+    input.removeAttribute("aria-invalid");
+  }
+  well.querySelector<HTMLElement>(".sample-color-error")?.setAttribute("hidden", "");
+  well.querySelectorAll<HTMLElement>(".sample-color-grid [role='option']").forEach((option) => {
+    option.setAttribute("aria-selected", String(option.dataset.color?.toUpperCase() === normalized));
+  });
+}
+
 function runAction(sample: HTMLElement, button: HTMLElement) {
   const action = button.dataset.action;
   const id = sample.dataset.specimenId;
@@ -1073,6 +1141,79 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
     case "select-outline":
       selectOne(sample, ".sample-outline-item", button, "is-current");
       break;
+    case "toggle-color-palette": {
+      const well = button.closest<HTMLElement>(".sample-color-well");
+      const panel = well?.querySelector<HTMLElement>(".sample-color-popover");
+      if (!well || !panel) break;
+      const shouldOpen = button.getAttribute("aria-expanded") !== "true";
+      closeColorWellPanels(well);
+      if (!shouldOpen) break;
+      panel.hidden = false;
+      button.setAttribute("aria-expanded", "true");
+      positionColorWellPanel(well, button, panel);
+      (panel.querySelector<HTMLElement>("[role='option'][aria-selected='true']")
+        ?? panel.querySelector<HTMLElement>("[role='option']"))?.focus();
+      break;
+    }
+    case "toggle-color-custom":
+    case "open-color-custom": {
+      const well = button.closest<HTMLElement>(".sample-color-well");
+      const panel = well?.querySelector<HTMLElement>(".sample-color-custom");
+      const trigger = well?.querySelector<HTMLElement>(".sample-color-more");
+      if (!well || !panel) break;
+      const shouldOpen = action === "open-color-custom" || trigger?.getAttribute("aria-expanded") !== "true";
+      closeColorWellPanels(well);
+      if (!shouldOpen) break;
+      panel.hidden = false;
+      trigger?.setAttribute("aria-expanded", "true");
+      positionColorWellPanel(well, trigger ?? button, panel);
+      panel.querySelector<HTMLInputElement>(".sample-color-hex")?.focus();
+      break;
+    }
+    case "return-color-palette": {
+      const well = button.closest<HTMLElement>(".sample-color-well");
+      const trigger = well?.querySelector<HTMLElement>("[data-action='toggle-color-palette']");
+      const panel = well?.querySelector<HTMLElement>(".sample-color-popover");
+      if (!well || !trigger || !panel) break;
+      closeColorWellPanels(well);
+      panel.hidden = false;
+      trigger.setAttribute("aria-expanded", "true");
+      positionColorWellPanel(well, trigger, panel);
+      (panel.querySelector<HTMLElement>("[role='option'][aria-selected='true']")
+        ?? panel.querySelector<HTMLElement>("[role='option']"))?.focus();
+      break;
+    }
+    case "select-color": {
+      const well = button.closest<HTMLElement>(".sample-color-well");
+      const color = button.dataset.color;
+      const name = button.dataset.colorName;
+      if (!well || !color || !name) break;
+      setColorWellValue(well, color, name);
+      closeColorWellPanels(well);
+      well.querySelector<HTMLElement>("[data-action='toggle-color-palette']")?.focus();
+      announce(sample, `${name}, ${color.toUpperCase()} selected.`);
+      break;
+    }
+    case "apply-color": {
+      const well = button.closest<HTMLElement>(".sample-color-well");
+      const input = well?.querySelector<HTMLInputElement>(".sample-color-hex");
+      const error = well?.querySelector<HTMLElement>(".sample-color-error");
+      if (!well || !input || !error) break;
+      const rawValue = input.value.trim();
+      const value = (rawValue.startsWith("#") ? rawValue : `#${rawValue}`).toUpperCase();
+      if (!/^#[0-9A-F]{6}$/.test(value)) {
+        input.setAttribute("aria-invalid", "true");
+        error.textContent = "Enter a valid six-digit HEX value, such as #21497B.";
+        error.hidden = false;
+        input.focus();
+        break;
+      }
+      setColorWellValue(well, value, "Custom color");
+      closeColorWellPanels(well);
+      well.querySelector<HTMLElement>("[data-action='toggle-color-custom']")?.focus();
+      announce(sample, `Custom color ${value} applied.`);
+      break;
+    }
     case "toggle-popover": {
       const group = button.parentElement;
       const panel = group?.querySelector<HTMLElement>(".sample-control-options")
@@ -1271,6 +1412,10 @@ document.addEventListener("click", (event) => {
   const target = event.target instanceof Element ? event.target : null;
   if (!target) return;
 
+  document.querySelectorAll<HTMLElement>(".sample-color-well").forEach((well) => {
+    if (!well.contains(target)) closeColorWellPanels(well);
+  });
+
   const opener = target.closest<HTMLElement>("[data-open-demo]");
   if (opener && dialog && dialogTitle && dialogDescription && dialogStage) {
     const entry = opener.closest<HTMLElement>(".element-entry");
@@ -1283,6 +1428,9 @@ document.addEventListener("click", (event) => {
       const clone = sample.cloneNode(true);
       if (clone instanceof HTMLElement) {
         clone.dataset.sampleInstance = `dialog-${++sampleInstance}`;
+        clone.querySelectorAll<HTMLElement>(".sample-color-well").forEach((well, index) => {
+          refreshColorWellIds(well, `${clone.dataset.sampleInstance}-${index + 1}`);
+        });
         if (clone.dataset.specimenId === "disclosure-triangle") initializeDisclosureSample(clone);
         clone.querySelectorAll<HTMLInputElement>("input[type='radio']").forEach((input) => {
           input.name = `${input.name}-${sampleInstance}`;
@@ -1341,18 +1489,10 @@ document.addEventListener("input", (event) => {
       if (value) value.textContent = `${input.value}%`;
       break;
     }
-    case "color": {
-      const hex = sample.querySelector<HTMLElement>(".sample-color-well small");
-      const name = sample.querySelector<HTMLElement>(".sample-color-well b");
-      const value = input.value.toUpperCase();
-      const palette: Record<string, string> = {
-        "#21497B": "Scout Blue",
-        "#EB7114": "Thinker Orange",
-        "#47A036": "Builder Green",
-        "#971607": "Auditor Red",
-      };
-      if (hex) hex.textContent = value;
-      if (name) name.textContent = palette[value] ?? "Custom color";
+    case "color-hex": {
+      input.removeAttribute("aria-invalid");
+      const error = sample.querySelector<HTMLElement>(".sample-color-error");
+      if (error) error.hidden = true;
       break;
     }
     case "files": {
@@ -1381,6 +1521,11 @@ document.addEventListener("keydown", (event) => {
     }
   }
 
+  if (target.matches(".sample-color-hex") && event.key === "Enter") {
+    event.preventDefault();
+    target.closest<HTMLElement>(".sample-color-well")?.querySelector<HTMLElement>("[data-action='apply-color']")?.click();
+  }
+
   if (target.matches("[role='tab']") && ["ArrowRight", "ArrowLeft"].includes(event.key)) {
     const tabs = Array.from(target.parentElement?.querySelectorAll<HTMLElement>("[role='tab']") ?? []);
     const index = tabs.indexOf(target);
@@ -1390,21 +1535,27 @@ document.addEventListener("keydown", (event) => {
     tabs[next]?.click();
   }
 
-  if (target.matches("[role='option'], [role='menuitem']") && ["ArrowDown", "ArrowUp"].includes(event.key)) {
+  if (target.matches("[role='option'], [role='menuitem']") && ["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
     const group = target.closest<HTMLElement>("[role='listbox'], [role='menu']");
     const options = Array.from(group?.querySelectorAll<HTMLElement>("[role='option'], [role='menuitem']") ?? []);
     const index = options.indexOf(target);
-    const next = (index + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
+    const next = event.key === "Home" ? 0 : event.key === "End" ? options.length - 1
+      : (index + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
     event.preventDefault();
     options[next]?.focus();
   }
 
   if (target.matches("[aria-haspopup='listbox'], [aria-haspopup='menu']") && ["ArrowDown", "ArrowUp"].includes(event.key)) {
-    const owner = target.closest<HTMLElement>(".sample-control-trio > div, .sample-overflow, .sample-combo-button, .sample-overlay-trio > div, .sample-menu-bar");
+    const owner = target.closest<HTMLElement>(".sample-control-trio > div, .sample-overflow, .sample-combo-button, .sample-overlay-trio > div, .sample-menu-bar, .sample-color-well");
     const panel = owner?.querySelector<HTMLElement>("[role='listbox'], [role='menu']");
-    const firstOption = panel?.querySelector<HTMLElement>("[role='option'], [role='menuitem']");
+    const firstOption = panel?.querySelector<HTMLElement>("[role='option'][aria-selected='true']")
+      ?? panel?.querySelector<HTMLElement>("[role='option'], [role='menuitem']");
     if (panel && firstOption) {
       event.preventDefault();
+      if (owner?.matches(".sample-color-well")) {
+        target.click();
+        return;
+      }
       panel.hidden = false;
       target.setAttribute("aria-expanded", "true");
       firstOption.focus();
@@ -1432,6 +1583,15 @@ document.addEventListener("keydown", (event) => {
       hoverTrigger.setAttribute("aria-expanded", "false");
       hoverCard.hidden = true;
       hoverTrigger.focus();
+      event.preventDefault();
+      return;
+    }
+    const colorWell = target.closest<HTMLElement>(".sample-color-well");
+    const colorTrigger = colorWell?.querySelector<HTMLElement>(".sample-color-trigger[aria-expanded='true'], .sample-color-more[aria-expanded='true']");
+    const colorPanel = colorWell?.querySelector<HTMLElement>(".sample-color-popover:not([hidden]), .sample-color-custom:not([hidden])");
+    if (colorWell && colorTrigger && colorPanel) {
+      closeColorWellPanels(colorWell);
+      colorTrigger.focus();
       event.preventDefault();
       return;
     }
