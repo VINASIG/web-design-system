@@ -5,6 +5,8 @@ const dialogStage = dialog?.querySelector<HTMLElement>(".element-demo-stage");
 let sampleInstance = 0;
 let fieldInstance = 0;
 const scrollspyCleanups = new WeakMap<HTMLElement, () => void>();
+const progressDemoControllers = new WeakMap<HTMLElement, { toggle: () => void; reset: () => void; cleanup: () => void }>();
+const progressDemoCleanups = new WeakMap<HTMLElement, () => void>();
 let activeDraggedTask: HTMLElement | null = null;
 let activeDragBoard: HTMLElement | null = null;
 
@@ -787,12 +789,173 @@ function validateLoginForm(sample: HTMLElement) {
   return { valid, email, password };
 }
 
+function initializeProgressDemo(
+  sample: HTMLElement,
+  options: { autoStart?: boolean; autoStartWhenVisible?: boolean; reset?: boolean } = {},
+) {
+  progressDemoCleanups.get(sample)?.();
+
+  const targetValue = 72;
+  const ring = sample.querySelector<HTMLElement>(".sample-progress-ring");
+  const arc = sample.querySelector<SVGCircleElement>("[data-progress-arc]");
+  const bar = sample.querySelector<HTMLProgressElement>("[data-progress-bar]");
+  const percent = sample.querySelector<HTMLElement>("[data-progress-percent]");
+  const caption = sample.querySelector<HTMLElement>("[data-progress-caption]");
+  const toggleButton = sample.querySelector<HTMLButtonElement>("[data-action='progress-toggle']");
+  const status = sample.querySelector<HTMLElement>("[data-progress-status]");
+  if (!ring || !arc || !bar || !percent || !caption || !toggleButton || !status) return;
+
+  const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let value = options.reset ? 27 : Math.max(0, Math.min(targetValue, Number(sample.dataset.progressValue ?? 27)));
+  let state: "ready" | "running" | "paused" | "complete" = "ready";
+  let frame = 0;
+  let observer: IntersectionObserver | null = null;
+  let animationStartedAt = 0;
+  let animationFrom = value;
+  let lastPaintAt = 0;
+
+  const setProgress = (nextValue: number) => {
+    value = Math.max(0, Math.min(targetValue, Math.round(nextValue)));
+    sample.dataset.progressValue = String(value);
+    ring.setAttribute("aria-valuenow", String(value));
+    percent.textContent = `${value}%`;
+    arc.style.strokeDashoffset = String(125.66 * (1 - value / 100));
+    bar.value = value;
+    bar.textContent = `${value}%`;
+    caption.textContent = `Upload, ${value}%`;
+  };
+
+  const renderButton = () => {
+    if (state === "running") toggleButton.textContent = "Pause progress";
+    else if (state === "complete") toggleButton.textContent = "Replay progress";
+    else if (motionPreference.matches && value < targetValue) toggleButton.textContent = "Advance progress";
+    else if (state === "paused") toggleButton.textContent = "Resume progress";
+    else toggleButton.textContent = "Start progress";
+  };
+
+  const stopFrame = () => {
+    if (frame) window.cancelAnimationFrame(frame);
+    frame = 0;
+    animationStartedAt = 0;
+  };
+
+  const announceStatus = (message: string) => {
+    status.textContent = message;
+  };
+
+  const complete = () => {
+    stopFrame();
+    setProgress(targetValue);
+    state = "complete";
+    renderButton();
+    announceStatus("Upload progress reached 72 percent. The spinner still has no time estimate.");
+  };
+
+  const animate = (timestamp: number) => {
+    if (state !== "running") return;
+    if (!animationStartedAt) animationStartedAt = timestamp;
+    const duration = Math.max(900, ((targetValue - animationFrom) / 45) * 3000);
+    const progress = Math.min(1, (timestamp - animationStartedAt) / duration);
+
+    if (timestamp - lastPaintAt >= 120 || progress === 1) {
+      setProgress(animationFrom + (targetValue - animationFrom) * progress);
+      lastPaintAt = timestamp;
+    }
+
+    if (progress === 1) complete();
+    else frame = window.requestAnimationFrame(animate);
+  };
+
+  const start = () => {
+    observer?.disconnect();
+    observer = null;
+    if (motionPreference.matches) {
+      stopFrame();
+      setProgress(targetValue);
+      state = "complete";
+      renderButton();
+      announceStatus("Progress advanced without animation because reduced motion is enabled.");
+      return;
+    }
+    if (value >= targetValue) setProgress(27);
+    animationFrom = value;
+    lastPaintAt = 0;
+    state = "running";
+    renderButton();
+    announceStatus("Upload progress is moving toward 72 percent. The spinner remains indeterminate.");
+    frame = window.requestAnimationFrame(animate);
+  };
+
+  const toggle = () => {
+    if (state === "running") {
+      stopFrame();
+      state = "paused";
+      renderButton();
+      announceStatus(`Upload progress paused at ${value} percent. The spinner remains indeterminate.`);
+      return;
+    }
+    if (state === "complete") setProgress(27);
+    start();
+  };
+
+  const reset = () => {
+    stopFrame();
+    observer?.disconnect();
+    observer = null;
+    state = "ready";
+    setProgress(27);
+    renderButton();
+    announceStatus("Upload progress reset to 27 percent.");
+  };
+
+  const onMotionPreferenceChange = (event: MediaQueryListEvent) => {
+    if (event.matches && state === "running") {
+      stopFrame();
+      state = "paused";
+      renderButton();
+      announceStatus("Progress paused because reduced motion is enabled. You can advance the value without animation.");
+    } else {
+      renderButton();
+    }
+  };
+
+  setProgress(value);
+  renderButton();
+  if (motionPreference.matches) {
+    announceStatus("Reduced motion is enabled. Advance the progress value without animation.");
+  }
+  motionPreference.addEventListener("change", onMotionPreferenceChange);
+
+  const cleanup = () => {
+    stopFrame();
+    observer?.disconnect();
+    motionPreference.removeEventListener("change", onMotionPreferenceChange);
+  };
+  progressDemoControllers.set(sample, { toggle, reset, cleanup });
+  progressDemoCleanups.set(sample, cleanup);
+
+  if (options.autoStart && !motionPreference.matches) start();
+  else if (options.autoStartWhenVisible && !motionPreference.matches) {
+    if ("IntersectionObserver" in window) {
+      observer = new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) start();
+      }, { threshold: 0.2 });
+      observer.observe(sample);
+    } else {
+      start();
+    }
+  }
+}
+
 function enhanceSample(sample: HTMLElement) {
   const id = sample.dataset.specimenId;
   sample.dataset.sampleInstance = String(++sampleInstance);
   liveStatus(sample);
 
   switch (id) {
+    case "progress-ring-spinner-bar":
+      initializeProgressDemo(sample, { autoStartWhenVisible: true });
+      break;
     case "data-table":
       initializeDataTable(sample);
       break;
@@ -1550,6 +1713,12 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
   const id = sample.dataset.specimenId;
 
   switch (action) {
+    case "progress-toggle":
+      progressDemoControllers.get(sample)?.toggle();
+      break;
+    case "progress-reset":
+      progressDemoControllers.get(sample)?.reset();
+      break;
     case "move-task": {
       const task = button.closest<HTMLElement>(".sample-task-card");
       const board = button.closest<HTMLElement>(".sample-kanban");
@@ -2436,6 +2605,9 @@ document.addEventListener("click", (event) => {
         if (clone.dataset.specimenId === "toggle-group-segmented-control") initializeToggleGroup(clone, clone.dataset.sampleInstance);
         if (clone.dataset.specimenId === "form-field") initializeFormFieldSample(clone, clone.dataset.sampleInstance);
         if (clone.dataset.specimenId === "drag-and-drop") initializeDragDropSample(clone);
+        if (clone.dataset.specimenId === "progress-ring-spinner-bar") {
+          initializeProgressDemo(clone, { autoStart: true, reset: true });
+        }
         clone.querySelectorAll<HTMLInputElement>("input[type='radio']").forEach((input) => {
           input.name = `${input.name}-${sampleInstance}`;
         });
@@ -3021,5 +3193,11 @@ document.querySelectorAll<HTMLDialogElement>(".element-demo-dialog").forEach((el
   elementDialog.addEventListener("close", () => {
     const sample = dialogStage?.querySelector<HTMLElement>(".ui-sample[data-specimen-id='scrollspy']");
     if (sample) destroyScrollspy(sample);
+    const progressSample = dialogStage?.querySelector<HTMLElement>(".ui-sample[data-specimen-id='progress-ring-spinner-bar']");
+    if (progressSample) {
+      progressDemoCleanups.get(progressSample)?.();
+      progressDemoCleanups.delete(progressSample);
+      progressDemoControllers.delete(progressSample);
+    }
   });
 });

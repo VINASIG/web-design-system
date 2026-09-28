@@ -383,8 +383,8 @@
       "platform": "Web",
       "category": "Feedback and overlays",
       "definition": "A progress bar or ring reports measurable completion. A spinner communicates an indeterminate wait.",
-      "guidance": "Choose determinate feedback when the amount of completed work is known. Use a spinner only for a real wait, keep the surrounding layout stable, and explain long-running work.",
-      "accessibility": "Give progress controls an accessible name and current value when determinate. Announce meaningful state changes, and do not communicate progress through motion or color alone."
+      "guidance": "Use a spinner when the remaining duration is unknown. Use a ring for compact determinate progress and a linear bar when a readable track fits. Animate only real progress, keep determinate indicators synchronized, and stop at the actual reported value.",
+      "accessibility": "Give determinate indicators an accessible name and current value that matches the visible percentage. Use a native progress element for a linear bar where possible. Give an indeterminate spinner a status label without aria-valuenow, avoid announcing every animation frame, and provide a reduced-motion state."
     },
     {
       "order": 37,
