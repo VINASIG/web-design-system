@@ -230,6 +230,92 @@ function addChip(container: HTMLElement, label: string, className = "sample-sele
   else container.append(chip);
 }
 
+const multiSelectTeams = ["Design", "Research", "Ops", "Sales", "Support"];
+
+function initializeMultiSelectIds(sample: HTMLElement, suffix: string) {
+  const checkbox = sample.querySelector<HTMLElement>(".sample-multi-checkbox");
+  const checkboxTrigger = checkbox?.querySelector<HTMLButtonElement>("[data-action='multi-dropdown-toggle']");
+  const checkboxOptions = checkbox?.querySelector<HTMLElement>(".sample-multi-checkbox-options");
+  if (checkboxTrigger && checkboxOptions) {
+    checkboxOptions.id = "multi-select-" + suffix + "-checkbox-options";
+    checkboxTrigger.setAttribute("aria-controls", checkboxOptions.id);
+  }
+
+  const tokenField = sample.querySelector<HTMLElement>(".sample-multi-token-field");
+  const tokenInput = tokenField?.querySelector<HTMLInputElement>(".sample-multi-token-input");
+  const tokenOptions = tokenField?.querySelector<HTMLElement>(".sample-multi-token-options");
+  if (tokenInput && tokenOptions) {
+    tokenOptions.id = "multi-select-" + suffix + "-token-options";
+    tokenInput.setAttribute("aria-controls", tokenOptions.id);
+  }
+}
+
+function refreshMultiSelectShowcase(showcase: HTMLElement) {
+  const checkbox = showcase.querySelector<HTMLElement>(".sample-multi-checkbox");
+  const selectedCheckboxes = Array.from(checkbox?.querySelectorAll<HTMLInputElement>("input[data-input-action='multi-checkbox-option']:checked") ?? []);
+  const checkboxCount = checkbox?.querySelector<HTMLElement>("[data-multi-count]");
+  const checkboxTrigger = checkbox?.querySelector<HTMLButtonElement>("[data-action='multi-dropdown-toggle']");
+  if (checkboxCount) checkboxCount.textContent = selectedCheckboxes.length + " selected";
+  if (checkboxTrigger) checkboxTrigger.setAttribute("aria-label", selectedCheckboxes.length + " teams selected. Choose teams.");
+
+  const tokenField = showcase.querySelector<HTMLElement>(".sample-multi-token-field");
+  if (tokenField) {
+    const selected = new Set(Array.from(tokenField.querySelectorAll<HTMLElement>("[data-multi-token]")).map((chip) => chip.dataset.multiToken ?? ""));
+    const input = tokenField.querySelector<HTMLInputElement>(".sample-multi-token-input");
+    const query = input?.value.trim().toLocaleLowerCase() ?? "";
+    let visibleCount = 0;
+    tokenField.querySelectorAll<HTMLButtonElement>(".sample-multi-token-options [data-action='multi-token-option']").forEach((option) => {
+      const value = option.dataset.value ?? "";
+      option.hidden = selected.has(value) || !value.toLocaleLowerCase().includes(query);
+      if (!option.hidden) visibleCount += 1;
+    });
+    const empty = tokenField.querySelector<HTMLElement>("[data-token-empty]");
+    if (empty) empty.hidden = visibleCount > 0;
+    const panel = tokenField.querySelector<HTMLElement>(".sample-multi-token-options");
+    if (input && panel) input.setAttribute("aria-expanded", String(!panel.hidden));
+  }
+
+  const available = showcase.querySelector<HTMLElement>("[data-transfer-side='available']");
+  const selected = showcase.querySelector<HTMLElement>("[data-transfer-side='selected']");
+  const selectedAvailable = available?.querySelectorAll<HTMLElement>("[role='option'][aria-selected='true']").length ?? 0;
+  const selectedChosen = selected?.querySelectorAll<HTMLElement>("[role='option'][aria-selected='true']").length ?? 0;
+  const toSelected = showcase.querySelector<HTMLButtonElement>("[data-action='multi-transfer'][data-direction='to-selected']");
+  const toAvailable = showcase.querySelector<HTMLButtonElement>("[data-action='multi-transfer'][data-direction='to-available']");
+  if (toSelected) toSelected.disabled = selectedAvailable === 0;
+  if (toAvailable) toAvailable.disabled = selectedChosen === 0;
+  const availableEmpty = showcase.querySelector<HTMLElement>("[data-transfer-empty='available']");
+  const selectedEmpty = showcase.querySelector<HTMLElement>("[data-transfer-empty='selected']");
+  if (availableEmpty) availableEmpty.hidden = Boolean(available?.querySelector("[role='option']"));
+  if (selectedEmpty) selectedEmpty.hidden = Boolean(selected?.querySelector("[role='option']"));
+}
+
+function addMultiSelectToken(field: HTMLElement, value: string) {
+  if (!multiSelectTeams.includes(value)) return false;
+  const input = field.querySelector<HTMLInputElement>(".sample-multi-token-input");
+  const alreadySelected = Array.from(field.querySelectorAll<HTMLElement>("[data-multi-token]"))
+    .some((chip) => chip.dataset.multiToken === value);
+  if (!input || alreadySelected) return false;
+
+  const chip = document.createElement("span");
+  chip.className = "sample-multi-token-chip";
+  chip.dataset.multiToken = value;
+  const label = document.createElement("span");
+  label.textContent = value;
+  const remove = document.createElement("button");
+  remove.type = "button";
+  remove.className = "sample-chip-remove";
+  remove.dataset.action = "multi-token-remove";
+  remove.dataset.value = value;
+  remove.setAttribute("aria-label", "Remove " + value);
+  const icon = document.createElement("i");
+  icon.className = "fi-br-cross-small";
+  icon.setAttribute("aria-hidden", "true");
+  remove.append(icon);
+  chip.append(label, remove);
+  field.insertBefore(chip, input);
+  return true;
+}
+
 function makeInput(placeholder: string, label: string, className = "sample-input-line") {
   const input = document.createElement("input");
   input.type = "text";
@@ -321,19 +407,9 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "multi-select": {
-      const inputLine = sample.querySelector<HTMLElement>(".sample-multiselect > .sample-input-line");
-      const container = sample.querySelector<HTMLElement>(".sample-multiselect");
-      if (!container) break;
-      sample.querySelectorAll<HTMLElement>(".sample-selected").forEach((chip) => {
-        const label = chip.childNodes[0]?.textContent?.trim() ?? "Selected item";
-        const oldRemove = chip.querySelector<HTMLElement>("b");
-        if (oldRemove) asButton(oldRemove, "remove-chip", `Remove ${label}`);
-      });
-      if (inputLine) {
-        const input = makeInput("Add a team", "Add a team");
-        input.dataset.inputAction = "add-team";
-        inputLine.replaceWith(input);
-      }
+      initializeMultiSelectIds(sample, String(++fieldInstance));
+      const showcase = sample.querySelector<HTMLElement>(".sample-multi-select-showcase");
+      if (showcase) refreshMultiSelectShowcase(showcase);
       break;
     }
     case "sign-in-form": {
@@ -1607,6 +1683,61 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       button.closest(".sample-selected, .sample-token-field > div > b")?.remove();
       announce(sample, `${button.getAttribute("aria-label")?.replace("Remove ", "") ?? "Item"} removed.`);
       break;
+    case "multi-dropdown-toggle": {
+      const owner = button.closest<HTMLElement>(".sample-multi-checkbox");
+      const panel = owner?.querySelector<HTMLElement>(".sample-multi-checkbox-options");
+      if (!owner || !panel) break;
+      panel.hidden = !panel.hidden;
+      button.setAttribute("aria-expanded", String(!panel.hidden));
+      if (!panel.hidden) panel.querySelector<HTMLInputElement>("input")?.focus();
+      break;
+    }
+    case "multi-token-option": {
+      const field = button.closest<HTMLElement>(".sample-multi-token-field");
+      const value = button.dataset.value;
+      if (!field || !value || !addMultiSelectToken(field, value)) break;
+      const input = field.querySelector<HTMLInputElement>(".sample-multi-token-input");
+      if (input) input.value = "";
+      const showcase = field.closest<HTMLElement>(".sample-multi-select-showcase");
+      if (showcase) refreshMultiSelectShowcase(showcase);
+      announce(sample, value + " added to selected teams.");
+      input?.focus();
+      break;
+    }
+    case "multi-token-remove": {
+      const field = button.closest<HTMLElement>(".sample-multi-token-field");
+      const value = button.dataset.value ?? "Team";
+      button.closest<HTMLElement>("[data-multi-token]")?.remove();
+      const showcase = field?.closest<HTMLElement>(".sample-multi-select-showcase");
+      if (showcase) refreshMultiSelectShowcase(showcase);
+      announce(sample, value + " removed from selected teams.");
+      field?.querySelector<HTMLInputElement>(".sample-multi-token-input")?.focus();
+      break;
+    }
+    case "multi-transfer-option": {
+      button.setAttribute("aria-selected", String(button.getAttribute("aria-selected") !== "true"));
+      const showcase = button.closest<HTMLElement>(".sample-multi-select-showcase");
+      if (showcase) refreshMultiSelectShowcase(showcase);
+      break;
+    }
+    case "multi-transfer": {
+      const showcase = button.closest<HTMLElement>(".sample-multi-select-showcase");
+      const direction = button.dataset.direction;
+      const sourceSide = direction === "to-selected" ? "available" : "selected";
+      const targetSide = direction === "to-selected" ? "selected" : "available";
+      const source = showcase?.querySelector<HTMLElement>("[data-transfer-side='" + sourceSide + "']");
+      const destination = showcase?.querySelector<HTMLElement>("[data-transfer-side='" + targetSide + "']");
+      if (!showcase || !source || !destination) break;
+      const moved = Array.from(source.querySelectorAll<HTMLElement>("[role='option'][aria-selected='true']"));
+      moved.forEach((option) => {
+        option.setAttribute("aria-selected", "false");
+        destination.append(option);
+      });
+      refreshMultiSelectShowcase(showcase);
+      const names = moved.map((option) => option.dataset.value ?? option.textContent?.trim() ?? "Team");
+      announce(sample, moved.length ? names.join(", ") + " moved." : "Select one or more teams first.");
+      break;
+    }
     case "create-project": {
       const title = sample.querySelector<HTMLElement>(".sample-empty > b");
       const message = sample.querySelector<HTMLElement>(".sample-empty > small");
@@ -1696,6 +1827,27 @@ document.addEventListener("click", (event) => {
   const target = event.target instanceof Element ? event.target : null;
   if (!target) return;
 
+  if (!target.closest("[data-open-demo]")) {
+    document.querySelectorAll<HTMLElement>(".sample-multi-checkbox").forEach((owner) => {
+      if (owner.contains(target)) return;
+      const trigger = owner.querySelector<HTMLButtonElement>("[data-action='multi-dropdown-toggle']");
+      const panel = owner.querySelector<HTMLElement>(".sample-multi-checkbox-options");
+      if (trigger && panel && !panel.hidden) {
+        panel.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+      }
+    });
+    document.querySelectorAll<HTMLElement>(".sample-multi-token-field").forEach((owner) => {
+      if (owner.contains(target)) return;
+      const input = owner.querySelector<HTMLInputElement>(".sample-multi-token-input");
+      const panel = owner.querySelector<HTMLElement>(".sample-multi-token-options");
+      if (input && panel && !panel.hidden) {
+        panel.hidden = true;
+        input.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
   document.querySelectorAll<HTMLElement>(".sample-color-well").forEach((well) => {
     if (!well.contains(target)) closeColorWellPanels(well);
   });
@@ -1716,6 +1868,7 @@ document.addEventListener("click", (event) => {
           refreshColorWellIds(well, `${clone.dataset.sampleInstance}-${index + 1}`);
         });
         if (clone.dataset.specimenId === "disclosure-triangle") initializeDisclosureSample(clone);
+        if (clone.dataset.specimenId === "multi-select") initializeMultiSelectIds(clone, clone.dataset.sampleInstance);
         clone.querySelectorAll<HTMLInputElement>("input[type='radio']").forEach((input) => {
           input.name = `${input.name}-${sampleInstance}`;
         });
@@ -1772,6 +1925,14 @@ document.addEventListener("input", (event) => {
   if (!input || !sample) return;
 
   switch (input.dataset.inputAction) {
+    case "multi-select-filter": {
+      const field = input.closest<HTMLElement>(".sample-multi-token-field");
+      const panel = field?.querySelector<HTMLElement>(".sample-multi-token-options");
+      const showcase = field?.closest<HTMLElement>(".sample-multi-select-showcase");
+      if (panel) panel.hidden = false;
+      if (showcase) refreshMultiSelectShowcase(showcase);
+      break;
+    }
     case "combobox-filter": {
       const value = input.value.toLocaleLowerCase();
       const options = Array.from(sample.querySelectorAll<HTMLElement>(".sample-option"));
@@ -1818,6 +1979,38 @@ document.addEventListener("keydown", (event) => {
   const target = event.target instanceof HTMLElement ? event.target : null;
   if (!target) return;
   const sample = target.closest<HTMLElement>(".ui-sample");
+
+  if (target.matches(".sample-multi-token-input") && sample) {
+    const field = target.closest<HTMLElement>(".sample-multi-token-field");
+    const panel = field?.querySelector<HTMLElement>(".sample-multi-token-options");
+    if (event.key === "ArrowDown" && panel) {
+      const firstOption = panel.querySelector<HTMLElement>("[role='option']:not([hidden])");
+      if (firstOption) {
+        event.preventDefault();
+        panel.hidden = false;
+        target.setAttribute("aria-expanded", "true");
+        firstOption.focus();
+      }
+    } else if (event.key === "Enter" && panel) {
+      const firstOption = panel.querySelector<HTMLButtonElement>("[data-action='multi-token-option']:not([hidden])");
+      if (firstOption) {
+        event.preventDefault();
+        firstOption.click();
+      }
+    }
+  }
+
+  if (target.matches("[data-action='multi-dropdown-toggle']") && event.key === "ArrowDown") {
+    const owner = target.closest<HTMLElement>(".sample-multi-checkbox");
+    const panel = owner?.querySelector<HTMLElement>(".sample-multi-checkbox-options");
+    const firstOption = panel?.querySelector<HTMLInputElement>("input");
+    if (panel && firstOption) {
+      event.preventDefault();
+      panel.hidden = false;
+      target.setAttribute("aria-expanded", "true");
+      firstOption.focus();
+    }
+  }
 
   if (target.dataset.inputAction === "add-team" || target.dataset.inputAction === "add-recipient") {
     if (event.key === "Enter" && target.value.trim() && sample) {
@@ -1878,6 +2071,26 @@ document.addEventListener("keydown", (event) => {
   }
 
   if (event.key === "Escape" && target.closest(".ui-sample")) {
+    const multiCheckbox = target.closest<HTMLElement>(".sample-multi-checkbox");
+    const multiCheckboxTrigger = multiCheckbox?.querySelector<HTMLButtonElement>("[data-action='multi-dropdown-toggle']");
+    const multiCheckboxPanel = multiCheckbox?.querySelector<HTMLElement>(".sample-multi-checkbox-options");
+    if (multiCheckboxTrigger?.getAttribute("aria-expanded") === "true" && multiCheckboxPanel) {
+      multiCheckboxPanel.hidden = true;
+      multiCheckboxTrigger.setAttribute("aria-expanded", "false");
+      multiCheckboxTrigger.focus();
+      event.preventDefault();
+      return;
+    }
+    const multiTokenField = target.closest<HTMLElement>(".sample-multi-token-field");
+    const multiTokenInput = multiTokenField?.querySelector<HTMLInputElement>(".sample-multi-token-input");
+    const multiTokenPanel = multiTokenField?.querySelector<HTMLElement>(".sample-multi-token-options");
+    if (multiTokenInput?.getAttribute("aria-expanded") === "true" && multiTokenPanel) {
+      multiTokenPanel.hidden = true;
+      multiTokenInput.setAttribute("aria-expanded", "false");
+      multiTokenInput.focus();
+      event.preventDefault();
+      return;
+    }
     const viewer = target.closest<HTMLElement>(".sample-lightbox-viewer");
     if (viewer) {
       viewer.querySelector<HTMLElement>("[data-action='close-lightbox']")?.click();
@@ -1944,6 +2157,14 @@ document.addEventListener("pointerout", (event) => {
 
 document.addEventListener("focusin", (event) => {
   const target = event.target instanceof Element ? event.target : null;
+  const tokenInput = target?.closest<HTMLInputElement>(".sample-multi-token-input");
+  const tokenField = tokenInput?.closest<HTMLElement>(".sample-multi-token-field");
+  const tokenPanel = tokenField?.querySelector<HTMLElement>(".sample-multi-token-options");
+  const tokenShowcase = tokenField?.closest<HTMLElement>(".sample-multi-select-showcase");
+  if (tokenInput && tokenPanel && tokenShowcase) {
+    tokenPanel.hidden = false;
+    refreshMultiSelectShowcase(tokenShowcase);
+  }
   const trigger = target?.closest<HTMLElement>(".sample-hover-trigger");
   const card = trigger?.parentElement?.querySelector<HTMLElement>(".sample-hover-card");
   if (!trigger || !card) return;
@@ -2014,6 +2235,15 @@ document.addEventListener("change", (event) => {
   const input = event.target instanceof HTMLInputElement ? event.target : null;
   const sample = input?.closest<HTMLElement>(".ui-sample");
   if (!input || !sample) return;
+  if (input.dataset.inputAction === "multi-checkbox-option") {
+    const showcase = input.closest<HTMLElement>(".sample-multi-select-showcase");
+    if (!showcase) return;
+    refreshMultiSelectShowcase(showcase);
+    const selected = Array.from(showcase.querySelectorAll<HTMLInputElement>("input[data-input-action='multi-checkbox-option']:checked"))
+      .map((option) => option.value);
+    announce(sample, selected.length ? "Selected teams: " + selected.join(", ") + "." : "No teams selected.");
+    return;
+  }
   if (input.dataset.inputAction === "table-select-all" || input.dataset.inputAction === "table-row-select") {
     const table = input.closest<HTMLElement>(".sample-data-table");
     if (!table) return;
