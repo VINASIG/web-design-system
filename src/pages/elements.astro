@@ -1169,8 +1169,39 @@ const slugify = (value: string) =>
   .sample-menu span { padding: 0.35rem 0.5rem; font-size: 0.75rem; }
   .sample-menu .is-danger { color: var(--color-auditor-red); border-top: 1px solid var(--color-border); }
 
-  .sample-toast { display: flex; width: 100%; align-items: center; gap: 0.65rem; padding: 0.65rem 0.8rem; background: var(--color-white); border: 1px solid var(--color-border); border-left: 3px solid var(--color-builder-green); border-radius: var(--radius-sm); box-shadow: 0 0.4rem 1rem rgb(68 58 59 / 8%); }
-  .sample-toast > span { display: grid; flex: 1; gap: 0.1rem; }
+  .sample-toast-demo { position: relative; display: grid; width: 100%; min-height: 15rem; align-content: center; justify-items: start; overflow: hidden; padding: 1rem; isolation: isolate; color: var(--color-text-inverse); background-color: #171b22; background-image: radial-gradient(rgb(255 255 255 / 11%) 0.7px, transparent 0.7px); background-size: 12px 12px; border: 1px solid #303641; border-radius: 0.7rem; }
+  .sample-toast-app { display: grid; width: min(100%, 26rem); gap: 1.15rem; padding: 1rem; background: #20252d; border: 1px solid #363d48; border-radius: 0.65rem; box-shadow: 0 1rem 2.5rem rgb(0 0 0 / 18%); }
+  .sample-toast-app > header,
+  .sample-toast-app > footer { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+  .sample-toast-brand { display: inline-flex; align-items: center; gap: 0.5rem; color: #f4f2f1; font-size: 0.78rem; font-weight: 600; }
+  .sample-toast-brand-mark { display: grid; width: 1.45rem; height: 1.45rem; place-items: center; color: white; background: var(--color-scout-blue); border-radius: 0.4rem; font-size: 0.7rem; }
+  .sample-toast-document { display: grid; gap: 0.5rem; }
+  .sample-toast-document > small { color: #a0a7b2; font-size: 0.61rem; font-weight: 700; letter-spacing: 0.08em; }
+  .sample-toast-document > strong { color: #f4f2f1; font-size: 1rem; }
+  .sample-toast-skeleton { display: grid; gap: 0.4rem; }
+  .sample-toast-skeleton > i { display: block; width: 88%; height: 0.4rem; background: #3a404a; border-radius: var(--radius-pill); }
+  .sample-toast-skeleton > i:nth-child(2) { width: 67%; }
+  .sample-toast-skeleton > i:nth-child(3) { width: 44%; }
+  .sample-toast-app > footer { justify-content: flex-start; padding-top: 0.8rem; border-top: 1px solid #363d48; }
+  .sample-toast-app > footer > span:last-child { color: #a0a7b2; font-size: 0.68rem; }
+  .sample-toast-save-indicator { width: 0.4rem; height: 0.4rem; background: #91e0b2; border-radius: 50%; }
+  .sample-toast-save { min-height: 2rem; padding: 0.35rem 0.7rem !important; color: white !important; background: var(--color-scout-blue) !important; border-radius: 0.4rem; font-size: 0.7rem !important; font-weight: 600; }
+  .sample-toast-save:hover { background: #2b5b92 !important; }
+  .sample-toast { position: absolute; right: 0.75rem; bottom: 0.75rem; z-index: 1; display: grid; width: min(19rem, calc(100% - 1.5rem)); min-height: 3.25rem; align-items: center; gap: 0.55rem; grid-template-columns: auto minmax(0, 1fr) auto auto; padding: 0.5rem 0.6rem; color: #f4f2f1; background: #252c37; border: 1px solid #3c4655; border-radius: 0.65rem; box-shadow: 0 0.6rem 1.5rem rgb(0 0 0 / 28%); }
+  .sample-toast[hidden] { display: none !important; }
+  .sample-toast-icon { display: grid; width: 1.35rem; height: 1.35rem; place-items: center; color: #91e0b2; background: #164d3e; border-radius: 50%; font-size: 0.78rem; font-weight: 700; }
+  .sample-toast-copy { min-width: 0; color: #f4f2f1; font-size: 0.78rem; font-weight: 600; }
+  .sample-toast-undo,
+  .sample-toast-dismiss { display: grid; min-width: 1.8rem; min-height: 1.8rem; place-items: center; padding: 0.2rem !important; border-radius: 0.35rem; }
+  .sample-toast-undo { color: #b9d7ff !important; font-size: 0.72rem !important; font-weight: 600; }
+  .sample-toast-dismiss { color: #aab3c1 !important; font-size: 1.15rem !important; line-height: 1; }
+  .sample-toast :is(button):hover { background: rgb(255 255 255 / 9%) !important; }
+  .sample-toast :is(button):focus-visible,
+  .sample-toast-save:focus-visible { outline: 3px solid #9bc6ff; outline-offset: 2px; }
+  @media (max-width: 38rem) {
+    .sample-toast-demo { min-height: 14rem; padding: 0.7rem; }
+    .sample-toast { right: 0.5rem; bottom: 0.5rem; width: min(18rem, calc(100% - 1rem)); }
+  }
 
   .sample-surface-demo { display: grid; align-content: center; justify-content: stretch; gap: 0.75rem; }
   .sample-surface-options { display: grid; width: 100%; align-items: stretch; gap: 0.6rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -1583,6 +1614,15 @@ const slugify = (value: string) =>
   .element-preview .ui-sample .sample-notice-footnote,
   .element-preview .ui-sample .sample-notice-feedback { font-size: 0.6rem; }
   .element-preview .ui-sample .sample-notice-dismiss { font-size: 1rem; }
+  .element-preview .ui-sample .sample-toast-brand,
+  .element-preview .ui-sample .sample-toast-app > footer > span:last-child { font-size: 0.68rem; }
+  .element-preview .ui-sample .sample-toast-brand-mark { font-size: 0.62rem; }
+  .element-preview .ui-sample .sample-toast-document > small { font-size: 0.55rem; }
+  .element-preview .ui-sample .sample-toast-document > strong { font-size: 0.82rem; }
+  .element-preview .ui-sample .sample-toast-save { font-size: 0.66rem !important; }
+  .element-preview .ui-sample .sample-toast-copy { font-size: 0.72rem; }
+  .element-preview .ui-sample .sample-toast-undo { font-size: 0.67rem !important; }
+  .element-preview .ui-sample .sample-toast-dismiss { font-size: 1rem !important; }
   .element-demo-stage .ui-sample .sample-notice-kind { font-size: 0.65rem; }
   .element-demo-stage .ui-sample .sample-notice-message strong { font-size: 0.88rem; }
   .element-demo-stage .ui-sample .sample-notice-message small { font-size: 0.76rem; }
@@ -1594,6 +1634,15 @@ const slugify = (value: string) =>
   .element-demo-stage .ui-sample .sample-notice-footnote,
   .element-demo-stage .ui-sample .sample-notice-feedback { font-size: 0.68rem; }
   .element-demo-stage .ui-sample .sample-notice-dismiss { font-size: 1.05rem; }
+  .element-demo-stage .ui-sample .sample-toast-brand,
+  .element-demo-stage .ui-sample .sample-toast-app > footer > span:last-child { font-size: 0.76rem; }
+  .element-demo-stage .ui-sample .sample-toast-brand-mark { font-size: 0.68rem; }
+  .element-demo-stage .ui-sample .sample-toast-document > small { font-size: 0.62rem; }
+  .element-demo-stage .ui-sample .sample-toast-document > strong { font-size: 0.95rem; }
+  .element-demo-stage .ui-sample .sample-toast-save { font-size: 0.78rem !important; }
+  .element-demo-stage .ui-sample .sample-toast-copy { font-size: 0.82rem; }
+  .element-demo-stage .ui-sample .sample-toast-undo { font-size: 0.75rem !important; }
+  .element-demo-stage .ui-sample .sample-toast-dismiss { font-size: 1.05rem !important; }
   .element-preview .ui-sample .sample-lightbox-header strong,
   .element-demo-stage .ui-sample .sample-lightbox-header strong { font-size: 0.88rem; }
   .element-preview .ui-sample .sample-lightbox-header small,

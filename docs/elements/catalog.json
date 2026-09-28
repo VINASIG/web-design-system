@@ -690,7 +690,7 @@
       "category": "Feedback and overlays",
       "definition": "A brief, non-blocking message that confirms or reports a recent action.",
       "guidance": "Use for short feedback that does not require a response. Keep important errors or persistent instructions visible until resolved, and do not cover primary controls.",
-      "accessibility": "Announce updates through an appropriate polite status region without moving focus. Give actionable messages enough time and an accessible action name."
+      "accessibility": "Announce updates through a polite status region without moving focus. Pause auto-dismiss while the toast is hovered or contains keyboard focus, and give actionable messages enough time and a clearly named action."
     },
     {
       "order": 65,

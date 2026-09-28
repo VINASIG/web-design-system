@@ -7,6 +7,9 @@ let fieldInstance = 0;
 const scrollspyCleanups = new WeakMap<HTMLElement, () => void>();
 const progressDemoControllers = new WeakMap<HTMLElement, { toggle: () => void; reset: () => void; cleanup: () => void }>();
 const progressDemoCleanups = new WeakMap<HTMLElement, () => void>();
+type ToastTimerState = { timer: number | null; deadline: number; remaining: number };
+const toastTimerStates = new WeakMap<HTMLElement, ToastTimerState>();
+const toastSampleCleanups = new WeakMap<HTMLElement, () => void>();
 let activeDraggedTask: HTMLElement | null = null;
 let activeDragBoard: HTMLElement | null = null;
 
@@ -47,6 +50,65 @@ function liveStatus(sample: HTMLElement) {
 
 function announce(sample: HTMLElement, message: string) {
   liveStatus(sample).textContent = message;
+}
+
+function pauseToastDismissal(toast: HTMLElement) {
+  const state = toastTimerStates.get(toast);
+  if (!state || state.timer === null) return;
+  window.clearTimeout(state.timer);
+  state.timer = null;
+  state.remaining = Math.max(0, state.deadline - Date.now());
+}
+
+function resumeToastDismissal(toast: HTMLElement) {
+  const state = toastTimerStates.get(toast);
+  if (!state || state.timer !== null || toast.hidden) return;
+  const delay = Math.max(0, state.remaining);
+  state.deadline = Date.now() + delay;
+  state.timer = window.setTimeout(() => {
+    state.timer = null;
+    state.remaining = 0;
+    toast.hidden = true;
+  }, delay);
+}
+
+function startToastDismissal(toast: HTMLElement) {
+  const state = toastTimerStates.get(toast);
+  if (!state) return;
+  if (state.timer !== null) window.clearTimeout(state.timer);
+  state.timer = null;
+  state.remaining = 5000;
+  resumeToastDismissal(toast);
+}
+
+function initializeToastSample(sample: HTMLElement) {
+  const toast = sample.querySelector<HTMLElement>(".sample-toast");
+  if (!toast || toastTimerStates.has(toast)) return;
+
+  const state: ToastTimerState = { timer: null, deadline: 0, remaining: 5000 };
+  const pause = () => pauseToastDismissal(toast);
+  const resume = () => resumeToastDismissal(toast);
+  const resumeAfterFocus = (event: FocusEvent) => {
+    if (!toast.contains(event.relatedTarget as Node | null)) resume();
+  };
+  toast.addEventListener("pointerenter", pause);
+  toast.addEventListener("pointerleave", resume);
+  toast.addEventListener("focusin", pause);
+  toast.addEventListener("focusout", resumeAfterFocus);
+  toastTimerStates.set(toast, state);
+  toastSampleCleanups.set(sample, () => {
+    if (state.timer !== null) window.clearTimeout(state.timer);
+    toast.removeEventListener("pointerenter", pause);
+    toast.removeEventListener("pointerleave", resume);
+    toast.removeEventListener("focusin", pause);
+    toast.removeEventListener("focusout", resumeAfterFocus);
+    toastTimerStates.delete(toast);
+  });
+}
+
+function cleanupToastSample(sample: HTMLElement) {
+  toastSampleCleanups.get(sample)?.();
+  toastSampleCleanups.delete(sample);
 }
 
 function visibleStatus(className: string) {
@@ -1108,8 +1170,7 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "toast-snackbar": {
-      const dismiss = sample.querySelector<HTMLElement>(".sample-toast > small:last-child");
-      if (dismiss) asButton(dismiss, "dismiss-toast", "Dismiss message");
+      initializeToastSample(sample);
       break;
     }
     case "modal-dialog-drawer-sheet": {
@@ -2380,10 +2441,38 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       announce(sample, "Project created.");
       break;
     }
-    case "dismiss-toast":
-      sample.querySelector(".sample-toast")?.remove();
-      announce(sample, "Message dismissed.");
+    case "toast-save": {
+      const toast = sample.querySelector<HTMLElement>(".sample-toast");
+      const saveState = sample.querySelector<HTMLElement>("[data-toast-save-state]");
+      if (!toast) break;
+      if (saveState) saveState.textContent = "Saved just now";
+      toast.hidden = false;
+      startToastDismissal(toast);
+      announce(sample, "Changes saved.");
       break;
+    }
+    case "toast-undo": {
+      const toast = sample.querySelector<HTMLElement>(".sample-toast");
+      const saveState = sample.querySelector<HTMLElement>("[data-toast-save-state]");
+      if (toast) {
+        pauseToastDismissal(toast);
+        toast.hidden = true;
+      }
+      if (saveState) saveState.textContent = "Unsaved changes";
+      announce(sample, "Save undone. Your changes are back in the draft.");
+      sample.querySelector<HTMLButtonElement>("[data-action='toast-save']")?.focus({ preventScroll: true });
+      break;
+    }
+    case "dismiss-toast": {
+      const toast = sample.querySelector<HTMLElement>(".sample-toast");
+      if (toast) {
+        pauseToastDismissal(toast);
+        toast.hidden = true;
+      }
+      announce(sample, "Changes saved notification dismissed.");
+      sample.querySelector<HTMLButtonElement>("[data-action='toast-save']")?.focus({ preventScroll: true });
+      break;
+    }
     case "notice-dismiss": {
       const notice = button.closest<HTMLElement>("[data-notice]");
       if (!notice) break;
@@ -2605,6 +2694,7 @@ document.addEventListener("click", (event) => {
         if (clone.dataset.specimenId === "toggle-group-segmented-control") initializeToggleGroup(clone, clone.dataset.sampleInstance);
         if (clone.dataset.specimenId === "form-field") initializeFormFieldSample(clone, clone.dataset.sampleInstance);
         if (clone.dataset.specimenId === "drag-and-drop") initializeDragDropSample(clone);
+        if (clone.dataset.specimenId === "toast-snackbar") initializeToastSample(clone);
         if (clone.dataset.specimenId === "progress-ring-spinner-bar") {
           initializeProgressDemo(clone, { autoStart: true, reset: true });
         }
@@ -3199,5 +3289,7 @@ document.querySelectorAll<HTMLDialogElement>(".element-demo-dialog").forEach((el
       progressDemoCleanups.delete(progressSample);
       progressDemoControllers.delete(progressSample);
     }
+    const toastSample = dialogStage?.querySelector<HTMLElement>(".ui-sample[data-specimen-id='toast-snackbar']");
+    if (toastSample) cleanupToastSample(toastSample);
   });
 });
