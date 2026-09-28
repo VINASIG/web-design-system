@@ -520,11 +520,18 @@ const slugify = (value: string) =>
   .sample-selected b { font-size: 0.9rem; }
   .sample-multiselect > .sample-input-line { min-width: 8rem; flex: 1 1 8rem; border: 0; }
 
-  .sample-scrollspy { display: grid; width: 100%; gap: 1rem; grid-template-columns: 9rem minmax(0, 1fr); }
-  .sample-scrollspy nav { display: grid; align-content: start; gap: 0.45rem; padding-left: 0.55rem; border-left: 1px solid var(--color-border); font-size: 0.75rem; }
-  .sample-scrollspy nav .is-current { margin-left: -0.62rem; padding-left: 0.55rem; border-left: 2px solid var(--color-scout-blue); color: var(--color-scout-blue); }
-  .sample-scrollspy > div { display: grid; align-content: start; gap: 0.5rem; }
-  .sample-scrollspy > div span { width: 90%; height: 0.35rem; background: var(--color-surface-muted); }
+  .sample-scrollspy { display: grid; width: 100%; max-width: 44rem; align-items: start; gap: 1rem; grid-template-columns: minmax(7rem, 9rem) minmax(0, 1fr); }
+  .sample-scrollspy nav { position: sticky; top: 0.5rem; display: grid; align-content: start; gap: 0.35rem; padding-left: 0.55rem; border-left: 1px solid var(--color-border); font-size: 0.75rem; }
+  .sample-scrollspy nav > strong { margin-bottom: 0.2rem; font-size: 0.76rem; }
+  .sample-scrollspy nav > a { margin-left: -0.62rem; padding: 0.22rem 0.3rem 0.22rem 0.55rem; color: var(--color-text-muted); border-left: 2px solid transparent; text-decoration: none; }
+  .sample-scrollspy nav > a:hover { color: var(--color-scout-blue); }
+  .sample-scrollspy nav > a[aria-current="location"] { color: var(--color-scout-blue); border-left-color: var(--color-scout-blue); font-weight: 600; }
+  .sample-scrollspy-content { height: 11rem; min-width: 0; overflow: auto; overscroll-behavior: contain; padding: 0.2rem 0.5rem 0.5rem 0; scroll-behavior: smooth; scrollbar-color: var(--color-border-strong) transparent; }
+  .sample-scrollspy-content:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
+  .sample-scrollspy-content > section { min-height: 8rem; padding: 0.15rem 0.1rem 0.75rem; scroll-margin-top: 0.5rem; }
+  .sample-scrollspy-content > section + section { padding-top: 0.65rem; border-top: 1px solid var(--color-border); }
+  .sample-scrollspy-content h4 { margin: 0; font-size: 0.88rem; }
+  .sample-scrollspy-content p { max-width: 55ch; margin: 0.45rem 0 0; color: var(--color-text-muted); font-size: 0.76rem; line-height: 1.55; }
 
   .sample-alert-stack { display: grid; width: 100%; gap: 0.5rem; }
   .sample-alert { display: grid; gap: 0.1rem; padding: 0.55rem 0.7rem; border-left: 3px solid var(--color-info); background: var(--color-info-background); }
@@ -1257,8 +1264,8 @@ const slugify = (value: string) =>
     }
 
     .sample-scrollspy {
-      gap: 0.45rem;
-      grid-template-columns: minmax(4.5rem, 0.8fr) minmax(0, 1.2fr);
+      gap: 0.75rem;
+      grid-template-columns: minmax(7rem, 9rem) minmax(0, 1fr);
     }
 
     .sample-calendar,
@@ -1451,15 +1458,32 @@ const slugify = (value: string) =>
       min-width: 0;
       gap: 0.3rem 0.5rem;
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding-left: 0;
+      border-left: 0;
     }
 
     .sample-scrollspy nav > strong {
       grid-column: 1 / -1;
     }
 
-    .sample-scrollspy nav .is-current {
+    .sample-scrollspy nav > a[aria-current="location"] {
       margin-left: 0;
-      padding-left: 0.35rem;
+      padding-left: 0.3rem;
+    }
+
+    .sample-scrollspy nav > a {
+      margin-left: 0;
+      padding: 0.2rem 0.3rem;
+      border-left: 0;
+    }
+
+    .sample-scrollspy nav > a[aria-current="location"] {
+      background: var(--color-scout-blue-soft);
+      border-radius: var(--radius-sm);
+    }
+
+    .sample-scrollspy-content {
+      height: 9rem;
     }
 
     .sample-pagination {

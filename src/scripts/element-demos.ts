@@ -4,6 +4,7 @@ const dialogDescription = dialog?.querySelector<HTMLElement>(".element-demo-desc
 const dialogStage = dialog?.querySelector<HTMLElement>(".element-demo-stage");
 let sampleInstance = 0;
 let fieldInstance = 0;
+const scrollspyCleanups = new WeakMap<HTMLElement, () => void>();
 
 function setAction(element: HTMLElement, action: string, label?: string) {
   element.dataset.action = action;
@@ -65,6 +66,68 @@ function initializeDisclosureSample(sample: HTMLElement) {
     button.setAttribute("aria-controls", contentId);
     children.hidden = button.getAttribute("aria-expanded") !== "true";
   });
+}
+
+function setCurrentScrollspyLink(sample: HTMLElement, key: string) {
+  sample.querySelectorAll<HTMLAnchorElement>(".sample-scrollspy nav a[data-scrollspy-key]").forEach((link) => {
+    const current = link.dataset.scrollspyKey === key;
+    link.classList.toggle("is-current", current);
+    if (current) link.setAttribute("aria-current", "location");
+    else link.removeAttribute("aria-current");
+  });
+}
+
+function initializeScrollspy(sample: HTMLElement) {
+  const nav = sample.querySelector<HTMLElement>(".sample-scrollspy nav");
+  const content = sample.querySelector<HTMLElement>(".sample-scrollspy-content");
+  if (!nav || !content) return;
+
+  scrollspyCleanups.get(sample)?.();
+  const prefix = `sample-scrollspy-${sample.dataset.sampleInstance ?? "example"}`;
+  const sections = Array.from(content.querySelectorAll<HTMLElement>("section[data-scrollspy-key]"));
+  const headings: HTMLElement[] = [];
+  sections.forEach((section) => {
+    const key = section.dataset.scrollspyKey;
+    if (!key) return;
+    const heading = section.querySelector<HTMLElement>(":scope > h4");
+    if (!heading) return;
+    heading.id = `${prefix}-${key}`;
+    heading.dataset.scrollspyKey = key;
+    heading.tabIndex = -1;
+    nav.querySelector<HTMLAnchorElement>(`a[data-scrollspy-key="${key}"]`)?.setAttribute("href", `#${heading.id}`);
+    headings.push(heading);
+  });
+
+  const updateCurrentSection = () => {
+    if (headings.length === 0) return;
+    const bounds = content.getBoundingClientRect();
+    const activationLine = bounds.top + content.clientHeight * 0.24;
+    const passed = headings.filter((heading) => heading.getBoundingClientRect().top <= activationLine);
+    const atBottom = content.scrollTop + content.clientHeight >= content.scrollHeight - 1;
+    const current = atBottom ? headings[headings.length - 1] : passed[passed.length - 1] ?? headings[0];
+    if (current?.dataset.scrollspyKey) setCurrentScrollspyLink(sample, current.dataset.scrollspyKey);
+  };
+
+  content.addEventListener("scroll", updateCurrentSection, { passive: true });
+  let observer: IntersectionObserver | undefined;
+  if ("IntersectionObserver" in window) {
+    observer = new IntersectionObserver(updateCurrentSection, {
+      root: content,
+      rootMargin: "-24% 0px -74% 0px",
+      threshold: 0,
+    });
+    headings.forEach((heading) => observer?.observe(heading));
+  }
+  scrollspyCleanups.set(sample, () => {
+    observer?.disconnect();
+    content.removeEventListener("scroll", updateCurrentSection);
+  });
+  updateCurrentSection();
+}
+
+function destroyScrollspy(sample: HTMLElement) {
+  scrollspyCleanups.get(sample)?.();
+  scrollspyCleanups.delete(sample);
 }
 
 function showDropResult(zone: HTMLElement, files: FileList | File[]) {
@@ -177,6 +240,9 @@ function enhanceSample(sample: HTMLElement) {
   liveStatus(sample);
 
   switch (id) {
+    case "scrollspy":
+      initializeScrollspy(sample);
+      break;
     case "bottom-navigation": {
       const nav = sample.querySelector<HTMLElement>(".sample-bottom-nav");
       if (!nav) break;
@@ -1441,7 +1507,31 @@ document.addEventListener("click", (event) => {
         });
       }
       dialogStage.replaceChildren(clone);
+      if (clone instanceof HTMLElement && clone.dataset.specimenId === "scrollspy") initializeScrollspy(clone);
       dialog.showModal();
+    }
+    return;
+  }
+
+  const scrollspyLink = target.closest<HTMLAnchorElement>(".sample-scrollspy nav a[data-scrollspy-key]");
+  if (scrollspyLink) {
+    const sample = scrollspyLink.closest<HTMLElement>(".ui-sample");
+    const content = sample?.querySelector<HTMLElement>(".sample-scrollspy-content");
+    const key = scrollspyLink.dataset.scrollspyKey;
+    const section = key
+      ? Array.from(content?.querySelectorAll<HTMLElement>("section[data-scrollspy-key]") ?? [])
+        .find((item) => item.dataset.scrollspyKey === key)
+      : null;
+    const heading = section?.querySelector<HTMLElement>(":scope > h4");
+    if (sample && content && heading && key) {
+      event.preventDefault();
+      const top = heading.getBoundingClientRect().top - content.getBoundingClientRect().top + content.scrollTop;
+      content.scrollTo({
+        top,
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      });
+      heading.focus({ preventScroll: true });
+      setCurrentScrollspyLink(sample, key);
     }
     return;
   }
@@ -1780,5 +1870,9 @@ document.addEventListener("focusout", (event) => {
 document.querySelectorAll<HTMLDialogElement>(".element-demo-dialog").forEach((elementDialog) => {
   elementDialog.addEventListener("click", (event) => {
     if (event.target === elementDialog) elementDialog.close();
+  });
+  elementDialog.addEventListener("close", () => {
+    const sample = dialogStage?.querySelector<HTMLElement>(".ui-sample[data-specimen-id='scrollspy']");
+    if (sample) destroyScrollspy(sample);
   });
 });
