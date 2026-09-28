@@ -955,6 +955,54 @@ function positionColorWellPanel(well: HTMLElement, trigger: HTMLElement, panel: 
   panel.classList.toggle("opens-up", below < panelHeight + 8 && above > below);
 }
 
+function middleTruncateText(element: HTMLElement, value: string) {
+  const availableWidth = element.getBoundingClientRect().width;
+  if (availableWidth <= 0) return value;
+
+  const context = document.createElement("canvas").getContext("2d");
+  if (!context) return value;
+  const style = window.getComputedStyle(element);
+  context.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+  const letterSpacing = Number.parseFloat(style.letterSpacing) || 0;
+  const measure = (text: string) => context.measureText(text).width + Math.max(0, text.length - 1) * letterSpacing;
+  if (measure(value) <= availableWidth) return value;
+
+  const extension = value.match(/\.[^.]+$/)?.[0] ?? "";
+  const name = extension ? value.slice(0, -extension.length) : value;
+  const ellipsis = "…";
+  let low = 0;
+  let high = name.length;
+  let result = `${ellipsis}${extension}`;
+
+  while (low <= high) {
+    const kept = Math.floor((low + high) / 2);
+    const prefixLength = Math.ceil(kept / 2);
+    const suffixLength = Math.floor(kept / 2);
+    const prefix = name.slice(0, prefixLength);
+    const suffix = suffixLength ? name.slice(-suffixLength) : "";
+    const candidate = `${prefix}${ellipsis}${suffix}${extension}`;
+    if (measure(candidate) <= availableWidth) {
+      result = candidate;
+      low = kept + 1;
+    } else {
+      high = kept - 1;
+    }
+  }
+
+  return result;
+}
+
+function refreshTruncationFilename(root: HTMLElement) {
+  const filename = root.querySelector<HTMLElement>(".sample-truncation-filename");
+  const fullText = filename?.dataset.fullText;
+  if (!filename || !fullText) return;
+  filename.textContent = root.dataset.expanded === "true" ? fullText : middleTruncateText(filename, fullText);
+}
+
+window.addEventListener("resize", () => {
+  document.querySelectorAll<HTMLElement>(".sample-truncation").forEach(refreshTruncationFilename);
+});
+
 function setColorWellValue(well: HTMLElement, color: string, name: string) {
   const normalized = color.toUpperCase();
   const swatch = well.querySelector<HTMLElement>(".sample-color-swatch > span");
@@ -1060,6 +1108,33 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       status.textContent = "Read";
       button.setAttribute("aria-pressed", "true");
       button.setAttribute("aria-label", "Read by Sam Kim: Yes! Booking the room now.");
+      break;
+    }
+    case "truncation-width": {
+      const truncation = button.closest<HTMLElement>(".sample-truncation");
+      const width = button.dataset.width;
+      if (!truncation || (width !== "narrow" && width !== "wide")) break;
+      truncation.dataset.width = width;
+      truncation.querySelectorAll<HTMLButtonElement>("[data-action='truncation-width']").forEach((option) => {
+        option.setAttribute("aria-pressed", String(option === button));
+      });
+      refreshTruncationFilename(truncation);
+      const status = truncation.querySelector<HTMLElement>(".sample-truncation-status");
+      if (status) status.textContent = `${width === "narrow" ? "Narrow" : "Wide"} container. Full text stays available to assistive technology.`;
+      break;
+    }
+    case "truncation-expand": {
+      const truncation = button.closest<HTMLElement>(".sample-truncation");
+      if (!truncation) break;
+      const expanded = truncation.dataset.expanded !== "true";
+      truncation.dataset.expanded = String(expanded);
+      button.setAttribute("aria-pressed", String(expanded));
+      button.textContent = expanded ? "Show truncation" : "Show full text";
+      refreshTruncationFilename(truncation);
+      const status = truncation.querySelector<HTMLElement>(".sample-truncation-status");
+      if (status) status.textContent = expanded
+        ? "Full text shown for every example."
+        : `${truncation.dataset.width === "wide" ? "Wide" : "Narrow"} container. Full text stays available to assistive technology.`;
       break;
     }
     case "timeline-complete": {

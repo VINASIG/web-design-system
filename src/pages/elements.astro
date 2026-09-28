@@ -900,8 +900,44 @@ const slugify = (value: string) =>
   .sample-form-field > div { padding: 0.5rem 0.6rem; background: var(--color-white); border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); }
   .sample-form-field small { font-size: 0.68rem; }
 
-  .sample-truncation { display: grid; max-width: 27rem; gap: 0.3rem; }
-  .sample-truncation p { display: -webkit-box; overflow: hidden; margin: 0; color: var(--color-text-muted); font-size: 0.8rem; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .sample-truncation { display: grid; width: 100%; max-width: 36rem; gap: 0.75rem; }
+  .sample-truncation-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 0.55rem 0.75rem; }
+  .sample-truncation-toolbar,
+  .sample-truncation-status { width: min(100%, 34rem); margin-inline: auto; }
+  .sample-truncation[data-width='narrow'] .sample-truncation-toolbar,
+  .sample-truncation[data-width='narrow'] .sample-truncation-status { width: min(100%, 19rem); }
+  .sample-truncation-width-label { color: var(--color-text-muted); font-size: 0.8rem; font-weight: 600; }
+  .sample-truncation-width { display: inline-flex; gap: 0.15rem; padding: 0.18rem; background: var(--color-surface-muted); border: 1px solid var(--color-border); border-radius: var(--radius-sm); }
+  .sample-truncation-width button,
+  .sample-truncation-expand { min-height: 2rem; padding: 0.3rem 0.65rem !important; color: var(--color-text-muted) !important; border-radius: calc(var(--radius-sm) - 2px); font-size: 0.78rem !important; font-weight: 600; }
+  .sample-truncation-width button[aria-pressed='true'] { color: var(--color-scout-blue-strong) !important; background: var(--color-white); box-shadow: 0 1px 2px rgb(68 58 59 / 10%); }
+  .sample-truncation-expand { margin-left: auto !important; color: var(--color-scout-blue-strong) !important; background: var(--color-scout-blue-soft) !important; }
+  .sample-truncation-width button:hover,
+  .sample-truncation-expand:hover { color: var(--color-scout-blue-strong) !important; }
+  .sample-truncation-card { display: grid; width: min(100%, 19rem); gap: 0; margin-inline: auto; padding: 0 1rem; background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-sm); }
+  .sample-truncation[data-width='wide'] .sample-truncation-card { width: min(100%, 34rem); }
+  .sample-truncation-example { display: grid; min-width: 0; gap: 0.25rem; padding: 0.8rem 0; }
+  .sample-truncation-example + .sample-truncation-example { border-top: 1px solid var(--color-border); }
+  .sample-truncation-example code { color: var(--color-text-muted); font-size: 0.72rem; line-height: 1.4; }
+  .sample-truncation-example p { min-width: 0; margin: 0; color: var(--color-text); font-size: 0.86rem; line-height: 1.5; }
+  .sample-truncation-single,
+  .sample-truncation-fade,
+  .sample-truncation-filename { overflow: hidden; white-space: nowrap; }
+  .sample-truncation-single { text-overflow: ellipsis; }
+  .sample-truncation-clamp { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .sample-truncation-filename { width: 100%; font-variant-numeric: tabular-nums; }
+  .sample-truncation-fade { -webkit-mask-image: linear-gradient(to right, #000 70%, transparent); mask-image: linear-gradient(to right, #000 70%, transparent); }
+  .sample-truncation[data-expanded='true'] .sample-truncation-single,
+  .sample-truncation[data-expanded='true'] .sample-truncation-fade,
+  .sample-truncation[data-expanded='true'] .sample-truncation-filename { overflow: visible; white-space: normal; overflow-wrap: anywhere; -webkit-mask-image: none; mask-image: none; }
+  .sample-truncation[data-expanded='true'] .sample-truncation-clamp { display: block; overflow: visible; -webkit-line-clamp: unset; }
+  .sample-truncation-status { justify-self: center; margin: 0 auto; color: var(--color-text-muted); font-size: 0.74rem; }
+  .element-demo-stage .ui-sample .sample-truncation-example code { font-size: 0.78rem; }
+  .element-demo-stage .ui-sample .sample-truncation-example p { font-size: 0.92rem; }
+  .element-demo-stage .ui-sample .sample-truncation-width-label,
+  .element-demo-stage .ui-sample .sample-truncation-status { font-size: 0.8rem; }
+  .element-demo-stage .ui-sample .sample-truncation-width button,
+  .element-demo-stage .ui-sample .sample-truncation-expand { font-size: 0.78rem !important; }
 
   .sample-dropzone { display: grid; width: 100%; min-height: 7rem; align-content: center; justify-items: center; gap: 0.35rem; padding: 0.75rem; background: var(--color-scout-blue-soft); border: 1px dashed var(--color-scout-blue-border); border-radius: var(--radius-sm); }
   .sample-dropzone b { font-size: 0.82rem; }
@@ -1473,6 +1509,12 @@ const slugify = (value: string) =>
   }
 
   @media (max-width: 420px) {
+    .sample-truncation { gap: 0.6rem; }
+    .sample-truncation-toolbar { gap: 0.45rem; }
+    .sample-truncation-width-label { flex-basis: 100%; }
+    .sample-truncation-expand { margin-left: 0 !important; }
+    .sample-truncation-card { padding-inline: 0.75rem; }
+    .sample-truncation-example { padding-block: 0.65rem; }
     .sample-chat-header { gap: 0.5rem; padding: 0.7rem 0.75rem; }
     .sample-chat-log { gap: 0.75rem; padding: 0.9rem 0.75rem; }
     .sample-chat-bubble { max-width: 88%; padding: 0.55rem 0.7rem; }
