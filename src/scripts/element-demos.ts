@@ -2127,6 +2127,25 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       sample.querySelector(".sample-toast")?.remove();
       announce(sample, "Message dismissed.");
       break;
+    case "notice-dismiss": {
+      const notice = button.closest<HTMLElement>("[data-notice]");
+      if (!notice) break;
+      const message = notice.dataset.notice === "banner"
+        ? "Maintenance announcement dismissed."
+        : "Card expiration notice dismissed.";
+      notice.remove();
+      const feedback = sample.querySelector<HTMLElement>(".sample-notice-feedback");
+      if (feedback) feedback.textContent = message;
+      sample.querySelector<HTMLElement>("[data-notice-focus-fallback]")?.focus({ preventScroll: true });
+      break;
+    }
+    case "notice-review": {
+      const feedback = sample.querySelector<HTMLElement>(".sample-notice-feedback");
+      if (feedback) feedback.textContent = "Payment settings are ready to review.";
+      button.textContent = "Settings ready";
+      button.disabled = true;
+      break;
+    }
     case "surface-select": {
       selectOne(button.parentElement ?? sample, ".sample-surface-options button", button);
       const label = button.querySelector("b")?.textContent?.trim() ?? "Surface";

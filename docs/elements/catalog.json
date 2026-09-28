@@ -119,7 +119,7 @@
       "category": "Feedback and overlays",
       "definition": "Three notice placements: an inline alert belongs to a task or field, a callout explains nearby content, and a banner spans a page or region.",
       "guidance": "Choose placement by scope and urgency. Keep persistent information in the page, reserve live alerts for timely changes, and use a banner only when the message affects the wider page.",
-      "accessibility": "Give the message a clear heading or text label. Use an alert role only for important dynamic announcements, and pair status color with words or an icon."
+      "accessibility": "Pair severity color with a visible label or icon. Keep static page-load notices out of live alert roles; use status or alert semantics only when content is added dynamically, according to its urgency."
     },
     {
       "order": 11,
