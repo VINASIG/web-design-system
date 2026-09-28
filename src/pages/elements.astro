@@ -708,19 +708,34 @@ const slugify = (value: string) =>
   .sample-pagination .sample-page-arrow { width: auto; color: var(--color-text-muted); }
   .sample-pagination > button.sample-page-arrow { min-width: 0; color: var(--color-scout-blue); }
 
-  .sample-calendar { width: 15rem; padding: 0.7rem; background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-sm); }
-  .sample-calendar header { display: flex; align-items: center; gap: 0.7rem; padding-bottom: 0.5rem; font-size: 0.72rem; }
-  .sample-calendar header b { margin-right: auto; }
-  .sample-calendar header span,
-  .sample-calendar header button { display: grid; width: 2rem; height: 2rem; place-items: center; color: var(--color-scout-blue); border-radius: 3px; }
-  .sample-calendar header button:hover { background: var(--color-scout-blue-soft); }
-  .sample-calendar-grid { display: grid; text-align: center; gap: 0.18rem; grid-template-columns: repeat(7, 1fr); }
-  .sample-calendar-grid > * { display: grid; min-height: 1.3rem; place-items: center; font-size: 0.68rem; }
-  .sample-calendar-grid small { color: var(--color-text-muted); }
-  .sample-calendar-grid button { min-height: 2rem; padding: 0; border-radius: 50%; font-size: 0.88rem; }
-  .sample-calendar-grid button:hover { background: var(--color-scout-blue-soft); }
-  .sample-calendar-grid .is-selected,
-  .sample-calendar-grid button.is-selected { color: var(--color-white); background: var(--color-scout-blue); border-radius: var(--radius-sm); }
+  .element-preview:has(.sample-date-picker) { min-height: 22rem; overflow: visible; place-items: start center; }
+  .element-preview .ui-sample:has(.sample-date-picker) { min-height: 0; align-items: flex-start; padding-top: 1rem; }
+  .element-demo-stage:has(.sample-date-picker) { min-height: 25rem; overflow: visible; place-items: start center; }
+  .element-demo-stage .ui-sample:has(.sample-date-picker) { min-height: 0; align-items: flex-start; padding-top: 1rem; }
+  .sample-date-picker { position: relative; width: min(100%, 18rem); min-height: 2.65rem; }
+  .sample-date-trigger { display: flex; width: 100%; min-height: 2.65rem; align-items: center; gap: 0.55rem; padding: 0.45rem 0.65rem !important; color: var(--color-text) !important; background: var(--color-white) !important; border: 1px solid var(--color-border-strong) !important; border-radius: var(--radius-sm) !important; font-size: 0.78rem !important; text-align: left !important; }
+  .sample-date-trigger > span { min-width: 0; flex: 1; }
+  .sample-date-trigger > i { color: var(--color-scout-blue-strong); font-size: 0.9rem; font-style: normal; }
+  .sample-date-trigger:hover { background: var(--color-surface-muted) !important; }
+  .sample-calendar { position: absolute; z-index: 4; top: calc(100% + 0.45rem); left: 50%; width: min(17.5rem, calc(100vw - 4rem)); padding: 0.7rem; background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-soft); transform: translateX(-50%); }
+  .sample-calendar header { display: flex; align-items: center; gap: 0.6rem; padding-bottom: 0.35rem; }
+  .sample-calendar header h3 { margin: 0 auto 0 0; font-size: 0.92rem; line-height: 1.3; }
+  .sample-calendar-controls { display: flex; align-items: center; gap: 0.2rem; }
+  .sample-calendar-controls button { display: grid; width: 2rem; height: 2rem; place-items: center; color: var(--color-scout-blue-strong) !important; border-radius: 0.3rem; }
+  .sample-calendar-controls button:hover { background: var(--color-scout-blue-soft) !important; }
+  .sample-calendar-controls i { font-size: 0.9rem; font-style: normal; }
+  .sample-calendar-grid { display: grid; gap: 0.08rem; }
+  .sample-calendar-grid [role='row'] { display: grid; align-items: center; gap: 0.08rem; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .sample-calendar-weekdays [role='columnheader'] { display: grid; min-width: 0; min-height: 1.55rem; place-items: center; color: var(--color-text-muted); font-size: 0.66rem; font-weight: 600; }
+  .sample-calendar-weekdays abbr { text-decoration: none; }
+  .sample-calendar-grid [role='gridcell'][aria-hidden='true'] { aspect-ratio: 1 / 1; }
+  .sample-calendar-grid button.sample-calendar-day { display: grid; width: 100%; min-width: 0; min-height: 0; aspect-ratio: 1 / 1; padding: 0; place-items: center; border-radius: 0.3rem; font-size: 0.8rem; }
+  .sample-calendar-grid button.sample-calendar-day:hover:not(.is-selected) { background: var(--color-scout-blue-soft) !important; }
+  .sample-calendar-grid button.sample-calendar-day.is-selected { color: var(--color-white) !important; background: var(--color-scout-blue) !important; border-radius: 0.3rem; }
+  .sample-calendar-grid button.sample-calendar-day.is-range-middle { color: var(--color-scout-blue-strong) !important; background: var(--color-scout-blue-soft) !important; border-radius: 0; }
+  .sample-calendar-grid button.sample-calendar-day.is-today:not(.is-selected) { box-shadow: inset 0 0 0 1px var(--color-scout-blue); }
+  .sample-calendar-grid button.sample-calendar-day.is-today.is-selected { box-shadow: inset 0 0 0 1px var(--color-white); }
+  .sample-calendar-hint { margin: 0.45rem 0 0; padding-top: 0.4rem; color: var(--color-text-muted); border-top: 1px solid var(--color-border); font-size: 0.67rem; line-height: 1.4; }
 
   .sample-parallax { display: grid; width: 100%; min-height: 15rem; align-content: center; gap: 0.55rem; }
   .sample-parallax-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.85rem; color: var(--color-text-muted); font-size: 0.7rem; }
@@ -1396,6 +1411,12 @@ const slugify = (value: string) =>
   .element-demo-stage .ui-sample :is(span, b, strong, button, label, p) { font-size: 1.05rem; }
   .element-demo-stage .ui-sample small { font-size: 0.95rem; }
   .element-demo-stage .ui-sample i[class^="fi-br-"] { font-size: 1.25rem; }
+  .element-preview .ui-sample .sample-date-trigger > span,
+  .element-demo-stage .ui-sample .sample-date-trigger > span { font-size: 0.82rem !important; }
+  .element-preview .ui-sample .sample-date-trigger > i,
+  .element-demo-stage .ui-sample .sample-date-trigger > i { font-size: 0.9rem !important; }
+  .element-preview .ui-sample .sample-calendar-hint,
+  .element-demo-stage .ui-sample .sample-calendar-hint { font-size: 0.68rem !important; }
   .element-preview .ui-sample .sample-breadcrumbs > i[class^="fi-br-"] { font-size: 1rem; }
   .element-demo-stage .ui-sample .sample-breadcrumbs > i[class^="fi-br-"] { font-size: 1.05rem; }
 

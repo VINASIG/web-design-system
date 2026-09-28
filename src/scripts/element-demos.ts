@@ -325,59 +325,161 @@ function makeInput(placeholder: string, label: string, className = "sample-input
   return input;
 }
 
-function enhanceCalendar(sample: HTMLElement) {
-  const calendar = sample.querySelector<HTMLElement>(".sample-calendar");
-  const title = calendar?.querySelector<HTMLElement>("header b");
-  const grid = calendar?.querySelector<HTMLElement>(".sample-calendar-grid");
-  if (!calendar || !title || !grid) return;
+function toCivilDate(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
 
-  const controls = calendar.querySelectorAll<HTMLElement>("header span");
-  if (controls[0]) asButton(controls[0], "calendar-prev", "Previous month");
-  if (controls[1]) asButton(controls[1], "calendar-next", "Next month");
-  calendar.dataset.calendarMonth = "2026-09";
-  calendar.dataset.selectedDate = "2026-09-25";
+function fromCivilDate(value: string) {
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function calendarMonthValue(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function formatCalendarDate(value: string, options: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" }) {
+  return new Intl.DateTimeFormat("en", options).format(fromCivilDate(value));
+}
+
+function updateCalendarDisplay(picker: HTMLElement) {
+  const calendar = picker.querySelector<HTMLElement>(".sample-calendar");
+  const value = picker.querySelector<HTMLElement>("[data-calendar-value]");
+  const hint = calendar?.querySelector<HTMLElement>("[data-calendar-hint]");
+  if (!calendar || !value) return;
+
+  const start = calendar.dataset.rangeStart;
+  const end = calendar.dataset.rangeEnd;
+  if (picker.dataset.calendarMode !== "range") {
+    value.textContent = start ? formatCalendarDate(start, { month: "short", day: "numeric", year: "numeric" }) : "Choose a date";
+    if (hint) hint.textContent = "Choose a date from the calendar.";
+    return;
+  }
+  if (start && end) {
+    const startDate = fromCivilDate(start);
+    const endDate = fromCivilDate(end);
+    const sameYear = startDate.getFullYear() === endDate.getFullYear();
+    const startLabel = formatCalendarDate(start, sameYear ? { month: "short", day: "numeric" } : { month: "short", day: "numeric", year: "numeric" });
+    const endLabel = formatCalendarDate(end, { month: "short", day: "numeric", year: "numeric" });
+    value.textContent = `${startLabel} – ${endLabel}`;
+    if (hint) hint.textContent = "Choose a new start date to change this range.";
+  } else if (start) {
+    value.textContent = `${formatCalendarDate(start)} – Choose end date`;
+    if (hint) hint.textContent = `Choose an end date on or after ${formatCalendarDate(start, { month: "long", day: "numeric", year: "numeric" })}.`;
+  } else {
+    value.textContent = "Choose a date range";
+    if (hint) hint.textContent = "Choose a start date, then an end date.";
+  }
+}
+
+function enhanceCalendar(sample: HTMLElement) {
+  const picker = sample.querySelector<HTMLElement>(".sample-date-picker");
+  const calendar = picker?.querySelector<HTMLElement>(".sample-calendar");
+  const title = calendar?.querySelector<HTMLElement>("[data-calendar-title]");
+  const grid = calendar?.querySelector<HTMLElement>(".sample-calendar-grid");
+  const hint = calendar?.querySelector<HTMLElement>("[data-calendar-hint]");
+  const trigger = picker?.querySelector<HTMLButtonElement>("[data-action='calendar-toggle']");
+  if (!picker || !calendar || !title || !grid || !trigger) return;
+
+  const instance = sample.dataset.sampleInstance ?? "example";
+  const today = new Date();
+  const todayValue = toCivilDate(today);
+  const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  const startDay = Math.min(5, daysInMonth);
+  const endDay = Math.min(16, daysInMonth);
+  calendar.dataset.calendarMonth = calendarMonthValue(today);
+  calendar.dataset.today = todayValue;
+  calendar.dataset.rangeStart = `${calendarMonthValue(today)}-${String(startDay).padStart(2, "0")}`;
+  calendar.dataset.rangeEnd = `${calendarMonthValue(today)}-${String(endDay).padStart(2, "0")}`;
+  calendar.dataset.calendarFocusDate = calendar.dataset.rangeStart;
+  calendar.id = `sample-calendar-${instance}`;
+  title.id = `${calendar.id}-title`;
+  title.setAttribute("aria-live", "polite");
+  if (hint) hint.id = `${calendar.id}-hint`;
+  grid.setAttribute("aria-labelledby", title.id);
+  calendar.setAttribute("aria-labelledby", title.id);
+  trigger.setAttribute("aria-controls", calendar.id);
+  if (hint) trigger.setAttribute("aria-describedby", hint.id);
+  picker.dataset.calendarOpen = "true";
+  calendar.hidden = false;
+  trigger.setAttribute("aria-expanded", "true");
+  updateCalendarDisplay(picker);
   renderCalendar(calendar);
 }
 
 function renderCalendar(calendar: HTMLElement) {
-  const title = calendar.querySelector<HTMLElement>("header b");
+  const title = calendar.querySelector<HTMLElement>("[data-calendar-title]");
   const grid = calendar.querySelector<HTMLElement>(".sample-calendar-grid");
   if (!title || !grid) return;
 
   const monthValue = calendar.dataset.calendarMonth ?? "2026-09";
   const [year, month] = monthValue.split("-").map(Number);
   const firstDate = new Date(year, month - 1, 1);
-  const monthName = new Intl.DateTimeFormat("en", { month: "long", year: "numeric" }).format(firstDate);
-  title.textContent = monthName;
-  title.setAttribute("aria-live", "polite");
+  title.textContent = new Intl.DateTimeFormat("en", { month: "long", year: "numeric" }).format(firstDate);
+  grid.setAttribute("aria-label", `Dates in ${title.textContent}`);
   grid.replaceChildren();
 
-  for (const weekday of ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]) {
-    const label = document.createElement("small");
-    label.textContent = weekday;
-    grid.append(label);
+  const headingRow = document.createElement("div");
+  headingRow.setAttribute("role", "row");
+  headingRow.className = "sample-calendar-weekdays";
+  for (const [short, long] of [["Su", "Sunday"], ["Mo", "Monday"], ["Tu", "Tuesday"], ["We", "Wednesday"], ["Th", "Thursday"], ["Fr", "Friday"], ["Sa", "Saturday"]]) {
+    const weekday = document.createElement("span");
+    weekday.setAttribute("role", "columnheader");
+    weekday.setAttribute("aria-label", long);
+    weekday.textContent = short;
+    headingRow.append(weekday);
   }
+  grid.append(headingRow);
 
-  const offset = (firstDate.getDay() + 6) % 7;
-  for (let blank = 0; blank < offset; blank += 1) {
-    const spacer = document.createElement("span");
-    spacer.setAttribute("aria-hidden", "true");
-    grid.append(spacer);
-  }
-
+  const offset = firstDate.getDay();
   const daysInMonth = new Date(year, month, 0).getDate();
-  for (let day = 1; day <= daysInMonth; day += 1) {
-    const dateValue = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "sample-calendar-day";
-    button.textContent = String(day);
-    button.dataset.date = dateValue;
-    button.setAttribute("aria-label", new Intl.DateTimeFormat("en", { dateStyle: "long" }).format(new Date(year, month - 1, day)));
-    button.setAttribute("aria-pressed", String(calendar.dataset.selectedDate === dateValue));
-    if (calendar.dataset.selectedDate === dateValue) button.classList.add("is-selected");
-    setAction(button, "calendar-day");
-    grid.append(button);
+  const rowCount = Math.ceil((offset + daysInMonth) / 7);
+  const start = calendar.dataset.rangeStart;
+  const end = calendar.dataset.rangeEnd;
+  const today = calendar.dataset.today;
+  let focusDate = calendar.dataset.calendarFocusDate;
+  if (!focusDate || !focusDate.startsWith(monthValue)) {
+    focusDate = start?.startsWith(monthValue) ? start : `${monthValue}-01`;
+    calendar.dataset.calendarFocusDate = focusDate;
+  }
+
+  for (let rowIndex = 0; rowIndex < rowCount; rowIndex += 1) {
+    const row = document.createElement("div");
+    row.setAttribute("role", "row");
+    row.className = "sample-calendar-week";
+    for (let column = 0; column < 7; column += 1) {
+      const day = rowIndex * 7 + column - offset + 1;
+      if (day < 1 || day > daysInMonth) {
+        const spacer = document.createElement("span");
+        spacer.setAttribute("role", "gridcell");
+        spacer.setAttribute("aria-hidden", "true");
+        row.append(spacer);
+        continue;
+      }
+
+      const dateValue = `${monthValue}-${String(day).padStart(2, "0")}`;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "sample-calendar-day";
+      button.textContent = String(day);
+      button.dataset.date = dateValue;
+      button.setAttribute("role", "gridcell");
+      button.setAttribute("aria-label", formatCalendarDate(dateValue, { dateStyle: "full" }));
+      const isStart = dateValue === start;
+      const isEnd = dateValue === end;
+      const isBetween = Boolean(start && end && dateValue > start && dateValue < end);
+      const isSelected = isStart || isEnd || isBetween;
+      button.setAttribute("aria-selected", String(isSelected));
+      button.tabIndex = dateValue === focusDate ? 0 : -1;
+      if (dateValue === today) button.setAttribute("aria-current", "date");
+      if (isStart) button.classList.add("is-selected", "is-range-start");
+      if (isEnd) button.classList.add("is-selected", "is-range-end");
+      if (isBetween) button.classList.add("is-range-middle");
+      if (dateValue === today) button.classList.add("is-today");
+      setAction(button, "calendar-day");
+      row.append(button);
+    }
+    grid.append(row);
   }
 }
 
@@ -1016,11 +1118,52 @@ function selectOne(container: ParentNode, selector: string, button: HTMLElement,
   });
 }
 
+function setCalendarOpen(picker: HTMLElement, open: boolean) {
+  const calendar = picker.querySelector<HTMLElement>(".sample-calendar");
+  const trigger = picker.querySelector<HTMLButtonElement>("[data-action='calendar-toggle']");
+  if (!calendar || !trigger) return;
+  picker.dataset.calendarOpen = String(open);
+  calendar.hidden = !open;
+  trigger.setAttribute("aria-expanded", String(open));
+}
+
 function setCalendarMonth(calendar: HTMLElement, offset: number) {
   const [year, month] = (calendar.dataset.calendarMonth ?? "2026-09").split("-").map(Number);
   const date = new Date(year, month - 1 + offset, 1);
   calendar.dataset.calendarMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
   renderCalendar(calendar);
+}
+
+function selectCalendarDay(sample: HTMLElement, calendar: HTMLElement, dateValue: string) {
+  const picker = calendar.closest<HTMLElement>(".sample-date-picker");
+  if (!picker) return;
+  const start = calendar.dataset.rangeStart;
+  const end = calendar.dataset.rangeEnd;
+  let message: string;
+
+  if (picker.dataset.calendarMode !== "range") {
+    calendar.dataset.rangeStart = dateValue;
+    delete calendar.dataset.rangeEnd;
+    message = `${formatCalendarDate(dateValue, { dateStyle: "long" })} selected.`;
+  } else if (!start || end) {
+    calendar.dataset.rangeStart = dateValue;
+    delete calendar.dataset.rangeEnd;
+    message = `Start date ${formatCalendarDate(dateValue, { dateStyle: "long" })} selected. Choose an end date.`;
+  } else if (dateValue < start) {
+    calendar.dataset.rangeStart = dateValue;
+    delete calendar.dataset.rangeEnd;
+    message = `Start date changed to ${formatCalendarDate(dateValue, { dateStyle: "long" })}. Choose an end date.`;
+  } else {
+    calendar.dataset.rangeEnd = dateValue;
+    message = `${formatCalendarDate(start, { dateStyle: "long" })} to ${formatCalendarDate(dateValue, { dateStyle: "long" })} selected.`;
+  }
+
+  calendar.dataset.calendarMonth = calendarMonthValue(fromCivilDate(dateValue));
+  calendar.dataset.calendarFocusDate = dateValue;
+  updateCalendarDisplay(picker);
+  renderCalendar(calendar);
+  calendar.querySelector<HTMLButtonElement>(`[data-date='${dateValue}']`)?.focus();
+  announce(sample, message);
 }
 
 function refreshColorWellIds(well: HTMLElement, instance: string) {
@@ -1317,6 +1460,16 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       pages[next]?.click();
       break;
     }
+    case "calendar-toggle": {
+      const picker = button.closest<HTMLElement>(".sample-date-picker");
+      const calendar = picker?.querySelector<HTMLElement>(".sample-calendar");
+      if (!picker || !calendar) break;
+      const open = calendar.hidden;
+      setCalendarOpen(picker, open);
+      if (open) calendar.querySelector<HTMLButtonElement>(".sample-calendar-grid [tabindex='0']")?.focus();
+      announce(sample, open ? "Calendar opened." : "Calendar closed.");
+      break;
+    }
     case "calendar-prev":
       if (button.closest(".sample-calendar")) setCalendarMonth(button.closest<HTMLElement>(".sample-calendar")!, -1);
       break;
@@ -1326,11 +1479,7 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
     case "calendar-day": {
       const calendar = button.closest<HTMLElement>(".sample-calendar");
       if (!calendar || !button.dataset.date) break;
-      calendar.dataset.selectedDate = button.dataset.date;
-      renderCalendar(calendar);
-      const selected = calendar.querySelector<HTMLElement>(`[data-date="${button.dataset.date}"]`);
-      selected?.focus();
-      announce(sample, `${selected?.getAttribute("aria-label")} selected.`);
+      selectCalendarDay(sample, calendar, button.dataset.date);
       break;
     }
     case "carousel-select":
@@ -1894,6 +2043,10 @@ document.addEventListener("click", (event) => {
   const target = event.target instanceof Element ? event.target : null;
   if (!target) return;
 
+  document.querySelectorAll<HTMLElement>(".sample-date-picker[data-calendar-open='true']").forEach((picker) => {
+    if (!picker.contains(target)) setCalendarOpen(picker, false);
+  });
+
   if (!target.closest("[data-open-demo]")) {
     document.querySelectorAll<HTMLElement>(".sample-multi-checkbox").forEach((owner) => {
       if (owner.contains(target)) return;
@@ -1935,6 +2088,7 @@ document.addEventListener("click", (event) => {
           refreshColorWellIds(well, `${clone.dataset.sampleInstance}-${index + 1}`);
         });
         if (clone.dataset.specimenId === "disclosure-triangle") initializeDisclosureSample(clone);
+        if (clone.dataset.specimenId === "date-picker") enhanceCalendar(clone);
         if (clone.dataset.specimenId === "sign-in-form") initializeLoginSample(clone);
         if (clone.dataset.specimenId === "multi-select") initializeMultiSelectIds(clone, clone.dataset.sampleInstance);
         clone.querySelectorAll<HTMLInputElement>("input[type='radio']").forEach((input) => {
@@ -2055,6 +2209,33 @@ document.addEventListener("keydown", (event) => {
   if (!target) return;
   const sample = target.closest<HTMLElement>(".ui-sample");
 
+  const calendarDay = target.closest<HTMLButtonElement>(".sample-calendar-grid [data-date]");
+  const calendar = calendarDay?.closest<HTMLElement>(".sample-calendar");
+  if (calendarDay?.dataset.date && calendar && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(event.key)) {
+    const nextDate = fromCivilDate(calendarDay.dataset.date);
+    if (event.key === "ArrowLeft") nextDate.setDate(nextDate.getDate() - 1);
+    else if (event.key === "ArrowRight") nextDate.setDate(nextDate.getDate() + 1);
+    else if (event.key === "ArrowUp") nextDate.setDate(nextDate.getDate() - 7);
+    else if (event.key === "ArrowDown") nextDate.setDate(nextDate.getDate() + 7);
+    else if (event.key === "Home") nextDate.setDate(nextDate.getDate() - nextDate.getDay());
+    else if (event.key === "End") nextDate.setDate(nextDate.getDate() + (6 - nextDate.getDay()));
+    else {
+      const day = nextDate.getDate();
+      const monthOffset = (event.key === "PageUp" ? -1 : 1) * (event.shiftKey ? 12 : 1);
+      nextDate.setDate(1);
+      nextDate.setMonth(nextDate.getMonth() + monthOffset);
+      nextDate.setDate(Math.min(day, new Date(nextDate.getFullYear(), nextDate.getMonth() + 1, 0).getDate()));
+    }
+
+    event.preventDefault();
+    const nextValue = toCivilDate(nextDate);
+    calendar.dataset.calendarMonth = calendarMonthValue(nextDate);
+    calendar.dataset.calendarFocusDate = nextValue;
+    renderCalendar(calendar);
+    calendar.querySelector<HTMLButtonElement>(`[data-date='${nextValue}']`)?.focus();
+    return;
+  }
+
   if (target.matches(".sample-multi-token-input") && sample) {
     const field = target.closest<HTMLElement>(".sample-multi-token-field");
     const panel = field?.querySelector<HTMLElement>(".sample-multi-token-options");
@@ -2146,6 +2327,13 @@ document.addEventListener("keydown", (event) => {
   }
 
   if (event.key === "Escape" && target.closest(".ui-sample")) {
+    const datePicker = target.closest<HTMLElement>(".sample-date-picker[data-calendar-open='true']");
+    if (datePicker) {
+      setCalendarOpen(datePicker, false);
+      datePicker.querySelector<HTMLButtonElement>("[data-action='calendar-toggle']")?.focus();
+      event.preventDefault();
+      return;
+    }
     const multiCheckbox = target.closest<HTMLElement>(".sample-multi-checkbox");
     const multiCheckboxTrigger = multiCheckbox?.querySelector<HTMLButtonElement>("[data-action='multi-dropdown-toggle']");
     const multiCheckboxPanel = multiCheckbox?.querySelector<HTMLElement>(".sample-multi-checkbox-options");
