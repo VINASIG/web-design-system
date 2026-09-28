@@ -342,9 +342,9 @@
       "name": "Form Field",
       "platform": "Web",
       "category": "Forms and controls",
-      "definition": "A labeled input together with its instructions, current value, validation, and related actions.",
-      "guidance": "Keep the label persistent and place format hints before errors. Show required status clearly, preserve user input after validation, and let the field grow or wrap with its content.",
-      "accessibility": "Associate label, hint, and error with the control. Keep focus visible, announce errors, and never rely on placeholder text as the label."
+      "definition": "A single data-entry control with a persistent label, optional placeholder, helper text, and validation state.",
+      "guidance": "Keep labels visible, mark required fields, and use helper text for format or purpose. Show a specific error after invalid input without clearing the entered value; restore the helper when the value is valid.",
+      "accessibility": "Associate each label with its input using for/id. Connect the active helper or error using aria-describedby, set aria-invalid when invalid, and never use a placeholder as the only label."
     },
     {
       "order": 33,

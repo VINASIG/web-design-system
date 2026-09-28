@@ -325,6 +325,57 @@ function makeInput(placeholder: string, label: string, className = "sample-input
   return input;
 }
 
+function updateFormFieldState(input: HTMLInputElement, touched = false) {
+  const field = input.closest<HTMLElement>(".sample-form-field");
+  const helper = field?.querySelector<HTMLElement>("[data-form-helper]");
+  const error = field?.querySelector<HTMLElement>("[data-form-error]");
+  if (!field || !helper || !error) return;
+
+  if (touched) input.dataset.touched = "true";
+  const value = input.value.trim();
+  let message = "";
+
+  if (!value && input.required && input.dataset.touched === "true") {
+    message = input.dataset.formField === "email" ? "Enter your email address." : "Enter a username.";
+  } else if (value && input.type === "email" && input.validity.typeMismatch) {
+    message = "Enter a valid email address.";
+  } else if (value && input.validity.patternMismatch) {
+    message = "No punctuation allowed.";
+  }
+
+  const invalid = message.length > 0;
+  error.textContent = message;
+  error.hidden = !invalid;
+  helper.hidden = invalid;
+  if (invalid) {
+    input.setAttribute("aria-invalid", "true");
+    input.setAttribute("aria-describedby", error.id);
+    input.setAttribute("aria-errormessage", error.id);
+  } else {
+    input.removeAttribute("aria-invalid");
+    input.removeAttribute("aria-errormessage");
+    input.setAttribute("aria-describedby", helper.id);
+  }
+}
+
+function initializeFormFieldSample(sample: HTMLElement, instance = sample.dataset.sampleInstance ?? "example") {
+  sample.querySelectorAll<HTMLElement>(".sample-form-field").forEach((field, index) => {
+    const input = field.querySelector<HTMLInputElement>("[data-form-field]");
+    const label = field.querySelector<HTMLLabelElement>(".sample-form-field-label label");
+    const helper = field.querySelector<HTMLElement>("[data-form-helper]");
+    const error = field.querySelector<HTMLElement>("[data-form-error]");
+    if (!input || !label || !helper || !error) return;
+
+    const key = input.dataset.formField ?? String(index + 1);
+    input.id = `sample-form-${instance}-${key}`;
+    label.htmlFor = input.id;
+    helper.id = `${input.id}-hint`;
+    error.id = `${input.id}-error`;
+    if (key === "username" && input.value) input.dataset.touched = "true";
+    updateFormFieldState(input);
+  });
+}
+
 function toCivilDate(date: Date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
@@ -686,13 +737,7 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "form-field": {
-      const oldLabel = sample.querySelector<HTMLElement>(".sample-form-field label");
-      const oldInput = sample.querySelector<HTMLElement>(".sample-form-field > div");
-      if (!oldLabel || !oldInput) break;
-      const labelText = oldLabel.textContent?.trim() ?? "Project name";
-      const input = makeInput("VINASIG website", labelText, "sample-input-line sample-editable-input");
-      input.value = "VINASIG website";
-      oldInput.replaceWith(input);
+      initializeFormFieldSample(sample);
       break;
     }
     case "drag-and-drop": {
@@ -2085,6 +2130,7 @@ document.addEventListener("click", (event) => {
         if (clone.dataset.specimenId === "date-picker") enhanceCalendar(clone);
         if (clone.dataset.specimenId === "sign-in-form") initializeLoginSample(clone);
         if (clone.dataset.specimenId === "multi-select") initializeMultiSelectIds(clone, clone.dataset.sampleInstance);
+        if (clone.dataset.specimenId === "form-field") initializeFormFieldSample(clone, clone.dataset.sampleInstance);
         clone.querySelectorAll<HTMLInputElement>("input[type='radio']").forEach((input) => {
           input.name = `${input.name}-${sampleInstance}`;
         });
@@ -2144,6 +2190,11 @@ document.addEventListener("input", (event) => {
   if (input.hasAttribute("data-login-field")) {
     const form = input.closest<HTMLFormElement>("[data-login-form]");
     if (form?.dataset.validationAttempted === "true") validateLoginForm(sample);
+    return;
+  }
+
+  if (input.hasAttribute("data-form-field")) {
+    updateFormFieldState(input, true);
     return;
   }
 
@@ -2431,6 +2482,7 @@ document.addEventListener("focusin", (event) => {
 
 document.addEventListener("focusout", (event) => {
   const target = event.target instanceof Element ? event.target : null;
+  if (target instanceof HTMLInputElement && target.hasAttribute("data-form-field")) updateFormFieldState(target, true);
   const owner = target?.closest<HTMLElement>(".sample-hover");
   if (!owner || (event.relatedTarget instanceof Node && owner.contains(event.relatedTarget))) return;
   owner.querySelector<HTMLElement>(".sample-hover-trigger")?.setAttribute("aria-expanded", "false");
