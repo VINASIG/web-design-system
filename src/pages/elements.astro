@@ -779,10 +779,17 @@ const slugify = (value: string) =>
   .sample-share-avatar { display: grid; width: 2.2rem; height: 2.2rem; flex: 0 0 auto; place-items: center; color: var(--color-scout-blue-strong); background: var(--color-scout-blue-soft); border-radius: 50%; font-size: 0.68rem; font-weight: 600; }
   .sample-share > div { display: grid; flex: 1; gap: 0.1rem; }
 
-  .sample-resize { display: flex; width: 100%; min-height: 7rem; background: var(--color-white); border: 1px solid var(--color-border); }
-  .sample-resize > div { display: grid; flex: 1; align-content: center; gap: 0.25rem; padding: 1rem; }
-  .sample-resize > div:first-child { flex: 0 1 var(--sample-split, 55%); }
-  .sample-resize-grip { width: 0.55rem; flex: 0 0 auto; background: var(--color-surface-muted); border-left: 1px solid var(--color-border); cursor: ew-resize; }
+  .sample-resize { display: grid; width: min(100%, 22rem); gap: 0.55rem; margin: auto; padding: 0.85rem; background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-sm); box-shadow: 0 0.75rem 1.5rem rgb(31 42 55 / 8%); }
+  .sample-resize-label { display: grid; gap: 0.4rem; color: var(--color-text); font-size: 0.76rem; font-weight: 600; }
+  .sample-resize-field { display: block; width: 100%; min-height: 5.6rem; max-height: 8rem; padding: 0.6rem 0.65rem; color: var(--color-text); background: var(--color-surface-muted); border: 1px solid var(--color-border); border-radius: 0.45rem; font: inherit; font-size: 0.73rem; line-height: 1.5; overflow: auto; resize: vertical; }
+  .sample-resize-field:focus-visible { outline: 2px solid var(--color-scout-blue); outline-offset: 2px; }
+  .sample-resize-field::-webkit-resizer { background: linear-gradient(135deg, transparent 0 42%, var(--color-text-muted) 43% 49%, transparent 50% 59%, var(--color-text-muted) 60% 66%, transparent 67% 76%, var(--color-text-muted) 77% 83%, transparent 84%); }
+  .sample-resize-footer { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+  .sample-resize-hint { color: var(--color-text-muted); font-size: 0.67rem; }
+  .sample-resize-send { min-height: 2rem; padding: 0.35rem 0.8rem; color: var(--color-white); background: var(--color-scout-blue); border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; }
+  .sample-resize-send:hover { background: var(--color-scout-blue-strong); }
+  .sample-resize-send:focus-visible { outline: 2px solid var(--color-scout-blue); outline-offset: 2px; }
+  .sample-resize-status { grid-column: 1 / -1; margin: 0; color: var(--color-text-muted); font-size: 0.7rem; }
 
   .sample-drawer { display: grid; width: 11rem; gap: 0.4rem; padding: 0.8rem; background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-sm); }
   .sample-drawer > b { margin-bottom: 0.3rem; }

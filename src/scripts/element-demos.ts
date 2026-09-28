@@ -638,17 +638,12 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "resize-handle-web": {
-      const grip = sample.querySelector<HTMLElement>(".sample-resize-grip");
-      if (!grip) break;
-      const handle = asButton(grip, "resize-panel", "Resize panel");
-      handle.setAttribute("role", "separator");
-      handle.setAttribute("aria-orientation", "vertical");
-      handle.tabIndex = 0;
-      handle.setAttribute("aria-valuemin", "25");
-      handle.setAttribute("aria-valuemax", "75");
-      handle.setAttribute("aria-valuenow", "55");
-      const panel = sample.querySelector<HTMLElement>(".sample-resize");
-      if (panel) panel.dataset.split = "55";
+      const field = sample.querySelector<HTMLTextAreaElement>(".sample-resize-field");
+      const hint = sample.querySelector<HTMLElement>("[data-resize-hint]");
+      if (field && hint) {
+        hint.id = `sample-resize-hint-${sample.dataset.sampleInstance ?? "example"}`;
+        field.setAttribute("aria-describedby", hint.id);
+      }
       break;
     }
     case "hamburger-menu-nav-drawer": {
@@ -1508,15 +1503,14 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       demo.classList.add("is-playing");
       break;
     }
-    case "resize-panel": {
-      const panel = sample.querySelector<HTMLElement>(".sample-resize");
-      if (!panel) break;
-      const current = Number(panel.dataset.split ?? "55");
-      const next = Math.max(25, Math.min(75, current + (button.dataset.delta === "-" ? -5 : 5)));
-      panel.dataset.split = String(next);
-      button.setAttribute("aria-valuenow", String(next));
-      panel.style.setProperty("--sample-split", `${next}%`);
-      announce(sample, `Panel width ${next} percent.`);
+    case "resize-send": {
+      const status = sample.querySelector<HTMLElement>("[data-resize-status]");
+      if (status) {
+        status.hidden = false;
+        status.textContent = "Demo message submitted.";
+      }
+      button.disabled = true;
+      announce(sample, "Demo message submitted.");
       break;
     }
     case "confirm-delete":
@@ -2444,13 +2438,6 @@ document.addEventListener("focusout", (event) => {
   if (card) card.hidden = true;
 });
 
-document.addEventListener("pointerdown", (event) => {
-  const target = event.target instanceof HTMLElement ? event.target : null;
-  if (!target?.matches("[data-action='resize-panel']")) return;
-  target.dataset.pointerStart = String(event.clientX);
-  target.setPointerCapture?.(event.pointerId);
-});
-
 document.addEventListener("dragover", (event) => {
   const target = event.target instanceof Element ? event.target : null;
   const zone = target?.closest<HTMLElement>(".sample-dropzone");
@@ -2474,24 +2461,6 @@ document.addEventListener("drop", (event) => {
   const count = event.dataTransfer.files.length;
   if (count) showDropResult(zone, event.dataTransfer.files);
   if (sample) announce(sample, count ? `${count} file${count === 1 ? "" : "s"} dropped.` : "No files dropped.");
-});
-
-document.addEventListener("pointerup", (event) => {
-  const target = event.target instanceof HTMLElement ? event.target : null;
-  if (!target?.matches("[data-action='resize-panel']")) return;
-  delete target.dataset.pointerStart;
-});
-
-document.addEventListener("pointermove", (event) => {
-  const target = event.target instanceof HTMLElement ? event.target : null;
-  if (!target?.matches("[data-action='resize-panel']") || target.dataset.pointerStart === undefined) return;
-  const panel = target.closest<HTMLElement>(".sample-resize");
-  if (!panel) return;
-  const bounds = panel.getBoundingClientRect();
-  const percentage = Math.max(25, Math.min(75, Math.round(((event.clientX - bounds.left) / bounds.width) * 100)));
-  panel.dataset.split = String(percentage);
-  panel.style.setProperty("--sample-split", `${percentage}%`);
-  target.setAttribute("aria-valuenow", String(percentage));
 });
 
 document.addEventListener("change", (event) => {

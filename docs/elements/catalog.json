@@ -197,9 +197,9 @@
       "name": "Resize Handle (Size Grip)",
       "platform": "Web",
       "category": "Forms and controls",
-      "definition": "A draggable separator that changes the relative size of adjacent panes or a resizable region.",
-      "guidance": "Use only when resizing improves a real workspace task. Enforce minimum and maximum sizes, keep adjacent content visible, and provide a non-drag alternative on touch and narrow screens.",
-      "accessibility": "Make the separator keyboard operable with arrow keys and expose orientation and current, minimum, and maximum values when using the window-splitter pattern."
+      "definition": "A small grip at the edge or corner of a resizable control that can be dragged to change its dimensions.",
+      "guidance": "Use the native textarea grip for resizable text fields and choose a resize axis that protects the surrounding layout. Set sensible minimum and maximum sizes, and keep overflow clipped so the browser can display its grip.",
+      "accessibility": "Keep a textarea visibly labeled and keyboard-editable, with predictable resize limits. Use a focusable separator with arrow-key resizing and value semantics only for an actual pane splitter."
     },
     {
       "order": 19,
