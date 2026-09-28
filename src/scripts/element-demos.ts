@@ -106,6 +106,43 @@ function initializeToastSample(sample: HTMLElement) {
   });
 }
 
+function initializeSurfaceDemo(sample: HTMLElement) {
+  const demo = sample.querySelector<HTMLElement>(".sample-surface-demo");
+  const controls = demo?.querySelectorAll<HTMLButtonElement>(".sample-surface-options [data-action='surface-select']");
+  const panels = demo?.querySelectorAll<HTMLElement>("[data-surface-panel]");
+  if (!demo || !controls || !panels) return;
+
+  const selectedSurface = demo.dataset.surface ?? "dialog";
+  const isOpen = demo.dataset.surfaceOpen !== "false";
+  const field = demo.querySelector<HTMLInputElement>(".sample-surface-field input");
+  const label = demo.querySelector<HTMLLabelElement>(".sample-surface-field label");
+  if (field && label) {
+    field.id = `surface-project-name-${sample.dataset.sampleInstance ?? "example"}`;
+    label.htmlFor = field.id;
+  }
+  controls.forEach((control) => {
+    control.setAttribute("aria-pressed", String(control.dataset.surface === selectedSurface));
+  });
+  panels.forEach((panel) => {
+    panel.hidden = !isOpen || panel.dataset.surfacePanel !== selectedSurface;
+  });
+}
+
+function closeSurfaceDemo(sample: HTMLElement, message: string) {
+  const demo = sample.querySelector<HTMLElement>(".sample-surface-demo");
+  const feedback = demo?.querySelector<HTMLElement>("[data-surface-feedback]");
+  if (!demo || !feedback) return;
+
+  demo.dataset.surfaceOpen = "false";
+  demo.querySelectorAll<HTMLElement>("[data-surface-panel]").forEach((panel) => {
+    panel.hidden = true;
+  });
+  feedback.hidden = false;
+  feedback.textContent = message;
+  announce(sample, message);
+  demo.querySelector<HTMLButtonElement>(`.sample-surface-options [data-surface='${demo.dataset.surface ?? "dialog"}']`)?.focus({ preventScroll: true });
+}
+
 function cleanupToastSample(sample: HTMLElement) {
   toastSampleCleanups.get(sample)?.();
   toastSampleCleanups.delete(sample);
@@ -1174,19 +1211,7 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "modal-dialog-drawer-sheet": {
-      const options = sample.querySelector<HTMLElement>(".sample-surface-options");
-      if (!options) break;
-      sample.classList.add("sample-surface-demo");
-      options.querySelectorAll<HTMLElement>(":scope > div").forEach((tile) => {
-        const label = tile.querySelector("b")?.textContent?.trim() ?? "Surface";
-        const button = asButton(tile, "surface-select", `Show ${label.toLowerCase()} example`);
-        button.setAttribute("aria-pressed", "false");
-      });
-      const feedback = document.createElement("p");
-      feedback.className = "sample-surface-feedback";
-      feedback.dataset.surfaceFeedback = "true";
-      feedback.textContent = "Choose a presentation to see when it fits.";
-      options.after(feedback);
+      initializeSurfaceDemo(sample);
       break;
     }
     case "popover-dropdown-tooltip": {
@@ -2493,10 +2518,31 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       break;
     }
     case "surface-select": {
-      selectOne(button.parentElement ?? sample, ".sample-surface-options button", button);
-      const label = button.querySelector("b")?.textContent?.trim() ?? "Surface";
-      const feedback = sample.querySelector<HTMLElement>("[data-surface-feedback]");
-      if (feedback) feedback.textContent = `${label} selected. Use it when the task needs this level of focus and context.`;
+      const demo = button.closest<HTMLElement>(".sample-surface-demo");
+      const surface = button.dataset.surface;
+      if (!demo || !surface) break;
+
+      demo.dataset.surface = surface;
+      demo.dataset.surfaceOpen = "true";
+      const feedback = demo.querySelector<HTMLElement>("[data-surface-feedback]");
+      if (feedback) feedback.hidden = true;
+      initializeSurfaceDemo(sample);
+      announce(sample, `${surface[0].toUpperCase()}${surface.slice(1)} example opened.`);
+      break;
+    }
+    case "surface-dismiss": {
+      const surface = button.closest<HTMLElement>("[data-surface-panel]")?.dataset.surfacePanel ?? "dialog";
+      closeSurfaceDemo(sample, `${surface[0].toUpperCase()}${surface.slice(1)} example closed.`);
+      break;
+    }
+    case "surface-primary": {
+      const surface = button.closest<HTMLElement>("[data-surface-panel]")?.dataset.surfacePanel ?? "dialog";
+      const message = surface === "dialog"
+        ? "Delete action previewed. No file was removed."
+        : surface === "drawer"
+          ? "Save action previewed. No changes were stored."
+          : "Share action previewed. Nothing was sent.";
+      closeSurfaceDemo(sample, message);
       break;
     }
     case "save-demo":
@@ -2695,6 +2741,7 @@ document.addEventListener("click", (event) => {
         if (clone.dataset.specimenId === "form-field") initializeFormFieldSample(clone, clone.dataset.sampleInstance);
         if (clone.dataset.specimenId === "drag-and-drop") initializeDragDropSample(clone);
         if (clone.dataset.specimenId === "toast-snackbar") initializeToastSample(clone);
+        if (clone.dataset.specimenId === "modal-dialog-drawer-sheet") initializeSurfaceDemo(clone);
         if (clone.dataset.specimenId === "progress-ring-spinner-bar") {
           initializeProgressDemo(clone, { autoStart: true, reset: true });
         }
@@ -2811,6 +2858,16 @@ document.addEventListener("keydown", (event) => {
   const target = event.target instanceof HTMLElement ? event.target : null;
   if (!target) return;
   const sample = target.closest<HTMLElement>(".ui-sample");
+
+  if (sample?.dataset.specimenId === "modal-dialog-drawer-sheet" && event.key === "Escape") {
+    const demo = sample.querySelector<HTMLElement>(".sample-surface-demo");
+    if (demo?.dataset.surfaceOpen === "true") {
+      event.preventDefault();
+      const surface = demo.dataset.surface ?? "dialog";
+      closeSurfaceDemo(sample, `${surface[0].toUpperCase()}${surface.slice(1)} example closed.`);
+      return;
+    }
+  }
 
   const lightboxDialog = target.closest<HTMLDialogElement>(".sample-lightbox-dialog[open]");
   if (lightboxDialog && ["ArrowLeft", "ArrowRight"].includes(event.key)) {
