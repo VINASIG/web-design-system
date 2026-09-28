@@ -1003,6 +1003,16 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
           menu.append(item);
         }
         menu.hidden = false;
+        const barRect = bar.getBoundingClientRect();
+        const triggerRect = button.getBoundingClientRect();
+        const contentLeft = barRect.left + bar.clientLeft;
+        const triggerLeft = triggerRect.left - contentLeft;
+        const triggerRight = triggerRect.right - contentLeft;
+        const preferredLeft = triggerLeft + menu.offsetWidth <= bar.clientWidth
+          ? triggerLeft
+          : triggerRight - menu.offsetWidth;
+        const maxLeft = Math.max(0, bar.clientWidth - menu.offsetWidth);
+        menu.style.setProperty("--sample-menu-bar-left", `${Math.min(Math.max(preferredLeft, 0), maxLeft)}px`);
         menu.querySelector<HTMLElement>("button")?.focus();
       } else {
         menu.hidden = true;
