@@ -181,6 +181,55 @@ function closeSurfaceDemo(sample: HTMLElement, message: string) {
   demo.querySelector<HTMLButtonElement>(`.sample-surface-options [data-surface='${demo.dataset.surface ?? "dialog"}']`)?.focus({ preventScroll: true });
 }
 
+function initializeScrimDemo(sample: HTMLElement) {
+  const demo = sample.querySelector<HTMLElement>(".sample-scrim-demo");
+  const background = demo?.querySelector<HTMLElement>(".sample-scrim-workspace");
+  const backdrop = demo?.querySelector<HTMLElement>(".sample-scrim-backdrop");
+  const panel = demo?.querySelector<HTMLElement>(".sample-scrim-dialog");
+  const trigger = demo?.querySelector<HTMLButtonElement>(".sample-scrim-open");
+  const title = demo?.querySelector<HTMLElement>(".sample-scrim-dialog h3");
+  const description = demo?.querySelector<HTMLElement>(".sample-scrim-dialog p");
+  if (!demo || !background || !backdrop || !panel || !trigger || !title || !description) return;
+
+  const instance = sample.dataset.sampleInstance ?? "example";
+  title.id = `sample-scrim-title-${instance}`;
+  description.id = `sample-scrim-description-${instance}`;
+  panel.setAttribute("aria-labelledby", title.id);
+  panel.setAttribute("aria-describedby", description.id);
+  trigger.setAttribute("aria-controls", panel.id = `sample-scrim-dialog-${instance}`);
+  trigger.setAttribute("aria-expanded", String(demo.dataset.scrimOpen !== "false"));
+  setAction(trigger, "scrim-open");
+  panel.querySelectorAll<HTMLButtonElement>("[data-action='scrim-close']").forEach((button) => {
+    setAction(button, "scrim-close");
+  });
+
+  const isOpen = demo.dataset.scrimOpen !== "false";
+  demo.dataset.scrimOpen = String(isOpen);
+  background.inert = isOpen;
+  backdrop.hidden = !isOpen;
+  panel.hidden = !isOpen;
+}
+
+function setScrimDemoOpen(sample: HTMLElement, isOpen: boolean, moveFocus = false) {
+  const demo = sample.querySelector<HTMLElement>(".sample-scrim-demo");
+  const background = demo?.querySelector<HTMLElement>(".sample-scrim-workspace");
+  const backdrop = demo?.querySelector<HTMLElement>(".sample-scrim-backdrop");
+  const panel = demo?.querySelector<HTMLElement>(".sample-scrim-dialog");
+  const trigger = demo?.querySelector<HTMLButtonElement>(".sample-scrim-open");
+  if (!demo || !background || !backdrop || !panel || !trigger) return;
+
+  demo.dataset.scrimOpen = String(isOpen);
+  background.inert = isOpen;
+  backdrop.hidden = !isOpen;
+  panel.hidden = !isOpen;
+  trigger.setAttribute("aria-expanded", String(isOpen));
+  if (isOpen && moveFocus) panel.querySelector<HTMLButtonElement>(".sample-scrim-close")?.focus({ preventScroll: true });
+  else if (!isOpen && moveFocus) trigger.focus({ preventScroll: true });
+  announce(sample, isOpen
+    ? "Focused task opened. The workspace is dimmed and inactive."
+    : "Focused task closed. The workspace is active again.");
+}
+
 function cleanupToastSample(sample: HTMLElement) {
   toastSampleCleanups.get(sample)?.();
   toastSampleCleanups.delete(sample);
@@ -1254,6 +1303,10 @@ function enhanceSample(sample: HTMLElement) {
     }
     case "popover-dropdown-tooltip": {
       initializeOverlayTrio(sample);
+      break;
+    }
+    case "scrim-backdrop-overlay": {
+      initializeScrimDemo(sample);
       break;
     }
     case "popover-macos": {
@@ -2554,6 +2607,12 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       closeSurfaceDemo(sample, message);
       break;
     }
+    case "scrim-open":
+      setScrimDemoOpen(sample, true, true);
+      break;
+    case "scrim-close":
+      setScrimDemoOpen(sample, false, true);
+      break;
     case "save-demo":
     case "cancel-save": {
       const panel = sample.querySelector<HTMLElement>(".sample-save-panel");
@@ -2684,6 +2743,13 @@ document.addEventListener("click", (event) => {
     }
   }
 
+  const scrimBackdrop = target.closest<HTMLElement>(".sample-scrim-backdrop");
+  if (scrimBackdrop) {
+    const sample = scrimBackdrop.closest<HTMLElement>(".ui-sample");
+    if (sample) setScrimDemoOpen(sample, false, true);
+    return;
+  }
+
   const comboOption = target.closest<HTMLElement>(".sample-combobox-popup [role='option']");
   if (comboOption && event.detail === 0) {
     const input = comboOption.closest<HTMLElement>(".sample-combobox")?.querySelector<HTMLInputElement>(".sample-combo-input");
@@ -2762,6 +2828,7 @@ document.addEventListener("click", (event) => {
         if (clone.dataset.specimenId === "toast-snackbar") initializeToastSample(clone);
         if (clone.dataset.specimenId === "modal-dialog-drawer-sheet") initializeSurfaceDemo(clone);
         if (clone.dataset.specimenId === "popover-dropdown-tooltip") initializeOverlayTrio(clone);
+        if (clone.dataset.specimenId === "scrim-backdrop-overlay") initializeScrimDemo(clone);
         if (clone.dataset.specimenId === "progress-ring-spinner-bar") {
           initializeProgressDemo(clone, { autoStart: true, reset: true });
         }
@@ -2772,6 +2839,9 @@ document.addEventListener("click", (event) => {
       dialogStage.replaceChildren(clone);
       if (clone instanceof HTMLElement && clone.dataset.specimenId === "scrollspy") initializeScrollspy(clone);
       dialog.showModal();
+      if (clone instanceof HTMLElement && clone.dataset.specimenId === "scrim-backdrop-overlay") {
+        clone.querySelector<HTMLButtonElement>(".sample-scrim-dialog:not([hidden]) .sample-scrim-close")?.focus({ preventScroll: true });
+      }
       if (clone instanceof HTMLElement && clone.dataset.specimenId === "combobox-autocomplete-typeahead") {
         const input = clone.querySelector<HTMLInputElement>(".sample-combo-input");
         if (input) openCombobox(input);
@@ -2885,6 +2955,15 @@ document.addEventListener("keydown", (event) => {
       event.preventDefault();
       const surface = demo.dataset.surface ?? "dialog";
       closeSurfaceDemo(sample, `${surface[0].toUpperCase()}${surface.slice(1)} example closed.`);
+      return;
+    }
+  }
+
+  if (sample?.dataset.specimenId === "scrim-backdrop-overlay" && event.key === "Escape") {
+    const demo = sample.querySelector<HTMLElement>(".sample-scrim-demo");
+    if (demo?.dataset.scrimOpen === "true") {
+      event.preventDefault();
+      setScrimDemoOpen(sample, false, true);
       return;
     }
   }
