@@ -3,6 +3,7 @@ const dialogTitle = dialog?.querySelector<HTMLElement>("#element-demo-title");
 const dialogDescription = dialog?.querySelector<HTMLElement>(".element-demo-description");
 const dialogStage = dialog?.querySelector<HTMLElement>(".element-demo-stage");
 let sampleInstance = 0;
+let fieldInstance = 0;
 
 function setAction(element: HTMLElement, action: string, label?: string) {
   element.dataset.action = action;
@@ -41,6 +42,30 @@ function liveStatus(sample: HTMLElement) {
 
 function announce(sample: HTMLElement, message: string) {
   liveStatus(sample).textContent = message;
+}
+
+function visibleStatus(className: string) {
+  const status = document.createElement("p");
+  status.className = `${className} sample-feedback-status`;
+  status.setAttribute("role", "status");
+  status.setAttribute("aria-live", "polite");
+  status.tabIndex = -1;
+  status.hidden = true;
+  return status;
+}
+
+function showDropResult(zone: HTMLElement, files: FileList | File[]) {
+  let result = zone.querySelector<HTMLElement>(".sample-drop-feedback");
+  if (!result) {
+    result = document.createElement("p");
+    result.className = "sample-drop-feedback";
+    result.setAttribute("role", "status");
+    zone.append(result);
+  }
+  const selected = Array.from(files);
+  result.textContent = selected.length
+    ? selected.map((file) => file.name).join(", ") + (selected.length === 1 ? " uploaded." : " selected.")
+    : "No files selected.";
 }
 
 function addChip(container: HTMLElement, label: string, className = "sample-selected") {
@@ -175,16 +200,27 @@ function enhanceSample(sample: HTMLElement) {
         input.type = definition.type;
         input.className = "sample-input-line sample-editable-input";
         input.placeholder = definition.placeholder;
+        input.id = "sample-login-field-" + ++fieldInstance;
         input.setAttribute("aria-label", definition.label);
+        input.setAttribute("aria-invalid", "false");
         if (definition.type === "email") input.autocomplete = "email";
         if (definition.type === "password") input.autocomplete = "current-password";
         const label = document.createElement("label");
         label.textContent = definition.label;
+        label.htmlFor = input.id;
         oldLabel.replaceWith(label);
-        label.after(input);
+        oldInput.replaceWith(input);
       });
       const submit = sample.querySelector<HTMLElement>(".sample-login > .sample-button");
       if (submit) asButton(submit, "submit-demo", "Sign in");
+      const error = document.createElement("p");
+      error.id = "sample-login-error-" + ++fieldInstance;
+      error.className = "sample-form-error";
+      error.setAttribute("role", "alert");
+      error.hidden = true;
+      error.textContent = "Enter a valid email address and password.";
+      sample.querySelector(".sample-login > button")?.after(error);
+      sample.querySelectorAll<HTMLInputElement>(".sample-login input").forEach((input) => input.setAttribute("aria-describedby", error.id));
       break;
     }
     case "pagination": {
@@ -225,11 +261,15 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "site-header-navigation-bar": {
-      sample.querySelectorAll<HTMLElement>(".sample-site-header nav span").forEach((item) => {
-        asButton(item, "site-nav");
+      sample.querySelectorAll<HTMLElement>(".sample-site-header nav span").forEach((item, index) => {
+        const button = asButton(item, "site-nav");
+        if (index === 0) {
+          button.classList.add("is-current");
+          button.setAttribute("aria-current", "page");
+        }
       });
       const cta = sample.querySelector<HTMLElement>(".sample-site-header .sample-button");
-      if (cta) asButton(cta, "site-nav", "Start a project");
+      if (cta) asButton(cta, "site-cta", "Start a project");
       break;
     }
     case "resize-handle-web": {
@@ -543,6 +583,23 @@ function enhanceSample(sample: HTMLElement) {
       });
       break;
     }
+    case "menu-bar": {
+      const bar = sample.querySelector<HTMLElement>(".sample-menu-bar");
+      if (!bar) break;
+      bar.querySelectorAll<HTMLElement>(":scope > span").forEach((item) => {
+        const label = item.textContent?.trim() ?? "Menu";
+        const button = asButton(item, "toggle-menubar", label + " menu");
+        button.dataset.menuLabel = label;
+        button.setAttribute("aria-haspopup", "menu");
+        button.setAttribute("aria-expanded", "false");
+      });
+      const menu = document.createElement("div");
+      menu.className = "sample-menu sample-menu-bar-panel";
+      menu.setAttribute("role", "menu");
+      menu.hidden = true;
+      bar.append(menu);
+      break;
+    }
     case "search-field": {
       const field = sample.querySelector<HTMLElement>(".sample-search > span");
       if (field) {
@@ -553,6 +610,7 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "save-panel": {
+      sample.classList.add("sample-save-demo");
       const fields = sample.querySelectorAll<HTMLElement>(".sample-save-panel > div");
       fields.forEach((field) => {
         const label = field.querySelector("span")?.textContent?.trim() ?? "Field";
@@ -565,6 +623,7 @@ function enhanceSample(sample: HTMLElement) {
       sample.querySelectorAll<HTMLElement>(".sample-save-panel footer > small, .sample-save-panel footer > b").forEach((item) => {
         asButton(item, item.textContent?.trim() === "Save" ? "save-demo" : "cancel-save");
       });
+      sample.append(visibleStatus("sample-save-feedback"));
       break;
     }
     case "token-field": {
@@ -584,6 +643,7 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "combo-button": {
+      sample.classList.add("sample-combo-demo");
       const trigger = sample.querySelector<HTMLElement>(".sample-combo-button > span");
       const description = sample.querySelector<HTMLElement>(".sample-combo-button > small");
       if (trigger) {
@@ -604,6 +664,7 @@ function enhanceSample(sample: HTMLElement) {
         }
         description.replaceWith(menu);
       }
+      sample.append(visibleStatus("sample-combo-feedback"));
       break;
     }
     case "disclosure-triangle": {
@@ -634,8 +695,21 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "toolbar-unified-title-bar": {
+      const toolbar = sample.querySelector<HTMLElement>(".sample-toolbar");
+      if (toolbar) {
+        const demo = document.createElement("div");
+        demo.className = "sample-toolbar-demo";
+        toolbar.replaceWith(demo);
+        demo.append(toolbar, visibleStatus("sample-toolbar-feedback"));
+      }
       sample.querySelectorAll<HTMLElement>(".sample-toolbar > div i").forEach((icon, index) => {
-        asButton(icon, "toolbar-action", index === 0 ? "Back" : index === 1 ? "Forward" : index === 2 ? "Search" : "Share");
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "sample-toolbar-action";
+        setAction(button, "toolbar-action", index === 0 ? "Back" : index === 1 ? "Forward" : index === 2 ? "Search" : "Share");
+        icon.setAttribute("aria-hidden", "true");
+        icon.replaceWith(button);
+        button.append(icon);
       });
       break;
     }
@@ -652,16 +726,31 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "context-menu":
-    case "menu-bar":
     case "desktop-sidebar-source-list":
-    case "outline-view":
     case "hamburger-menu-nav-drawer": {
-      const candidates = sample.querySelectorAll<HTMLElement>(".sample-context-menu > span, .sample-menu-bar > span, .sample-source-list > b, .sample-source-list > span, .sample-outline > b, .sample-outline > span");
+      const candidates = sample.querySelectorAll<HTMLElement>(".sample-context-menu > span, .sample-source-list > b, .sample-source-list > span");
       candidates.forEach((item) => {
         const button = asButton(item, "menu-command");
         if (id === "context-menu") button.setAttribute("role", "menuitem");
       });
-      if (id === "context-menu") sample.querySelector(".sample-context-menu")?.setAttribute("role", "menu");
+      if (id === "context-menu") {
+        const menu = sample.querySelector<HTMLElement>(".sample-context-menu");
+        if (menu) {
+          menu.setAttribute("role", "menu");
+          const example = document.createElement("div");
+          example.className = "sample-context-example";
+          menu.replaceWith(example);
+          example.append(menu);
+
+          const feedback = visibleStatus("sample-context-feedback");
+          example.append(feedback);
+        }
+      }
+      if (id === "desktop-sidebar-source-list") {
+        const current = sample.querySelector<HTMLButtonElement>(".sample-source-list > button[data-action='menu-command']");
+        current?.classList.add("is-current");
+        current?.setAttribute("aria-current", "page");
+      }
       break;
     }
     default:
@@ -704,8 +793,25 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       announce(sample, `${button.getAttribute("aria-label")} selected.`);
       break;
     case "site-nav":
-      announce(sample, `${button.getAttribute("aria-label") ?? button.textContent?.trim()} section selected.`);
+      {
+        const nav = button.closest<HTMLElement>(".sample-site-header")?.querySelector<HTMLElement>("nav");
+        if (nav) {
+          selectOne(nav, "button[data-action='site-nav']", button);
+          button.setAttribute("aria-current", "page");
+        }
+      }
       break;
+    case "site-cta": {
+      let feedback = sample.querySelector<HTMLElement>(".sample-site-feedback");
+      if (!feedback) {
+        feedback = document.createElement("span");
+        feedback.className = "sample-site-feedback";
+        feedback.setAttribute("role", "status");
+        sample.append(feedback);
+      }
+      feedback.textContent = "Project inquiry selected.";
+      break;
+    }
     case "page-select": {
       const page = Number(button.dataset.page);
       sample.querySelectorAll<HTMLElement>(".sample-pagination button[data-action='page-select']").forEach((item) => {
@@ -769,9 +875,14 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       announce(sample, "The example item was removed.");
       button.disabled = true;
       break;
-    case "cancel-delete":
-      announce(sample, "Removal canceled.");
+    case "cancel-delete": {
+      const result = document.createElement("p");
+      result.className = "sample-confirm-result";
+      result.setAttribute("role", "status");
+      result.textContent = "Removal canceled. No items were changed.";
+      sample.replaceChildren(result);
       break;
+    }
     case "stepper-dec":
     case "stepper-inc": {
       const value = sample.querySelector<HTMLElement>(".sample-stepper > b");
@@ -826,6 +937,90 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       if (expanded) button.closest(".sample-overflow, .sample-combo-button")?.querySelector<HTMLElement>(".sample-menu button")?.focus();
       break;
     }
+    case "toggle-menubar": {
+      const bar = button.closest<HTMLElement>(".sample-menu-bar");
+      const menu = bar?.querySelector<HTMLElement>(".sample-menu-bar-panel");
+      if (!bar || !menu) break;
+      const opening = button.getAttribute("aria-expanded") !== "true";
+      bar.querySelectorAll<HTMLElement>("[data-action='toggle-menubar']").forEach((trigger) => {
+        trigger.setAttribute("aria-expanded", String(trigger === button && opening));
+        trigger.classList.toggle("is-current", trigger === button && opening);
+      });
+      menu.replaceChildren();
+      if (opening) {
+        const commands: Record<string, string[]> = {
+          File: ["New document", "Open", "Save"],
+          Edit: ["Undo", "Redo", "Select all"],
+          View: ["Zoom in", "Zoom out", "Show toolbar"],
+          Window: ["Minimize", "Restore", "Bring all to front"],
+          Help: ["Keyboard shortcuts", "About this design system"],
+        };
+        for (const label of commands[button.dataset.menuLabel ?? ""] ?? ["Open", "Settings"]) {
+          const item = document.createElement("button");
+          item.type = "button";
+          item.textContent = label;
+          setAction(item, "menubar-command", label);
+          menu.append(item);
+        }
+        menu.hidden = false;
+        menu.querySelector<HTMLElement>("button")?.focus();
+      } else {
+        menu.hidden = true;
+      }
+      break;
+    }
+    case "menubar-command": {
+      const bar = button.closest<HTMLElement>(".sample-menu-bar");
+      const menu = button.closest<HTMLElement>(".sample-menu-bar-panel");
+      const trigger = bar?.querySelector<HTMLElement>("[data-action='toggle-menubar'][aria-expanded='true']");
+      const status = bar?.querySelector<HTMLElement>("[data-menu-status]");
+      if (status) status.textContent = button.textContent?.trim() + " selected";
+      if (menu) menu.hidden = true;
+      trigger?.setAttribute("aria-expanded", "false");
+      trigger?.classList.remove("is-current");
+      trigger?.focus();
+      break;
+    }
+    case "toggle-hover-card": {
+      const trigger = button;
+      const card = trigger.parentElement?.querySelector<HTMLElement>(".sample-hover-card");
+      if (!card) break;
+      const open = trigger.getAttribute("aria-expanded") !== "true";
+      trigger.setAttribute("aria-expanded", String(open));
+      card.hidden = !open;
+      break;
+    }
+    case "toggle-lightbox": {
+      const root = button.closest<HTMLElement>(".sample-lightbox");
+      const viewer = root?.querySelector<HTMLElement>(".sample-lightbox-viewer");
+      if (viewer) {
+        viewer.hidden = false;
+        viewer.querySelector<HTMLElement>("[data-action='close-lightbox']")?.focus();
+      }
+      break;
+    }
+    case "close-lightbox": {
+      const root = button.closest<HTMLElement>(".sample-lightbox");
+      const viewer = root?.querySelector<HTMLElement>(".sample-lightbox-viewer");
+      const thumbnail = root?.querySelector<HTMLElement>(".sample-lightbox-thumbnail");
+      if (viewer) viewer.hidden = true;
+      thumbnail?.focus();
+      break;
+    }
+    case "toggle-outline": {
+      const branch = button.closest<HTMLElement>(".sample-outline-branch");
+      const children = branch?.querySelector<HTMLElement>(":scope > .sample-outline-children");
+      if (!children) break;
+      const expanded = button.getAttribute("aria-expanded") !== "true";
+      const label = button.getAttribute("aria-label")?.replace(/^(Expand|Collapse) /, "") ?? "section";
+      button.setAttribute("aria-expanded", String(expanded));
+      button.setAttribute("aria-label", (expanded ? "Collapse " : "Expand ") + label);
+      children.hidden = !expanded;
+      break;
+    }
+    case "select-outline":
+      selectOne(sample, ".sample-outline-item", button, "is-current");
+      break;
     case "toggle-popover": {
       const group = button.parentElement;
       const panel = group?.querySelector<HTMLElement>(".sample-control-options")
@@ -834,7 +1029,18 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       const expanded = button.getAttribute("aria-expanded") !== "true";
       button.setAttribute("aria-expanded", String(expanded));
       panel.hidden = !expanded;
-      if (expanded) panel.querySelector<HTMLElement>("[role='option'], [role='menuitem']")?.focus();
+      if (expanded) {
+        const stage = button.closest<HTMLElement>(".element-demo-stage");
+        const triggerBounds = button.getBoundingClientRect();
+        const stageBounds = stage?.getBoundingClientRect();
+        const panelHeight = panel.getBoundingClientRect().height;
+        const below = stageBounds ? stageBounds.bottom - triggerBounds.bottom : window.innerHeight - triggerBounds.bottom;
+        const above = stageBounds ? triggerBounds.top - stageBounds.top : triggerBounds.top;
+        panel.classList.toggle("opens-up", below < panelHeight + 8 && above > below);
+        panel.querySelector<HTMLElement>("[role='option'], [role='menuitem']")?.focus();
+      } else {
+        panel.classList.remove("opens-up");
+      }
       break;
     }
     case "toggle-tooltip": {
@@ -866,6 +1072,39 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       break;
     }
     case "menu-command": {
+      if (id === "desktop-sidebar-source-list") {
+        selectOne(sample, ".sample-source-list > button[data-action='menu-command']", button, "is-current");
+        button.setAttribute("aria-current", "page");
+        announce(sample, `${button.getAttribute("aria-label") ?? button.textContent?.trim()} selected.`);
+        break;
+      }
+      if (id === "context-menu") {
+        const menu = sample.querySelector<HTMLElement>(".sample-context-menu");
+        const feedback = sample.querySelector<HTMLElement>(".sample-context-feedback");
+        const command = button.getAttribute("aria-label") ?? button.textContent?.trim() ?? "Command";
+        if (menu) menu.hidden = true;
+        if (feedback) {
+          feedback.textContent = `${command} selected.`;
+          feedback.hidden = false;
+          feedback.focus();
+        }
+        announce(sample, `${command} selected.`);
+        break;
+      }
+      if (id === "combo-button") {
+        const command = button.getAttribute("aria-label") ?? button.textContent?.trim() ?? "Command";
+        const feedback = sample.querySelector<HTMLElement>(".sample-combo-feedback");
+        button.closest<HTMLElement>(".sample-menu")?.setAttribute("hidden", "");
+        const trigger = sample.querySelector<HTMLElement>(".sample-combo-button [aria-haspopup='menu']");
+        trigger?.setAttribute("aria-expanded", "false");
+        if (feedback) {
+          feedback.textContent = `${command} selected.`;
+          feedback.hidden = false;
+          feedback.focus();
+        }
+        announce(sample, `${command} selected.`);
+        break;
+      }
       announce(sample, `${button.getAttribute("aria-label") ?? button.textContent?.trim()} selected.`);
       button.closest<HTMLElement>(".sample-menu")?.setAttribute("hidden", "");
       const trigger = button.closest<HTMLElement>(".sample-overflow, .sample-combo-button, .sample-overlay-trio > div")?.querySelector<HTMLElement>("[aria-haspopup='menu']");
@@ -912,11 +1151,19 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       break;
     }
     case "save-demo":
-      announce(sample, "Example saved locally. No file was created.");
+    case "cancel-save": {
+      const panel = sample.querySelector<HTMLElement>(".sample-save-panel");
+      const feedback = sample.querySelector<HTMLElement>(".sample-save-feedback");
+      const message = action === "save-demo" ? "Example saved locally. No file was created." : "Save canceled.";
+      if (panel) panel.hidden = true;
+      if (feedback) {
+        feedback.textContent = message;
+        feedback.hidden = false;
+        feedback.focus();
+      }
+      announce(sample, message);
       break;
-    case "cancel-save":
-      announce(sample, "Save canceled.");
-      break;
+    }
     case "submit-demo": {
       const email = sample.querySelector<HTMLInputElement>("input[type='email']");
       const password = sample.querySelector<HTMLInputElement>("input[type='password']");
@@ -924,15 +1171,27 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       announce(sample, valid ? "Example sign-in accepted." : "Enter a valid email address and password.");
       if (email) email.setAttribute("aria-invalid", String(!email.value.includes("@")));
       if (password) password.setAttribute("aria-invalid", String(!password.value.length));
+      const error = sample.querySelector<HTMLElement>(".sample-form-error");
+      if (error) error.hidden = valid;
       break;
     }
-    case "toolbar-action":
-      announce(sample, `${button.getAttribute("aria-label")} action selected.`);
+    case "toolbar-action": {
+      const action = button.getAttribute("aria-label") ?? "Toolbar";
+      const feedback = sample.querySelector<HTMLElement>(".sample-toolbar-feedback");
+      if (feedback) {
+        feedback.textContent = `${action} action selected.`;
+        feedback.hidden = false;
+        feedback.focus();
+      }
+      announce(sample, `${action} action selected.`);
       break;
+    }
     case "window-control": {
-      const window = button.closest(".sample-mac-window, .sample-traffic-lights");
-      if (button.getAttribute("aria-label") === "Close window" && window) window.classList.toggle("is-closed");
-      else if (window) window.classList.toggle("is-minimized");
+      const window = button.closest<HTMLElement>(".sample-mac-window, .sample-traffic-window");
+      const label = button.getAttribute("aria-label");
+      if (label === "Close window" && window) window.classList.toggle("is-closed");
+      else if (label === "Minimize window" && window) window.classList.toggle("is-minimized");
+      else if (label === "Expand window" && window) window.classList.toggle("is-expanded");
       announce(sample, `${button.getAttribute("aria-label")} activated.`);
       break;
     }
@@ -1027,12 +1286,24 @@ document.addEventListener("input", (event) => {
     }
     case "color": {
       const hex = sample.querySelector<HTMLElement>(".sample-color-well small");
-      if (hex) hex.textContent = input.value.toUpperCase();
+      const name = sample.querySelector<HTMLElement>(".sample-color-well b");
+      const value = input.value.toUpperCase();
+      const palette: Record<string, string> = {
+        "#21497B": "Scout Blue",
+        "#EB7114": "Thinker Orange",
+        "#47A036": "Builder Green",
+        "#971607": "Auditor Red",
+      };
+      if (hex) hex.textContent = value;
+      if (name) name.textContent = palette[value] ?? "Custom color";
       break;
     }
-    case "files":
+    case "files": {
+      const zone = sample.querySelector<HTMLElement>(".sample-dropzone");
+      if (zone && input.files?.length) showDropResult(zone, input.files);
       announce(sample, input.files?.length ? `${input.files.length} file${input.files.length === 1 ? "" : "s"} selected.` : "No files selected.");
       break;
+    }
     default:
       break;
   }
@@ -1072,7 +1343,7 @@ document.addEventListener("keydown", (event) => {
   }
 
   if (target.matches("[aria-haspopup='listbox'], [aria-haspopup='menu']") && ["ArrowDown", "ArrowUp"].includes(event.key)) {
-    const owner = target.closest<HTMLElement>(".sample-control-trio > div, .sample-overflow, .sample-combo-button, .sample-overlay-trio > div");
+    const owner = target.closest<HTMLElement>(".sample-control-trio > div, .sample-overflow, .sample-combo-button, .sample-overlay-trio > div, .sample-menu-bar");
     const panel = owner?.querySelector<HTMLElement>("[role='listbox'], [role='menu']");
     const firstOption = panel?.querySelector<HTMLElement>("[role='option'], [role='menuitem']");
     if (panel && firstOption) {
@@ -1091,9 +1362,25 @@ document.addEventListener("keydown", (event) => {
   }
 
   if (event.key === "Escape" && target.closest(".ui-sample")) {
-    const expanded = target.closest<HTMLElement>(".sample-overflow, .sample-combo-button, .sample-overlay-trio > div, .sample-popover-macos, .sample-control-trio > div");
+    const viewer = target.closest<HTMLElement>(".sample-lightbox-viewer");
+    if (viewer) {
+      viewer.querySelector<HTMLElement>("[data-action='close-lightbox']")?.click();
+      event.preventDefault();
+      return;
+    }
+    const hover = target.closest<HTMLElement>(".sample-hover");
+    const hoverTrigger = hover?.querySelector<HTMLElement>(".sample-hover-trigger");
+    const hoverCard = hover?.querySelector<HTMLElement>(".sample-hover-card");
+    if (hoverTrigger?.getAttribute("aria-expanded") === "true" && hoverCard) {
+      hoverTrigger.setAttribute("aria-expanded", "false");
+      hoverCard.hidden = true;
+      hoverTrigger.focus();
+      event.preventDefault();
+      return;
+    }
+    const expanded = target.closest<HTMLElement>(".sample-overflow, .sample-combo-button, .sample-overlay-trio > div, .sample-popover-macos, .sample-control-trio > div, .sample-menu-bar");
     const trigger = expanded?.querySelector<HTMLElement>("[aria-expanded='true']");
-    const panel = expanded?.querySelector<HTMLElement>(".sample-menu, .sample-control-options, [role='tooltip'], [hidden]");
+    const panel = expanded?.querySelector<HTMLElement>(".sample-menu, .sample-control-options, [role='tooltip']");
     if (trigger && panel) {
       trigger.setAttribute("aria-expanded", "false");
       panel.hidden = true;
@@ -1108,6 +1395,42 @@ document.addEventListener("keydown", (event) => {
     const next = (active + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
     options[next]?.focus();
   }
+});
+
+document.addEventListener("pointerover", (event) => {
+  const target = event.target instanceof Element ? event.target : null;
+  const trigger = target?.closest<HTMLElement>(".sample-hover-trigger");
+  const card = trigger?.parentElement?.querySelector<HTMLElement>(".sample-hover-card");
+  if (!trigger || !card) return;
+  trigger.setAttribute("aria-expanded", "true");
+  card.hidden = false;
+});
+
+document.addEventListener("pointerout", (event) => {
+  const target = event.target instanceof Element ? event.target : null;
+  const owner = target?.closest<HTMLElement>(".sample-hover");
+  if (!owner || (event.relatedTarget instanceof Node && owner.contains(event.relatedTarget))) return;
+  owner.querySelector<HTMLElement>(".sample-hover-trigger")?.setAttribute("aria-expanded", "false");
+  const card = owner.querySelector<HTMLElement>(".sample-hover-card");
+  if (card) card.hidden = true;
+});
+
+document.addEventListener("focusin", (event) => {
+  const target = event.target instanceof Element ? event.target : null;
+  const trigger = target?.closest<HTMLElement>(".sample-hover-trigger");
+  const card = trigger?.parentElement?.querySelector<HTMLElement>(".sample-hover-card");
+  if (!trigger || !card) return;
+  trigger.setAttribute("aria-expanded", "true");
+  card.hidden = false;
+});
+
+document.addEventListener("focusout", (event) => {
+  const target = event.target instanceof Element ? event.target : null;
+  const owner = target?.closest<HTMLElement>(".sample-hover");
+  if (!owner || (event.relatedTarget instanceof Node && owner.contains(event.relatedTarget))) return;
+  owner.querySelector<HTMLElement>(".sample-hover-trigger")?.setAttribute("aria-expanded", "false");
+  const card = owner.querySelector<HTMLElement>(".sample-hover-card");
+  if (card) card.hidden = true;
 });
 
 document.addEventListener("pointerdown", (event) => {
@@ -1138,6 +1461,7 @@ document.addEventListener("drop", (event) => {
   zone.classList.remove("is-dragging");
   const sample = zone.closest<HTMLElement>(".ui-sample");
   const count = event.dataTransfer.files.length;
+  if (count) showDropResult(zone, event.dataTransfer.files);
   if (sample) announce(sample, count ? `${count} file${count === 1 ? "" : "s"} dropped.` : "No files dropped.");
 });
 
