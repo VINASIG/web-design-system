@@ -870,6 +870,19 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       cards[next]?.scrollIntoView({ block: "nearest", inline: "nearest" });
       break;
     }
+    case "replay-spring": {
+      const demo = button.closest<HTMLElement>(".sample-spring");
+      if (!demo) break;
+      demo.classList.remove("is-playing");
+      if (reducedMotionPreference.matches) {
+        demo.querySelectorAll<HTMLElement>(".sample-spring-dot").forEach((dot) => { dot.style.left = "78%"; });
+        break;
+      }
+      void demo.offsetWidth;
+      demo.querySelectorAll<HTMLElement>(".sample-spring-dot").forEach((dot) => { dot.style.removeProperty("left"); });
+      demo.classList.add("is-playing");
+      break;
+    }
     case "resize-panel": {
       const panel = sample.querySelector<HTMLElement>(".sample-resize");
       if (!panel) break;
