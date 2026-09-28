@@ -848,7 +848,7 @@
       "name": "Toggle Group (Segmented Control)",
       "platform": "Web",
       "category": "Forms and controls",
-      "definition": "A connected group of compact controls for selecting one mode or several related values.",
+      "definition": "A connected row of compact options that keeps one view or mode selected at a time.",
       "guidance": "Use for a small set of peer options with persistent selection. Distinguish value selection from tabs that change a content panel and from menus that launch actions.",
       "accessibility": "Use a radio group for exclusive values or buttons with pressed state for independent toggles. Provide clear labels and keyboard movement appropriate to the chosen pattern."
     },

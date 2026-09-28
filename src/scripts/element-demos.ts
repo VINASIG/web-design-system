@@ -431,6 +431,48 @@ function selectComboboxOption(input: HTMLInputElement, option: HTMLElement) {
   input.focus({ preventScroll: true });
 }
 
+function selectToggleRadio(button: HTMLElement, focus = false) {
+  const group = button.closest<HTMLElement>(".sample-toggle-group[role='radiogroup']");
+  const sample = button.closest<HTMLElement>(".ui-sample");
+  const value = button.dataset.value;
+  if (!group || !sample || !value) return;
+
+  group.querySelectorAll<HTMLElement>("[role='radio']").forEach((option) => {
+    const selected = option === button;
+    option.setAttribute("aria-checked", String(selected));
+    option.tabIndex = selected ? 0 : -1;
+    option.classList.toggle("is-current", selected);
+  });
+
+  const preview = sample.querySelector<HTMLElement>(".sample-toggle-preview");
+  if (preview) {
+    preview.dataset.align = value;
+    preview.style.textAlign = value;
+  }
+  const status = sample.querySelector<HTMLElement>(".sample-toggle-status");
+  if (status) status.textContent = `Single selection · ${value[0]?.toUpperCase()}${value.slice(1)}`;
+  if (focus) button.focus();
+}
+
+function initializeToggleGroup(sample: HTMLElement, instance = sample.dataset.sampleInstance ?? "example") {
+  const label = sample.querySelector<HTMLElement>("[data-toggle-label]");
+  const group = sample.querySelector<HTMLElement>(".sample-toggle-group");
+  if (!label || !group) return;
+
+  label.id = `sample-toggle-label-${instance.replace(/[^a-z0-9_-]/gi, "-")}`;
+  group.setAttribute("role", "radiogroup");
+  group.setAttribute("aria-orientation", "horizontal");
+  group.setAttribute("aria-labelledby", label.id);
+  group.querySelectorAll<HTMLElement>("[data-value]").forEach((button) => {
+    button.setAttribute("role", "radio");
+    setAction(button, "select-toggle-radio");
+  });
+
+  const selected = group.querySelector<HTMLElement>("[role='radio'][aria-checked='true']")
+    ?? group.querySelector<HTMLElement>("[role='radio']");
+  if (selected) selectToggleRadio(selected);
+}
+
 function initializeComboboxSample(sample: HTMLElement, instance = sample.dataset.sampleInstance ?? "example") {
   const owner = sample.querySelector<HTMLElement>(".sample-combobox");
   const label = owner?.querySelector<HTMLLabelElement>("[data-combobox-label]");
@@ -1056,7 +1098,10 @@ function enhanceSample(sample: HTMLElement) {
       });
       break;
     }
-    case "toggle-group-segmented-control":
+    case "toggle-group-segmented-control": {
+      initializeToggleGroup(sample);
+      break;
+    }
     case "segmented-control-macos": {
       const group = sample.querySelector<HTMLElement>(".sample-toggle-group, .sample-segmented");
       if (!group) break;
@@ -1705,6 +1750,9 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       selectOne(button.parentElement ?? sample, "button[data-action='select-segment']", button);
       announce(sample, `${button.textContent?.trim()} selected.`);
       break;
+    case "select-toggle-radio":
+      selectToggleRadio(button);
+      break;
     case "select-tab": {
       const nav = button.parentElement;
       if (nav) selectOne(nav, "[role='tab']", button);
@@ -2267,6 +2315,7 @@ document.addEventListener("click", (event) => {
         if (clone.dataset.specimenId === "sign-in-form") initializeLoginSample(clone);
         if (clone.dataset.specimenId === "multi-select") initializeMultiSelectIds(clone, clone.dataset.sampleInstance);
         if (clone.dataset.specimenId === "combobox-autocomplete-typeahead") initializeComboboxSample(clone, clone.dataset.sampleInstance);
+        if (clone.dataset.specimenId === "toggle-group-segmented-control") initializeToggleGroup(clone, clone.dataset.sampleInstance);
         if (clone.dataset.specimenId === "form-field") initializeFormFieldSample(clone, clone.dataset.sampleInstance);
         if (clone.dataset.specimenId === "drag-and-drop") initializeDragDropSample(clone);
         clone.querySelectorAll<HTMLInputElement>("input[type='radio']").forEach((input) => {
@@ -2419,6 +2468,22 @@ document.addEventListener("keydown", (event) => {
       return;
     }
 
+    return;
+  }
+
+  if (target.matches(".sample-toggle-group[role='radiogroup'] [role='radio']")) {
+    const group = target.closest<HTMLElement>(".sample-toggle-group[role='radiogroup']");
+    const radios = Array.from(group?.querySelectorAll<HTMLElement>("[role='radio']") ?? []);
+    const index = radios.indexOf(target);
+    let nextIndex = index;
+    if (event.key === "ArrowRight") nextIndex = (index + 1) % radios.length;
+    else if (event.key === "ArrowLeft") nextIndex = (index - 1 + radios.length) % radios.length;
+    else if (event.key === "Home") nextIndex = 0;
+    else if (event.key === "End") nextIndex = radios.length - 1;
+    else return;
+
+    event.preventDefault();
+    if (radios[nextIndex]) selectToggleRadio(radios[nextIndex], true);
     return;
   }
 
