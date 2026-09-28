@@ -381,6 +381,76 @@ function renderCalendar(calendar: HTMLElement) {
   }
 }
 
+function initializeLoginSample(sample: HTMLElement) {
+  const form = sample.querySelector<HTMLFormElement>("[data-login-form]");
+  if (!form) return;
+
+  const instance = sample.dataset.sampleInstance ?? "example";
+  const email = form.querySelector<HTMLInputElement>("[data-login-field='email']");
+  const password = form.querySelector<HTMLInputElement>("[data-login-field='password']");
+  const error = form.querySelector<HTMLElement>("[data-login-error]");
+  const submit = form.querySelector<HTMLButtonElement>("[data-action='submit-demo']");
+
+  if (email) {
+    email.id = `sample-login-email-${instance}`;
+    email.name = "username";
+    email.autocomplete = "username";
+    email.setAttribute("aria-invalid", "false");
+  }
+  if (password) {
+    password.id = `sample-login-password-${instance}`;
+    password.name = "password";
+    password.autocomplete = "current-password";
+    password.setAttribute("aria-invalid", "false");
+  }
+  if (error) {
+    error.id = `sample-login-error-${instance}`;
+    error.hidden = true;
+    error.textContent = "";
+  }
+
+  const emailLabel = form.querySelector<HTMLLabelElement>(":scope > label");
+  const passwordLabel = form.querySelector<HTMLLabelElement>(".sample-login-password-heading label");
+  if (emailLabel && email) emailLabel.htmlFor = email.id;
+  if (passwordLabel && password) passwordLabel.htmlFor = password.id;
+  if (error) {
+    email?.setAttribute("aria-describedby", error.id);
+    password?.setAttribute("aria-describedby", error.id);
+  }
+  if (submit) submit.type = "submit";
+  form.dataset.validationAttempted = "false";
+}
+
+function validateLoginForm(sample: HTMLElement) {
+  const email = sample.querySelector<HTMLInputElement>("[data-login-field='email']");
+  const password = sample.querySelector<HTMLInputElement>("[data-login-field='password']");
+  const error = sample.querySelector<HTMLElement>("[data-login-error]");
+  const emailValid = Boolean(email?.validity.valid);
+  const passwordValid = Boolean(password?.validity.valid);
+  const valid = emailValid && passwordValid;
+
+  if (email) email.setAttribute("aria-invalid", String(!emailValid));
+  if (password) password.setAttribute("aria-invalid", String(!passwordValid));
+  if (error) {
+    if (!emailValid) email?.setAttribute("aria-describedby", error.id);
+    else email?.removeAttribute("aria-describedby");
+    if (!passwordValid) password?.setAttribute("aria-describedby", error.id);
+    else password?.removeAttribute("aria-describedby");
+  }
+  if (error) {
+    error.hidden = valid;
+    error.textContent = !emailValid && !passwordValid
+      ? "Enter a valid email address and password."
+      : !emailValid
+        ? "Enter a valid email address."
+        : !passwordValid
+          ? "Enter your password."
+          : "";
+  }
+
+  return { valid, email, password };
+}
+
 function enhanceSample(sample: HTMLElement) {
   const id = sample.dataset.specimenId;
   sample.dataset.sampleInstance = String(++sampleInstance);
@@ -413,41 +483,7 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "sign-in-form": {
-      const fields = sample.querySelectorAll<HTMLElement>(".sample-login > span");
-      const lines = sample.querySelectorAll<HTMLElement>(".sample-login > .sample-input-line");
-      const definitions = [
-        { label: "Email address", type: "email", placeholder: "name@company.com" },
-        { label: "Password", type: "password", placeholder: "Enter your password" },
-      ];
-      definitions.forEach((definition, index) => {
-        const oldLabel = fields[index];
-        const oldInput = lines[index];
-        if (!oldLabel || !oldInput) return;
-        const input = document.createElement("input");
-        input.type = definition.type;
-        input.className = "sample-input-line sample-editable-input";
-        input.placeholder = definition.placeholder;
-        input.id = "sample-login-field-" + ++fieldInstance;
-        input.setAttribute("aria-label", definition.label);
-        input.setAttribute("aria-invalid", "false");
-        if (definition.type === "email") input.autocomplete = "email";
-        if (definition.type === "password") input.autocomplete = "current-password";
-        const label = document.createElement("label");
-        label.textContent = definition.label;
-        label.htmlFor = input.id;
-        oldLabel.replaceWith(label);
-        oldInput.replaceWith(input);
-      });
-      const submit = sample.querySelector<HTMLElement>(".sample-login > .sample-button");
-      if (submit) asButton(submit, "submit-demo", "Sign in");
-      const error = document.createElement("p");
-      error.id = "sample-login-error-" + ++fieldInstance;
-      error.className = "sample-form-error";
-      error.setAttribute("role", "alert");
-      error.hidden = true;
-      error.textContent = "Enter a valid email address and password.";
-      sample.querySelector(".sample-login > button")?.after(error);
-      sample.querySelectorAll<HTMLInputElement>(".sample-login input").forEach((input) => input.setAttribute("aria-describedby", error.id));
+      initializeLoginSample(sample);
       break;
     }
     case "pagination": {
@@ -1773,14 +1809,34 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       break;
     }
     case "submit-demo": {
-      const email = sample.querySelector<HTMLInputElement>("input[type='email']");
-      const password = sample.querySelector<HTMLInputElement>("input[type='password']");
-      const valid = Boolean(email?.value.includes("@") && password?.value.length);
-      announce(sample, valid ? "Example sign-in accepted." : "Enter a valid email address and password.");
-      if (email) email.setAttribute("aria-invalid", String(!email.value.includes("@")));
-      if (password) password.setAttribute("aria-invalid", String(!password.value.length));
-      const error = sample.querySelector<HTMLElement>(".sample-form-error");
-      if (error) error.hidden = valid;
+      const form = button.closest<HTMLFormElement>("[data-login-form]");
+      if (form) form.dataset.validationAttempted = "true";
+      const validation = validateLoginForm(sample);
+      if (!validation.valid) {
+        (validation.email?.validity.valid ? validation.password : validation.email)?.focus();
+        break;
+      }
+      announce(sample, "Sign-in details look valid. This preview did not send a request.");
+      break;
+    }
+    case "login-provider": {
+      const provider = button.dataset.provider ?? "Alternate";
+      announce(sample, `${provider} sign-in selected. This preview does not connect to a service.`);
+      break;
+    }
+    case "login-forgot":
+      announce(sample, "Password recovery selected. This preview did not send a request.");
+      break;
+    case "toggle-login-password": {
+      const form = button.closest<HTMLFormElement>("[data-login-form]");
+      const password = form?.querySelector<HTMLInputElement>("[data-login-field='password']");
+      const icon = button.querySelector<HTMLElement>("i");
+      if (!password) break;
+      const reveal = password.type === "password";
+      password.type = reveal ? "text" : "password";
+      button.setAttribute("aria-label", reveal ? "Hide password" : "Show password");
+      button.setAttribute("aria-pressed", String(reveal));
+      if (icon) icon.className = reveal ? "fi-br-eye-crossed" : "fi-br-eye";
       break;
     }
     case "toolbar-action": {
@@ -1822,6 +1878,17 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
 }
 
 document.querySelectorAll<HTMLElement>(".ui-sample").forEach(enhanceSample);
+
+document.addEventListener("submit", (event) => {
+  const form = event.target instanceof HTMLFormElement && event.target.matches("[data-login-form]")
+    ? event.target
+    : null;
+  if (!form) return;
+  event.preventDefault();
+  const sample = form.closest<HTMLElement>(".ui-sample");
+  const submit = form.querySelector<HTMLElement>("[data-action='submit-demo']");
+  if (sample && submit) runAction(sample, submit);
+});
 
 document.addEventListener("click", (event) => {
   const target = event.target instanceof Element ? event.target : null;
@@ -1868,6 +1935,7 @@ document.addEventListener("click", (event) => {
           refreshColorWellIds(well, `${clone.dataset.sampleInstance}-${index + 1}`);
         });
         if (clone.dataset.specimenId === "disclosure-triangle") initializeDisclosureSample(clone);
+        if (clone.dataset.specimenId === "sign-in-form") initializeLoginSample(clone);
         if (clone.dataset.specimenId === "multi-select") initializeMultiSelectIds(clone, clone.dataset.sampleInstance);
         clone.querySelectorAll<HTMLInputElement>("input[type='radio']").forEach((input) => {
           input.name = `${input.name}-${sampleInstance}`;
@@ -1911,6 +1979,7 @@ document.addEventListener("click", (event) => {
   const actionButton = target.closest<HTMLElement>("[data-action]");
   const sample = actionButton?.closest<HTMLElement>(".ui-sample");
   if (actionButton && sample) {
+    if (actionButton.dataset.action === "submit-demo" && actionButton instanceof HTMLButtonElement && actionButton.type === "submit") return;
     if (actionButton.dataset.action === "choose-files") {
       sample.querySelector<HTMLInputElement>("input[type='file']")?.click();
       return;
@@ -1923,6 +1992,12 @@ document.addEventListener("input", (event) => {
   const input = event.target instanceof HTMLInputElement ? event.target : null;
   const sample = input?.closest<HTMLElement>(".ui-sample");
   if (!input || !sample) return;
+
+  if (input.hasAttribute("data-login-field")) {
+    const form = input.closest<HTMLFormElement>("[data-login-form]");
+    if (form?.dataset.validationAttempted === "true") validateLoginForm(sample);
+    return;
+  }
 
   switch (input.dataset.inputAction) {
     case "multi-select-filter": {
