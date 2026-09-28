@@ -1029,6 +1029,31 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       announce(sample, `Sorted by ${button.textContent?.trim() ?? key}, ${direction}.`);
       break;
     }
+    case "presence-set": {
+      const presence = button.closest<HTMLElement>(".sample-status");
+      const statusCopy = {
+        available: { live: "Live now", label: "Available", meta: "Last active now", feedback: "Ava Reyes is available." },
+        away: { live: "Away", label: "Away", meta: "Last active 12 minutes ago", feedback: "Ava Reyes is away." },
+        busy: { live: "In a call", label: "Busy", meta: "Available for messages", feedback: "Ava Reyes is busy and available for messages." },
+        offline: { live: "Offline", label: "Offline", meta: "Last active 2 hours ago", feedback: "Ava Reyes is offline." },
+      } as const;
+      const status = button.dataset.status as keyof typeof statusCopy | undefined;
+      const copy = status ? statusCopy[status] : undefined;
+      if (!presence || !status || !copy) break;
+      presence.dataset.presenceState = status;
+      presence.querySelectorAll<HTMLButtonElement>("button[data-action='presence-set']").forEach((option) => {
+        option.setAttribute("aria-pressed", String(option === button));
+      });
+      const live = presence.querySelector<HTMLElement>("[data-presence-live]");
+      const label = presence.querySelector<HTMLElement>("[data-presence-label]");
+      const meta = presence.querySelector<HTMLElement>("[data-presence-meta]");
+      const feedback = presence.querySelector<HTMLElement>("[data-presence-feedback]");
+      if (live) live.textContent = copy.live;
+      if (label) label.textContent = copy.label;
+      if (meta) meta.textContent = copy.meta;
+      if (feedback) feedback.textContent = copy.feedback;
+      break;
+    }
     case "timeline-complete": {
       const item = button.closest<HTMLElement>(".sample-timeline-item.is-current");
       if (!item || button.getAttribute("aria-disabled") === "true") break;
