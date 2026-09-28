@@ -5,6 +5,8 @@ const dialogStage = dialog?.querySelector<HTMLElement>(".element-demo-stage");
 let sampleInstance = 0;
 let fieldInstance = 0;
 const scrollspyCleanups = new WeakMap<HTMLElement, () => void>();
+let activeDraggedTask: HTMLElement | null = null;
+let activeDragBoard: HTMLElement | null = null;
 
 function setAction(element: HTMLElement, action: string, label?: string) {
   element.dataset.action = action;
@@ -191,18 +193,49 @@ function destroyScrollspy(sample: HTMLElement) {
   scrollspyCleanups.delete(sample);
 }
 
-function showDropResult(zone: HTMLElement, files: FileList | File[]) {
-  let result = zone.querySelector<HTMLElement>(".sample-drop-feedback");
-  if (!result) {
-    result = document.createElement("p");
-    result.className = "sample-drop-feedback";
-    result.setAttribute("role", "status");
-    zone.append(result);
-  }
-  const selected = Array.from(files);
-  result.textContent = selected.length
-    ? selected.map((file) => file.name).join(", ") + (selected.length === 1 ? " uploaded." : " selected.")
-    : "No files selected.";
+function updateDragTaskControls(board: HTMLElement) {
+  board.querySelectorAll<HTMLElement>(".sample-task-card").forEach((task) => {
+    const title = task.dataset.taskTitle ?? task.querySelector<HTMLElement>(".sample-task-title")?.textContent?.trim() ?? "Task";
+    const sourceColumn = task.closest<HTMLElement>(".sample-kanban-column");
+    const sourceName = sourceColumn?.querySelector("h3")?.textContent?.trim() ?? "current column";
+    const destination = Array.from(board.querySelectorAll<HTMLElement>(".sample-kanban-column"))
+      .find((column) => column !== sourceColumn);
+    const destinationName = destination?.querySelector("h3")?.textContent?.trim() ?? "other column";
+    const grip = task.querySelector<HTMLButtonElement>(".sample-task-grip");
+    if (grip) setAction(grip, "move-task", `Move ${title} from ${sourceName} to ${destinationName}. Drag to reposition.`);
+  });
+  board.querySelectorAll<HTMLElement>(".sample-kanban-column").forEach((column) => {
+    const count = column.querySelector<HTMLElement>("[data-column-count]");
+    if (count) count.textContent = String(column.querySelectorAll(".sample-kanban-list > .sample-task-card").length);
+  });
+}
+
+function initializeDragDropSample(sample: HTMLElement) {
+  const board = sample.querySelector<HTMLElement>(".sample-kanban");
+  if (board) updateDragTaskControls(board);
+}
+
+function clearDragIndicators(board: HTMLElement) {
+  board.querySelectorAll(".is-drop-target, .is-drop-before, .is-drop-after").forEach((element) => {
+    element.classList.remove("is-drop-target", "is-drop-before", "is-drop-after");
+  });
+}
+
+function moveTask(task: HTMLElement, destination: HTMLElement, before: HTMLElement | null, sample: HTMLElement) {
+  const board = task.closest<HTMLElement>(".sample-kanban");
+  const sourceColumn = task.closest<HTMLElement>(".sample-kanban-column");
+  const destinationColumn = destination.closest<HTMLElement>(".sample-kanban-column");
+  if (!board || !sourceColumn || !destinationColumn) return;
+  if (sourceColumn === destinationColumn && (before === task || before === task.nextElementSibling || before === null && task.nextElementSibling === null)) return;
+
+  const taskName = task.dataset.taskTitle ?? "Task";
+  const sourceName = sourceColumn.querySelector("h3")?.textContent?.trim() ?? "current column";
+  const destinationName = destinationColumn.querySelector("h3")?.textContent?.trim() ?? "destination";
+  destination.insertBefore(task, before);
+  task.dataset.column = destinationColumn.dataset.dropColumn ?? "";
+  updateDragTaskControls(board);
+  task.querySelector<HTMLButtonElement>(".sample-task-grip")?.focus({ preventScroll: true });
+  announce(sample, `Moved ${taskName} from ${sourceName} to ${destinationName}.`);
 }
 
 function addChip(container: HTMLElement, label: string, className = "sample-selected") {
@@ -741,22 +774,7 @@ function enhanceSample(sample: HTMLElement) {
       break;
     }
     case "drag-and-drop": {
-      const zone = sample.querySelector<HTMLElement>(".sample-dropzone");
-      if (!zone) break;
-      const fileInput = document.createElement("input");
-      fileInput.type = "file";
-      fileInput.multiple = true;
-      fileInput.className = "sample-file-input";
-      fileInput.setAttribute("aria-label", "Choose files to upload");
-      fileInput.dataset.inputAction = "files";
-      const prompt = zone.querySelector<HTMLElement>("small");
-      const choose = document.createElement("button");
-      choose.type = "button";
-      choose.className = "sample-file-button";
-      choose.textContent = "Choose files";
-      setAction(choose, "choose-files");
-      prompt?.replaceWith(choose);
-      zone.append(fileInput);
+      initializeDragDropSample(sample);
       break;
     }
     case "three-dots-overflow-menu": {
@@ -1327,6 +1345,17 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
   const id = sample.dataset.specimenId;
 
   switch (action) {
+    case "move-task": {
+      const task = button.closest<HTMLElement>(".sample-task-card");
+      const board = button.closest<HTMLElement>(".sample-kanban");
+      const sourceColumn = task?.closest<HTMLElement>(".sample-kanban-column");
+      const destination = board && sourceColumn
+        ? Array.from(board.querySelectorAll<HTMLElement>(".sample-kanban-column"))
+          .find((column) => column !== sourceColumn)?.querySelector<HTMLElement>(".sample-kanban-list")
+        : null;
+      if (task && destination) moveTask(task, destination, null, sample);
+      break;
+    }
     case "combo-primary": {
       const group = button.closest<HTMLElement>(".sample-combo-button");
       const menu = group?.querySelector<HTMLElement>(".sample-combo-menu");
@@ -2131,6 +2160,7 @@ document.addEventListener("click", (event) => {
         if (clone.dataset.specimenId === "sign-in-form") initializeLoginSample(clone);
         if (clone.dataset.specimenId === "multi-select") initializeMultiSelectIds(clone, clone.dataset.sampleInstance);
         if (clone.dataset.specimenId === "form-field") initializeFormFieldSample(clone, clone.dataset.sampleInstance);
+        if (clone.dataset.specimenId === "drag-and-drop") initializeDragDropSample(clone);
         clone.querySelectorAll<HTMLInputElement>("input[type='radio']").forEach((input) => {
           input.name = `${input.name}-${sampleInstance}`;
         });
@@ -2174,10 +2204,6 @@ document.addEventListener("click", (event) => {
   const sample = actionButton?.closest<HTMLElement>(".ui-sample");
   if (actionButton && sample) {
     if (actionButton.dataset.action === "submit-demo" && actionButton instanceof HTMLButtonElement && actionButton.type === "submit") return;
-    if (actionButton.dataset.action === "choose-files") {
-      sample.querySelector<HTMLInputElement>("input[type='file']")?.click();
-      return;
-    }
     runAction(sample, actionButton);
   }
 });
@@ -2236,12 +2262,6 @@ document.addEventListener("input", (event) => {
       input.removeAttribute("aria-invalid");
       const error = sample.querySelector<HTMLElement>(".sample-color-error");
       if (error) error.hidden = true;
-      break;
-    }
-    case "files": {
-      const zone = sample.querySelector<HTMLElement>(".sample-dropzone");
-      if (zone && input.files?.length) showDropResult(zone, input.files);
-      announce(sample, input.files?.length ? `${input.files.length} file${input.files.length === 1 ? "" : "s"} selected.` : "No files selected.");
       break;
     }
     default:
@@ -2490,29 +2510,75 @@ document.addEventListener("focusout", (event) => {
   if (card) card.hidden = true;
 });
 
+document.addEventListener("dragstart", (event) => {
+  const target = event.target instanceof Element ? event.target : null;
+  const grip = target?.closest<HTMLButtonElement>(".sample-task-grip[draggable='true']");
+  const task = grip?.closest<HTMLElement>(".sample-task-card");
+  const board = grip?.closest<HTMLElement>(".sample-kanban");
+  const sample = grip?.closest<HTMLElement>(".ui-sample");
+  if (!grip || !task || !board || !sample || !event.dataTransfer) return;
+  activeDraggedTask = task;
+  activeDragBoard = board;
+  task.classList.add("is-dragging");
+  event.dataTransfer.effectAllowed = "move";
+  event.dataTransfer.setData("text/plain", task.dataset.taskId ?? task.dataset.taskTitle ?? "task");
+  announce(sample, `Picked up ${task.dataset.taskTitle ?? "task"}. Move to To do or In review, then release.`);
+});
+
 document.addEventListener("dragover", (event) => {
   const target = event.target instanceof Element ? event.target : null;
-  const zone = target?.closest<HTMLElement>(".sample-dropzone");
-  if (!zone) return;
+  const board = target?.closest<HTMLElement>(".sample-kanban");
+  if (!board || board !== activeDragBoard || !activeDraggedTask) return;
+  const list = target?.closest<HTMLElement>(".sample-kanban-list");
+  if (!list) return;
   event.preventDefault();
-  zone.classList.add("is-dragging");
+  if (event.dataTransfer) event.dataTransfer.dropEffect = "move";
+  clearDragIndicators(board);
+  const column = list.closest<HTMLElement>(".sample-kanban-column");
+  column?.classList.add("is-drop-target");
+  const targetTask = target?.closest<HTMLElement>(".sample-task-card");
+  if (!targetTask || targetTask === activeDraggedTask || targetTask.parentElement !== list) return;
+  const bounds = targetTask.getBoundingClientRect();
+  targetTask.classList.add(event.clientY < bounds.top + bounds.height / 2 ? "is-drop-before" : "is-drop-after");
 });
 
 document.addEventListener("dragleave", (event) => {
   const target = event.target instanceof Element ? event.target : null;
-  target?.closest<HTMLElement>(".sample-dropzone")?.classList.remove("is-dragging");
+  const board = target?.closest<HTMLElement>(".sample-kanban");
+  if (!board || board !== activeDragBoard || event.relatedTarget instanceof Node && board.contains(event.relatedTarget)) return;
+  clearDragIndicators(board);
 });
 
 document.addEventListener("drop", (event) => {
   const target = event.target instanceof Element ? event.target : null;
-  const zone = target?.closest<HTMLElement>(".sample-dropzone");
-  if (!zone || !event.dataTransfer) return;
+  const board = target?.closest<HTMLElement>(".sample-kanban");
+  if (!board || board !== activeDragBoard || !activeDraggedTask) return;
+  const list = target?.closest<HTMLElement>(".sample-kanban-list");
+  if (!list) return;
   event.preventDefault();
-  zone.classList.remove("is-dragging");
-  const sample = zone.closest<HTMLElement>(".ui-sample");
-  const count = event.dataTransfer.files.length;
-  if (count) showDropResult(zone, event.dataTransfer.files);
-  if (sample) announce(sample, count ? `${count} file${count === 1 ? "" : "s"} dropped.` : "No files dropped.");
+  const task = activeDraggedTask;
+  const sample = board.closest<HTMLElement>(".ui-sample");
+  const targetTask = target?.closest<HTMLElement>(".sample-task-card");
+  if (targetTask === task) {
+    clearDragIndicators(board);
+    return;
+  }
+  let before: HTMLElement | null = null;
+  if (targetTask && targetTask.parentElement === list) {
+    const bounds = targetTask.getBoundingClientRect();
+    before = event.clientY < bounds.top + bounds.height / 2
+      ? targetTask
+      : targetTask.nextElementSibling instanceof HTMLElement ? targetTask.nextElementSibling : null;
+  }
+  if (sample) moveTask(task, list, before, sample);
+  clearDragIndicators(board);
+});
+
+document.addEventListener("dragend", () => {
+  activeDraggedTask?.classList.remove("is-dragging");
+  if (activeDragBoard) clearDragIndicators(activeDragBoard);
+  activeDraggedTask = null;
+  activeDragBoard = null;
 });
 
 document.addEventListener("change", (event) => {

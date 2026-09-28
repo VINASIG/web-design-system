@@ -1016,9 +1016,30 @@ const slugify = (value: string) =>
   .element-demo-stage .ui-sample .sample-truncation-width button,
   .element-demo-stage .ui-sample .sample-truncation-expand { font-size: 0.78rem !important; }
 
-  .sample-dropzone { display: grid; width: 100%; min-height: 7rem; align-content: center; justify-items: center; gap: 0.35rem; padding: 0.75rem; background: var(--color-scout-blue-soft); border: 1px dashed var(--color-scout-blue-border); border-radius: var(--radius-sm); }
-  .sample-dropzone b { font-size: 0.82rem; }
-  .sample-drop-feedback { max-width: 100%; margin: 0; padding: 0.35rem 0.55rem; overflow-wrap: anywhere; color: var(--color-builder-green-strong); background: var(--color-white); border-radius: 3px; font-size: 0.78rem; }
+  .sample-kanban { width: min(100%, 42rem); margin-inline: auto; }
+  .sample-kanban-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 0.8rem; }
+  .sample-kanban-column { min-width: 0; padding: 0.65rem; background: var(--color-surface-muted); border: 1px solid var(--color-border); border-radius: var(--radius-sm); transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease; }
+  .sample-kanban-column > header { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.6rem; }
+  .sample-kanban-column h3 { margin: 0; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.055em; text-transform: uppercase; }
+  .sample-kanban-column [data-column-count] { display: grid; min-width: 1.4rem; height: 1.4rem; place-items: center; padding-inline: 0.3rem; color: var(--color-text-muted); background: var(--color-surface); border-radius: 999px; font-size: 0.68rem; font-variant-numeric: tabular-nums; }
+  .sample-kanban-list { display: grid; min-height: 6rem; align-content: start; gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
+  .sample-task-card { position: relative; display: grid; min-width: 0; align-items: center; gap: 0.4rem; grid-template-columns: 1rem minmax(0, 1fr); padding: 0.35rem 0.4rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: calc(var(--radius-sm) - 2px); box-shadow: 0 1px 2px rgb(68 58 59 / 6%); transition: opacity 140ms ease, box-shadow 140ms ease, transform 140ms ease; }
+  .sample-task-title { min-width: 0; overflow: hidden; font-size: 0.78rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+  .sample-task-grip { display: grid; width: 1rem; min-height: 1.8rem; place-items: center; padding: 0 !important; color: var(--color-text-muted) !important; background: transparent !important; border: 0 !important; border-radius: 4px !important; cursor: grab; }
+  .sample-task-grip:hover { color: var(--color-scout-blue-strong) !important; background: var(--color-scout-blue-soft) !important; }
+  .sample-task-grip:active { cursor: grabbing; }
+  .sample-task-grip i { display: block; width: 0.55rem; height: 0.9rem; background-image: radial-gradient(circle, currentColor 1px, transparent 1.35px), radial-gradient(circle, currentColor 1px, transparent 1.35px); background-position: left top, right top; background-size: 4px 4px; }
+  .sample-task-grip i::before { content: none; }
+  .sample-task-grip:focus-visible { outline: 2px solid var(--color-scout-blue); outline-offset: 2px; }
+  .sample-kanban-column.is-drop-target { background: var(--color-scout-blue-soft); border-color: var(--color-scout-blue-border); box-shadow: inset 0 0 0 1px var(--color-scout-blue-border); }
+  .sample-kanban-column.is-drop-target .sample-task-card { background: var(--color-surface); }
+  .sample-task-card.is-dragging { opacity: 0.36; box-shadow: none; }
+  .sample-task-card.is-drop-before::before,
+  .sample-task-card.is-drop-after::after { position: absolute; right: 0.2rem; left: 0.2rem; height: 2px; background: var(--color-scout-blue); border-radius: 2px; content: ""; }
+  .sample-task-card.is-drop-before::before { top: -0.3rem; }
+  .sample-task-card.is-drop-after::after { bottom: -0.3rem; }
+  .sample-kanban-hint { margin: 0.65rem 0 0; color: var(--color-text-muted); font-size: 0.7rem; line-height: 1.4; text-align: center; }
+  @media (max-width: 620px) { .sample-kanban-columns { grid-template-columns: minmax(0, 1fr); } .sample-kanban-list { min-height: 3.5rem; } }
 
   .sample-divider-set { display: grid; width: 100%; gap: 0.6rem; }
   .sample-divider-set > div { display: flex; align-items: center; gap: 0.8rem; }
@@ -1333,9 +1354,6 @@ const slugify = (value: string) =>
   .ui-sample .sample-token-input { min-height: 2.5rem; padding: 0.45rem 0.6rem; background: var(--color-white); border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); }
   .ui-sample input::placeholder { color: var(--color-text-muted); opacity: 1; }
   .ui-sample .sample-range { width: 100%; min-width: 4rem; accent-color: var(--color-scout-blue); }
-  .ui-sample .sample-file-input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .sample-dropzone.is-dragging { background: var(--color-builder-green-soft); border-color: var(--color-builder-green); }
-  .sample-file-button { min-height: 2.25rem; padding: 0.4rem 0.7rem !important; color: var(--color-scout-blue-strong) !important; background: var(--color-white) !important; border: 1px solid var(--color-border) !important; border-radius: var(--radius-sm) !important; font-size: 0.88rem !important; }
   .sample-selected > button,
   .sample-multi-token-chip > button,
   .sample-token-chip > button { display: grid; width: 1.4rem; height: 1.4rem; flex: 0 0 auto; place-items: center; padding: 0 !important; color: var(--color-scout-blue-strong) !important; }

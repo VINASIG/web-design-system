@@ -362,9 +362,9 @@
       "name": "Drag & Drop",
       "platform": "Web",
       "category": "Forms and controls",
-      "definition": "An interaction for moving or transferring an item by dragging it to a destination.",
-      "guidance": "Provide a visible alternative such as move-up, move-down, or choose-destination actions. Show a clear target, preview the result, and support pointer, touch, and keyboard input.",
-      "accessibility": "Announce the source, target, and completion. Keep focus predictable and do not make dragging the only way to reorder or upload."
+      "definition": "An interaction for moving an item to another position or destination by dragging it.",
+      "guidance": "Show a clear drag grip, destination highlight, and insertion position. Provide a visible move control for keyboard and touch users, and confirm where the item moved.",
+      "accessibility": "Announce pickup and the completed move in a live region, keep focus on the moved item, and make dragging optional. A resize handle changes size; it does not move an item."
     },
     {
       "order": 35,
