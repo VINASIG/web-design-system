@@ -1139,6 +1139,9 @@ function enhanceSample(sample: HTMLElement) {
   liveStatus(sample);
 
   switch (id) {
+    case "skeleton-spinner":
+      initializeLoadingMotion(sample);
+      break;
     case "progress-ring-spinner-bar":
       initializeProgressDemo(sample, { autoStartWhenVisible: true });
       break;
@@ -1595,6 +1598,34 @@ function enhanceSample(sample: HTMLElement) {
   }
 }
 
+function initializeLoadingMotion(sample: HTMLElement) {
+  const demo = sample.querySelector<HTMLElement>(".sample-loading-demo");
+  const button = demo?.querySelector<HTMLButtonElement>("[data-action='loading-motion-toggle']");
+  const status = demo?.querySelector<HTMLElement>("[data-loading-status]");
+  if (!demo || !button || !status) return;
+
+  const instance = sample.dataset.sampleInstance ?? String(++sampleInstance);
+  const skeletonTitle = demo.querySelector<HTMLElement>("#sample-loading-skeleton-title");
+  const spinnerTitle = demo.querySelector<HTMLElement>("#sample-loading-spinner-title");
+  if (skeletonTitle) {
+    skeletonTitle.id = `sample-loading-skeleton-title-${instance}`;
+    skeletonTitle.closest("article")?.setAttribute("aria-labelledby", skeletonTitle.id);
+  }
+  if (spinnerTitle) {
+    spinnerTitle.id = `sample-loading-spinner-title-${instance}`;
+    spinnerTitle.closest("article")?.setAttribute("aria-labelledby", spinnerTitle.id);
+  }
+
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  demo.dataset.motionPaused = String(reducedMotion);
+  demo.dataset.motionOptIn = "false";
+  button.setAttribute("aria-pressed", String(!reducedMotion));
+  button.textContent = reducedMotion ? "Play animation" : "Pause animation";
+  status.textContent = reducedMotion
+    ? "Motion is paused to match your reduced-motion preference."
+    : "The skeleton shimmer and spinner are moving. Pause motion to inspect them.";
+}
+
 function selectOne(container: ParentNode, selector: string, button: HTMLElement, className = "is-current") {
   container.querySelectorAll<HTMLElement>(selector).forEach((item) => {
     const selected = item === button;
@@ -1852,6 +1883,20 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
   const id = sample.dataset.specimenId;
 
   switch (action) {
+    case "loading-motion-toggle": {
+      const demo = button.closest<HTMLElement>(".sample-loading-demo");
+      const status = demo?.querySelector<HTMLElement>("[data-loading-status]");
+      if (!demo || !status) break;
+      const shouldPlay = demo.dataset.motionPaused === "true";
+      demo.dataset.motionPaused = String(!shouldPlay);
+      if (shouldPlay) demo.dataset.motionOptIn = "true";
+      button.setAttribute("aria-pressed", String(shouldPlay));
+      button.textContent = shouldPlay ? "Pause animation" : "Play animation";
+      status.textContent = shouldPlay
+        ? "The skeleton shimmer and spinner are moving. Pause motion to inspect them."
+        : "Animations are paused. Choose Play animation to resume.";
+      break;
+    }
     case "progress-toggle":
       progressDemoControllers.get(sample)?.toggle();
       break;
@@ -2829,6 +2874,7 @@ document.addEventListener("click", (event) => {
         if (clone.dataset.specimenId === "modal-dialog-drawer-sheet") initializeSurfaceDemo(clone);
         if (clone.dataset.specimenId === "popover-dropdown-tooltip") initializeOverlayTrio(clone);
         if (clone.dataset.specimenId === "scrim-backdrop-overlay") initializeScrimDemo(clone);
+        if (clone.dataset.specimenId === "skeleton-spinner") initializeLoadingMotion(clone);
         if (clone.dataset.specimenId === "progress-ring-spinner-bar") {
           initializeProgressDemo(clone, { autoStart: true, reset: true });
         }
