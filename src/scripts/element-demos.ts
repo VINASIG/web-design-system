@@ -82,7 +82,11 @@ function addChip(container: HTMLElement, label: string, className = "sample-sele
   remove.append(removeIcon);
   setAction(remove, "remove-chip", `Remove ${label}`);
   chip.append(text, remove);
-  container.append(chip);
+  const multiSelectInput = container.matches(".sample-multiselect")
+    ? container.querySelector<HTMLElement>(".sample-input-line")
+    : null;
+  if (multiSelectInput) container.insertBefore(chip, multiSelectInput);
+  else container.append(chip);
 }
 
 function makeInput(placeholder: string, label: string, className = "sample-input-line") {
