@@ -68,6 +68,67 @@ function initializeDisclosureSample(sample: HTMLElement) {
   });
 }
 
+function renderDataTable(table: HTMLElement) {
+  const body = table.querySelector<HTMLTableSectionElement>("tbody");
+  if (!body) return;
+
+  const sortKey = table.dataset.sortKey ?? "amount";
+  const sortDirection = table.dataset.sortDirection === "ascending" ? "ascending" : "descending";
+  const rows = Array.from(body.querySelectorAll<HTMLTableRowElement>("tr[data-row-id]"));
+  rows.sort((left, right) => {
+    const leftValue = left.dataset[sortKey] ?? "";
+    const rightValue = right.dataset[sortKey] ?? "";
+    const comparison = sortKey === "amount"
+      ? Number(leftValue) - Number(rightValue)
+      : leftValue.localeCompare(rightValue, undefined, { sensitivity: "base" });
+    return sortDirection === "ascending" ? comparison : -comparison;
+  });
+  body.replaceChildren(...rows);
+
+  table.querySelectorAll<HTMLElement>("thead th[data-sort-column]").forEach((header) => {
+    if (header.dataset.sortColumn === sortKey) header.setAttribute("aria-sort", sortDirection);
+    else header.removeAttribute("aria-sort");
+  });
+
+  const pageSize = Math.max(1, Number(table.dataset.pageSize ?? "5"));
+  const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
+  const page = Math.min(pageCount, Math.max(1, Number(table.dataset.page ?? "1")));
+  table.dataset.page = String(page);
+  const firstIndex = (page - 1) * pageSize;
+  const lastIndex = Math.min(firstIndex + pageSize, rows.length);
+  const visibleRows = rows.slice(firstIndex, lastIndex);
+
+  rows.forEach((row, index) => {
+    row.hidden = index < firstIndex || index >= lastIndex;
+    row.classList.toggle("is-selected", Boolean(row.querySelector<HTMLInputElement>("input[data-input-action='table-row-select']")?.checked));
+  });
+
+  const selectedCount = rows.filter((row) => row.querySelector<HTMLInputElement>("input[data-input-action='table-row-select']")?.checked).length;
+  const selectedOnPage = visibleRows.filter((row) => row.querySelector<HTMLInputElement>("input[data-input-action='table-row-select']")?.checked).length;
+  const selectAll = table.querySelector<HTMLInputElement>("input[data-input-action='table-select-all']");
+  if (selectAll) {
+    selectAll.checked = visibleRows.length > 0 && selectedOnPage === visibleRows.length;
+    selectAll.indeterminate = selectedOnPage > 0 && selectedOnPage < visibleRows.length;
+    selectAll.setAttribute("aria-checked", selectAll.indeterminate ? "mixed" : String(selectAll.checked));
+  }
+
+  const selection = table.querySelector<HTMLElement>("[data-table-selection]");
+  if (selection) selection.textContent = `${selectedCount} selected`;
+  const range = table.querySelector<HTMLElement>("[data-table-range]");
+  if (range) range.textContent = rows.length ? `Rows ${firstIndex + 1}–${lastIndex} of ${rows.length}` : "No customers";
+  const pageLabel = table.querySelector<HTMLElement>("[data-table-page]");
+  if (pageLabel) pageLabel.textContent = `Page ${page} of ${pageCount}`;
+  const previous = table.querySelector<HTMLButtonElement>("[data-action='table-page-prev']");
+  const next = table.querySelector<HTMLButtonElement>("[data-action='table-page-next']");
+  if (previous) previous.disabled = page <= 1;
+  if (next) next.disabled = page >= pageCount;
+}
+
+function initializeDataTable(sample: HTMLElement) {
+  const table = sample.querySelector<HTMLElement>(".sample-data-table");
+  if (table) renderDataTable(table);
+}
+
 function setCurrentScrollspyLink(sample: HTMLElement, key: string) {
   sample.querySelectorAll<HTMLAnchorElement>(".sample-scrollspy nav a[data-scrollspy-key]").forEach((link) => {
     const current = link.dataset.scrollspyKey === key;
@@ -240,6 +301,9 @@ function enhanceSample(sample: HTMLElement) {
   liveStatus(sample);
 
   switch (id) {
+    case "data-table":
+      initializeDataTable(sample);
+      break;
     case "scrollspy":
       initializeScrollspy(sample);
       break;
@@ -952,6 +1016,30 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       selectOne(button.parentElement ?? sample, "button[data-action='drawer-nav']", button);
       announce(sample, `${button.getAttribute("aria-label")} selected.`);
       break;
+    case "table-sort": {
+      const table = button.closest<HTMLElement>(".sample-data-table");
+      const key = button.dataset.sortKey;
+      if (!table || !key) break;
+      const direction = table.dataset.sortKey === key && table.dataset.sortDirection === "ascending"
+        ? "descending"
+        : "ascending";
+      table.dataset.sortKey = key;
+      table.dataset.sortDirection = direction;
+      renderDataTable(table);
+      announce(sample, `Sorted by ${button.textContent?.trim() ?? key}, ${direction}.`);
+      break;
+    }
+    case "table-page-prev":
+    case "table-page-next": {
+      const table = button.closest<HTMLElement>(".sample-data-table");
+      if (!table) break;
+      const pageCount = Math.max(1, Math.ceil(table.querySelectorAll("tbody tr[data-row-id]").length / Number(table.dataset.pageSize ?? "5")));
+      const offset = action === "table-page-prev" ? -1 : 1;
+      table.dataset.page = String(Math.max(1, Math.min(pageCount, Number(table.dataset.page ?? "1") + offset)));
+      renderDataTable(table);
+      announce(sample, table.querySelector<HTMLElement>("[data-table-page]")?.textContent ?? "Page updated.");
+      break;
+    }
     case "site-nav":
       {
         const nav = button.closest<HTMLElement>(".sample-site-header")?.querySelector<HTMLElement>("nav");
@@ -1800,6 +1888,18 @@ document.addEventListener("change", (event) => {
   const input = event.target instanceof HTMLInputElement ? event.target : null;
   const sample = input?.closest<HTMLElement>(".ui-sample");
   if (!input || !sample) return;
+  if (input.dataset.inputAction === "table-select-all" || input.dataset.inputAction === "table-row-select") {
+    const table = input.closest<HTMLElement>(".sample-data-table");
+    if (!table) return;
+    if (input.dataset.inputAction === "table-select-all") {
+      table.querySelectorAll<HTMLInputElement>("tbody tr:not([hidden]) input[data-input-action='table-row-select']")
+        .forEach((checkbox) => { checkbox.checked = input.checked; });
+    }
+    renderDataTable(table);
+    const selectedCount = table.querySelectorAll("tbody input[data-input-action='table-row-select']:checked").length;
+    announce(sample, `${selectedCount} customer${selectedCount === 1 ? "" : "s"} selected.`);
+    return;
+  }
   if (input.dataset.inputAction === "volume") {
     const value = sample.querySelector<HTMLElement>(".sample-volume > b");
     if (value) value.textContent = `${input.value}%`;
