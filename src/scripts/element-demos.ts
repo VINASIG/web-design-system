@@ -1054,6 +1054,14 @@ function runAction(sample: HTMLElement, button: HTMLElement) {
       if (feedback) feedback.textContent = copy.feedback;
       break;
     }
+    case "chat-mark-read": {
+      const status = button.closest<HTMLElement>(".sample-chat")?.querySelector<HTMLElement>("[data-chat-status]");
+      if (!status || button.getAttribute("aria-pressed") === "true") break;
+      status.textContent = "Read";
+      button.setAttribute("aria-pressed", "true");
+      button.setAttribute("aria-label", "Read by Sam Kim: Yes! Booking the room now.");
+      break;
+    }
     case "timeline-complete": {
       const item = button.closest<HTMLElement>(".sample-timeline-item.is-current");
       if (!item || button.getAttribute("aria-disabled") === "true") break;
