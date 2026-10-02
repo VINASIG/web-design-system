@@ -142,16 +142,20 @@ import Icon from "../components/Icon.astro";
   <section class="page-section" aria-labelledby="consuming-title">
     <div class="section-heading">
       <div><p class="section-kicker">Add to a website repository</p><h2 id="consuming-title">Keep the context close to the code</h2></div>
-      <p>Each VINASIG website should identify its system version and its own approved exceptions.</p>
+      <p>Import the shared working standard, then record the design source commit and the project's approved exceptions.</p>
     </div>
     <pre class="code-panel"><code># AGENTS.md in a consuming website repository
 
-## VINASIG interface guidance
-Design system guidance at https://github.com/VINASIG/web-design-system
-- Read the relevant foundation and component specification before editing UI.
-- Confirm the version used by this website before applying a change.
-- Current v0.1 guidance is draft and requires owner approval.
-- Prefer tokens and components from the installed design-system package.</code></pre>
+## VINASIG working and interface guidance
+- Import a reviewed VINASIG/agent-standards snapshot with its approved digest.
+- Keep the generated AGENTS.md block, local manifest and .agents/skills files.
+- Start a fresh agent session to check discovery of the installed skills.
+- Record the VINASIG/web-design-system source commit used by this project.
+- Read the matching foundation, component specification and rendered example.
+- Review source tokens and components against the project's approved design.
+- Current design guidance is draft and requires owner approval.</code></pre>
+    <p class="card-copy">A URL or Markdown link alone does not import instructions or install components. This repository has no published design-system npm package.</p>
+    <a class="text-link" href="https://github.com/VINASIG/agent-standards/blob/main/docs/integration.md" target="_blank" rel="noopener">Read the shared standards integration procedure&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
   </section>
 
   <section class="page-section" aria-labelledby="writing-title">
@@ -173,7 +177,7 @@ Design system guidance at https://github.com/VINASIG/web-design-system
       <div><p class="section-kicker">Source map</p><h2 id="source-map-title">Where to find the canonical information</h2></div>
     </div>
     <div class="two-column-grid">
-      <article class="card"><h3>Project and agent context</h3><p class="card-copy"><code>AGENTS.md</code> defines status, scope, repository map, and working instructions.</p></article>
+      <article class="card"><h3>Project and agent context</h3><p class="card-copy"><code>AGENTS.md</code> routes shared working rules and required project context. <code>docs/agents/project-guide.md</code> retains the complete design guide.</p></article>
       <article class="card"><h3>SI agent UI review</h3><p class="card-copy"><code>docs/agents/ui-quality.md</code> defines the research-backed quality workflow and completion gate for interface work.</p></article>
       <article class="card"><h3>Brand identity</h3><p class="card-copy"><code>docs/brand/README.md</code> lists logo variant facts, export paths, and draft usage guidance.</p></article>
       <article class="card"><h3>Design guidance</h3><p class="card-copy"><code>docs/</code> contains source specifications for foundations, components, and patterns.</p></article>

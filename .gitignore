@@ -12,3 +12,7 @@ output/
 *.log
 playwright-report/
 test-results/
+
+# Local standards installer recovery records and exclusive operation lock.
+.vinasig/backups/
+.vinasig/install.lock

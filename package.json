@@ -1,18 +1,31 @@
 {
-  "name": "vinasig-design-system",
+  "name": "@vinasig/web-design-system",
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "description": "Draft interface guidance, design tokens and UI specimens for VINASIG websites and SI agents.",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VINASIG/web-design-system.git"
+  },
+  "homepage": "https://github.com/VINASIG/web-design-system#readme",
+  "bugs": {
+    "url": "https://github.com/VINASIG/web-design-system/issues"
+  },
+  "keywords": ["vinasig", "design-system", "astro", "si-agents", "accessibility"],
   "packageManager": "npm@11.17.0",
   "engines": {
-    "node": ">=22.12.0",
-    "npm": ">=9.6.5"
+    "node": ">=24.19.0 <25",
+    "npm": ">=11.17.0 <12"
   },
   "scripts": {
     "dev": "astro dev",
     "check:content": "node scripts/check-content.mjs",
-    "check:scripts": "node --check scripts/check-content.mjs && node --check tests/helpers/preview.mjs && node --check tests/responsive.mjs",
-    "check": "npm run check:content && npm run check:scripts && astro check",
+    "check:standards": "node scripts/check-standards.mjs",
+    "check:scripts": "node --check scripts/check-content.mjs && node --check scripts/check-standards.mjs && node --check tests/standards.test.mjs && node --check tests/helpers/preview.mjs && node --check tests/responsive.mjs",
+    "check": "npm run check:standards && npm run check:content && npm run check:scripts && astro check",
+    "test:standards": "node --test tests/standards.test.mjs",
     "test": "npm run test:responsive",
     "test:responsive": "node tests/responsive.mjs",
     "build": "astro build",
@@ -24,11 +37,11 @@
     "astro": "7.3.5",
     "playwright": "1.63.0",
     "typescript": "6.0.3",
-    "wrangler": "4.146.0"
+    "wrangler": "4.147.0"
   },
   "dependencies": {
-    "@lucide/astro": "^1.48.0",
-    "lucide": "^1.48.0",
-    "simple-icons": "^16.33.0"
+    "@lucide/astro": "1.50.0",
+    "lucide": "1.50.0",
+    "simple-icons": "16.33.0"
   }
 }

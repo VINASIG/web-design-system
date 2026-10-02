@@ -13,12 +13,14 @@ Start with the repository's `AGENTS.md` for agent instructions and project conte
 - [Patterns](/patterns/) covers forms, empty states, loading, errors, and page layout.
 - [UI element library](/elements/) shows styled previews for all 81 entries in the NameThatUI snapshot, with 49 web entries and 32 macOS entries.
 - [SI agent guide](/agents/) explains how an SI agent should use this system.
+- [Shared working standard](https://github.com/VINASIG/agent-standards) provides reviewed snapshot imports and namespaced skills. A link alone does not import instructions.
 - [SI agent UI quality workflow](https://github.com/VINASIG/web-design-system/blob/main/docs/agents/ui-quality.md) records the research-backed review checklist for generated interface work.
 
 ## Source files
 
 - docs/elements/catalog.json defines the 81 entries. docs/elements/specimens.json supplies the rendered visual examples.
-- `AGENTS.md` describes project context and working rules.
+- `AGENTS.md` routes shared working rules and required local context. `docs/agents/project-guide.md` retains the complete project guide.
+- `docs/agents/standards.md` records the snapshot integration and actual enforcement. `.vinasig/manifest.json` and `.vinasig/provenance.json` pin its payload and source commit.
 - `docs/agents/ui-quality.md` documents failure patterns, a multi-stage UI workflow, and research sources.
 - `docs/foundations/README.md` specifies the draft visual direction and foundations.
 - `docs/brand/README.md` records logo source facts, file mapping, and draft usage guidance.

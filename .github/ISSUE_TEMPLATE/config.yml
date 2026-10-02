@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/VINASIG/web-design-system/security/advisories/new
+    about: Read SECURITY.md and use private reporting for suspected vulnerabilities.

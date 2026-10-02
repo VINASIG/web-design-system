@@ -81,6 +81,15 @@ try {
     }));
     check('calendar semantic rows have seven usable columns',rows.every(r=>r.columns===7&&r.minWidth>=20&&r.height>=20),rows);
     await shot('date-picker');
+    const calendarPanel=entry('date-picker').locator('.sample-calendar');
+    const calendarMonth=await calendarPanel.getAttribute('data-calendar-month');
+    await tap(calendarPanel.locator('[data-action="calendar-next"]'));
+    check('calendar month navigation preserves a valid civil date',await calendarPanel.getAttribute('data-calendar-month')!==calendarMonth);
+    await tap(calendarPanel.locator('[data-action="calendar-prev"]'));
+    await calendarPanel.evaluate(el=>el.dataset.calendarMonth='invalid');
+    await tap(calendarPanel.locator('[data-action="calendar-next"]'));
+    check('calendar ignores malformed month state without replacing its grid',await calendarPanel.getAttribute('data-calendar-month')==='invalid'&&await calendarPanel.locator('[role="row"]').count()===rows.length);
+    await calendarPanel.evaluate((el,month)=>el.dataset.calendarMonth=month,calendarMonth);
     const inbox=entry('inbox-split-view');
     const inboxWidth=await inbox.locator('.sample-inbox').evaluate(e=>e.clientWidth);
     if(inboxWidth<=368) {
@@ -160,6 +169,29 @@ try {
     check('segmented control labels fit',segmentButtons.every(b=>b.scroll<=b.client+1),segmentButtons);
     await segmented.getByRole('radio',{name:'Columns',exact:true}).click();
     check('segmented control selects columns',await segmented.getByRole('radio',{name:'Columns',exact:true}).getAttribute('aria-checked')==='true');
+    const toggleRadios=entry('toggle-group-segmented-control').getByRole('radio');
+    await toggleRadios.first().focus();
+    await toggleRadios.first().press('End');
+    check('toggle group End selects and focuses the last radio',await toggleRadios.last().evaluate(el=>el.getAttribute('aria-checked')==='true'&&el===document.activeElement));
+    await toggleRadios.last().press('Home');
+    check('toggle group Home restores the first radio',await toggleRadios.first().evaluate(el=>el.getAttribute('aria-checked')==='true'&&el===document.activeElement));
+    await shot('toggle-group-segmented-control','keyboard-home');
+    const vibrancy=entry('visual-effect-material-vibrancy');
+    const vibrancyDemo=vibrancy.locator('.sample-vibrancy-demo');
+    const materialLabels=await vibrancy.locator('.sample-vibrancy-material-options button').evaluateAll(buttons=>buttons.map(button=>{
+      const text=document.createRange();text.selectNodeContents(button);
+      const a=text.getBoundingClientRect(),b=button.getBoundingClientRect();
+      return {label:button.textContent,fits:a.left>=b.left&&a.right<=b.right,textWidth:a.width,buttonWidth:b.width};
+    }));
+    check('vibrancy material labels fit inside their buttons',materialLabels.every(label=>label.fits),materialLabels);
+    const material=await vibrancyDemo.getAttribute('data-material');
+    const materialButton=vibrancy.locator('[data-action="vibrancy-material"]').first();
+    const materialValue=await materialButton.getAttribute('data-material-value');
+    await materialButton.evaluate(el=>el.dataset.materialValue='constructor');
+    await tap(materialButton);
+    check('vibrancy ignores inherited object keys as material names',await vibrancyDemo.getAttribute('data-material')===material);
+    await materialButton.evaluate((el,value)=>el.dataset.materialValue=value,materialValue);
+    await shot('visual-effect-material-vibrancy','invalid-key-ignored');
     await settle();
     const columnView=segmented.locator('.sample-mac-segmented-columns');
     const columnHeadings=await columnView.locator(':scope > div > small').evaluateAll(els=>els.map(el=>{

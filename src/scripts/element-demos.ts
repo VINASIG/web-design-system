@@ -431,7 +431,7 @@ const paginationResultPages = [
     ["Brand assets", "Download current marks, colors, and templates."],
     ["Contact the team", "Find the right person for your next question."],
   ],
-];
+] as const;
 
 function renderPaginationResults(owner: HTMLElement, page: number, animate = false) {
   const results = owner.querySelector<HTMLElement>("[data-pagination-results]");
@@ -804,7 +804,7 @@ function initializeSurfaceDemo(sample: HTMLElement) {
         });
 
         if (feedback?.hidden) {
-          const label = surface[0].toUpperCase() + surface.slice(1);
+          const label = surface.charAt(0).toUpperCase() + surface.slice(1);
           showSurfaceFeedback(feedback, `${label} example closed.`);
         }
       });
@@ -813,7 +813,7 @@ function initializeSurfaceDemo(sample: HTMLElement) {
         const rect = panel.getBoundingClientRect();
         const { clientX, clientY } = event as MouseEvent;
         if (clientX < rect.left || clientX > rect.right || clientY < rect.top || clientY > rect.bottom) {
-          const label = surface[0].toUpperCase() + surface.slice(1);
+          const label = surface.charAt(0).toUpperCase() + surface.slice(1);
           closeSurfaceDemo(sample, `${label} example closed.`);
         }
       });
@@ -1398,7 +1398,7 @@ function updateStepsSample(sample: HTMLElement, nextIndex?: number) {
   });
 
   const status = demo.querySelector<HTMLElement>(".sample-steps-status");
-  const label = items[currentIndex].querySelector<HTMLElement>(".sample-step-label")?.textContent?.trim() ?? `Step ${currentIndex + 1}`;
+  const label = items[currentIndex]?.querySelector<HTMLElement>(".sample-step-label")?.textContent?.trim() ?? `Step ${currentIndex + 1}`;
   if (status) status.textContent = `${label} · Step ${currentIndex + 1} of ${items.length}`;
 }
 
@@ -2793,6 +2793,7 @@ function initializeMacSegmentedControl(sample: HTMLElement, instance = sample.da
   const radios = Array.from(group.querySelectorAll<HTMLButtonElement>("button[data-view]"));
   if (radios.length === 0) return;
   const selected = radios.find((radio) => radio.getAttribute("aria-checked") === "true") ?? radios[0];
+  if (!selected) return;
   group.style.setProperty("--segment-index", String(radios.indexOf(selected)));
   radios.forEach((radio) => {
     radio.setAttribute("role", "radio");
@@ -3577,7 +3578,7 @@ function toCivilDate(date: Date) {
 }
 
 function fromCivilDate(value: string) {
-  const [year, month, day] = value.split("-").map(Number);
+  const [year = Number.NaN, month = Number.NaN, day = Number.NaN] = value.split("-").map(Number);
   return new Date(year, month - 1, day);
 }
 
@@ -3661,8 +3662,10 @@ function renderCalendar(calendar: HTMLElement) {
   if (!title || !grid) return;
 
   const monthValue = calendar.dataset.calendarMonth ?? "2026-09";
-  const [year, month] = monthValue.split("-").map(Number);
-  const firstDate = new Date(year, month - 1, 1);
+  const firstDate = fromCivilDate(`${monthValue}-01`);
+  if (!Number.isFinite(firstDate.getTime())) return;
+  const year = firstDate.getFullYear();
+  const month = firstDate.getMonth() + 1;
   title.textContent = new Intl.DateTimeFormat("en", { month: "long", year: "numeric" }).format(firstDate);
   grid.setAttribute("aria-label", `Dates in ${title.textContent}`);
   grid.replaceChildren();
@@ -3670,7 +3673,7 @@ function renderCalendar(calendar: HTMLElement) {
   const headingRow = document.createElement("div");
   headingRow.setAttribute("role", "row");
   headingRow.className = "sample-calendar-weekdays";
-  for (const [short, long] of [["Su", "Sunday"], ["Mo", "Monday"], ["Tu", "Tuesday"], ["We", "Wednesday"], ["Th", "Thursday"], ["Fr", "Friday"], ["Sa", "Saturday"]]) {
+  for (const [short, long] of [["Su", "Sunday"], ["Mo", "Monday"], ["Tu", "Tuesday"], ["We", "Wednesday"], ["Th", "Thursday"], ["Fr", "Friday"], ["Sa", "Saturday"]] as const) {
     const weekday = document.createElement("span");
     weekday.setAttribute("role", "columnheader");
     weekday.setAttribute("aria-label", long);
@@ -4271,6 +4274,7 @@ function updateSavePanel(sample: HTMLElement, statusMessage?: string) {
   const validity = sample.querySelector<HTMLElement>("[data-save-validity]");
   const list = sample.querySelector<HTMLElement>("[data-save-file-list]");
   const format = savePanelFormats[currentFormat] ?? savePanelFormats.pdf;
+  if (!format) return;
 
   if (locationLabel) locationLabel.textContent = currentLocation;
   if (formatLabel) formatLabel.textContent = format.label;
@@ -4823,17 +4827,18 @@ function setVibrancyMaterial(demo: HTMLElement, material: string, announceChange
   };
   const state = demo.querySelector<HTMLElement>("[data-vibrancy-state]");
   const status = demo.querySelector<HTMLElement>(".sample-vibrancy-status");
-  if (!(material in materialNames)) return;
+  const materialName = materialNames[material];
+  if (!Object.hasOwn(materialNames, material) || !materialName) return;
 
   demo.dataset.material = material;
   demo.querySelectorAll<HTMLButtonElement>("[data-action='vibrancy-material']").forEach((button) => {
     button.setAttribute("aria-pressed", String(button.dataset.materialValue === material));
   });
-  if (state) state.textContent = materialNames[material];
+  if (state) state.textContent = materialName;
   if (status && announceChange) {
     status.textContent = material === "solid"
       ? "Solid fallback selected. The wallpaper no longer shows through the panel."
-      : `${materialNames[material]} selected. The panel uses a material tuned for that surface role.`;
+      : `${materialName} selected. The panel uses a material tuned for that surface role.`;
     status.hidden = false;
   }
 }
@@ -6047,6 +6052,7 @@ function initializePopupPullDownCombo(sample: HTMLElement, instance = sample.dat
     const options = visibleComboOptions();
     if (!options.length) return;
     const next = options[(index + options.length) % options.length];
+    if (!next) return;
     comboPanel.querySelectorAll<HTMLElement>(".is-active").forEach((option) => option.classList.remove("is-active"));
     next.classList.add("is-active");
     input.setAttribute("aria-activedescendant", next.id);
@@ -6227,7 +6233,8 @@ function getEditorColorInk(color: string) {
       const channel = Number.parseInt(value.slice(offset, offset + 2), 16) / 255;
       return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
     });
-    return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+    const [red = 0, green = 0, blue = 0] = channels;
+    return red * 0.2126 + green * 0.7152 + blue * 0.0722;
   };
 
   const backgroundLuminance = luminance(hex);
@@ -6590,8 +6597,9 @@ function animateCalendarGrid(calendar: HTMLElement) {
 }
 
 function setCalendarMonth(calendar: HTMLElement, offset: number) {
-  const [year, month] = (calendar.dataset.calendarMonth ?? "2026-09").split("-").map(Number);
-  const date = new Date(year, month - 1 + offset, 1);
+  const date = fromCivilDate(`${calendar.dataset.calendarMonth ?? "2026-09"}-01`);
+  if (!Number.isFinite(date.getTime())) return;
+  date.setMonth(date.getMonth() + offset);
   calendar.dataset.calendarMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
   renderCalendar(calendar);
   animateCalendarGrid(calendar);
@@ -6804,6 +6812,7 @@ function animateTruncationText(root: HTMLElement, expanded: boolean) {
     .map((paragraph, index) => {
       const startHeight = startHeights[index];
       const targetHeight = targetHeights[index];
+      if (startHeight === undefined || targetHeight === undefined) return null;
       if (Math.abs(startHeight - targetHeight) < 0.5) return null;
       return paragraph.animate(
         [{ height: `${startHeight}px` }, { height: `${targetHeight}px` }],
@@ -7041,7 +7050,7 @@ function syncHoverCard(owner: HTMLElement, openDelay = 100) {
   const shouldOpen = !state.suppressed && (state.pointerInside || state.focusInside || state.pinned);
   if (shouldOpen) {
     if (state.closeTimer !== undefined) window.clearTimeout(state.closeTimer);
-    state.closeTimer = undefined;
+    delete state.closeTimer;
     if (!card.hidden) {
       trigger.setAttribute("aria-expanded", "true");
       card.dataset.state = "open";
@@ -7049,7 +7058,7 @@ function syncHoverCard(owner: HTMLElement, openDelay = 100) {
     }
     if (state.openTimer !== undefined) return;
     state.openTimer = window.setTimeout(() => {
-      state.openTimer = undefined;
+      delete state.openTimer;
       if (card.isConnected && !state.suppressed && (state.pointerInside || state.focusInside || state.pinned)) {
         card.hidden = false;
         card.dataset.state = "closed";
@@ -7063,13 +7072,13 @@ function syncHoverCard(owner: HTMLElement, openDelay = 100) {
   }
 
   if (state.openTimer !== undefined) window.clearTimeout(state.openTimer);
-  state.openTimer = undefined;
+  delete state.openTimer;
   if (card.hidden || state.closeTimer !== undefined) return;
 
   trigger.setAttribute("aria-expanded", "false");
   card.dataset.state = "closing";
   state.closeTimer = window.setTimeout(() => {
-    state.closeTimer = undefined;
+    delete state.closeTimer;
     if (state.suppressed || (!state.pointerInside && !state.focusInside && !state.pinned)) {
       card.hidden = true;
       card.dataset.state = "closed";
@@ -8878,12 +8887,12 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         control.setAttribute("aria-expanded", String(control === button));
       });
       initializeSurfaceDemo(sample);
-      announce(sample, `${surface[0].toUpperCase()}${surface.slice(1)} example opened.`);
+      announce(sample, `${surface.charAt(0).toUpperCase()}${surface.slice(1)} example opened.`);
       break;
     }
     case "surface-dismiss": {
       const surface = button.closest<HTMLElement>("[data-surface-panel]")?.dataset.surfacePanel ?? "dialog";
-      closeSurfaceDemo(sample, `${surface[0].toUpperCase()}${surface.slice(1)} example closed.`);
+      closeSurfaceDemo(sample, `${surface.charAt(0).toUpperCase()}${surface.slice(1)} example closed.`);
       break;
     }
     case "surface-primary": {
@@ -10406,7 +10415,8 @@ document.addEventListener("keydown", (event) => {
     else return;
 
     event.preventDefault();
-    if (radios[nextIndex]) selectToggleRadio(radios[nextIndex], true);
+    const nextRadio = radios[nextIndex];
+    if (nextRadio) selectToggleRadio(nextRadio, true);
     return;
   }
 
