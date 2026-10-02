@@ -6,7 +6,7 @@
 
 ## Context
 
-The VINASIG shared UI guide is primarily a content and documentation website. The first version needs to be static, quick to deploy, and easy for AI agents to inspect. Later versions may need server-rendered routes or API endpoints.
+The VINASIG shared UI guide is primarily a content and documentation website. The first version needs to be static, quick to deploy, and easy for SI agents to inspect. Later versions may need server-rendered routes or API endpoints.
 
 ## Decision
 

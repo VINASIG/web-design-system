@@ -1,6 +1,8 @@
 # VINASIG Design System
 
-An AI-readable design-system website for shared interface guidance across VINASIG projects. This is a first prototype. All rules and examples are proposals pending approval.
+A documentation website for people and SI agents that provides shared interface guidance across VINASIG projects. This is a first prototype. All rules and examples are proposals pending approval.
+
+VINASIG uses **Super Intelligence (SI)** and **SI agents** as its preferred terms in project-authored copy. This is a naming convention, not a claim that every current system exceeds human intelligence. Preserve original wording in research titles, quotations, official names, laws, and technical identifiers.
 
 ## Technology
 
@@ -67,11 +69,11 @@ For automatic deployments, connect this GitHub repository to **Workers Builds** 
 
 The static site can stay pre-rendered as it grows. If a future page needs request-time data, authentication, or an API, add Astro's Cloudflare adapter and render only the routes that need server behavior.
 
-## AI-agent entry points
+## Guidance for SI agents
 
 - Use the [UI element library source](docs/elements/catalog.json) and its [rendered examples](docs/elements/specimens.json) for all 81 web and macOS interface entries. The published library is at /elements/.
 - Start with [`AGENTS.md`](AGENTS.md) for project context, authority, and navigation.
-- Follow the [AI-assisted UI quality workflow](docs/agents/ui-quality.md) before creating or changing visible interface code.
+- Follow the [SI agent UI quality workflow](docs/agents/ui-quality.md) before creating or changing visible interface code.
 - Use [`llms.txt`](public/llms.txt) as a compact index of the published guidance.
 - The source specifications live under [`docs/`](docs/). The website pages under [`src/pages/`](src/pages/) publish them.
 - Tokens are implemented in [`src/styles/tokens.css`](src/styles/tokens.css).

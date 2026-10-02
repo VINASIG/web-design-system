@@ -1,20 +1,22 @@
-# AI-Assisted UI Quality
+# SI Agent UI Quality
 
 **Status:** Draft proposal. This checklist is for review and does not override the consuming project's approved requirements.
+
+**Terminology:** VINASIG uses **Super Intelligence (SI)** and **SI agents** as its preferred terms in project-authored copy. This is a naming convention, not a claim that every current system exceeds human intelligence. Preserve source titles, quotations, official names, laws, and technical identifiers in their original wording.
 
 **Research reviewed:** 27 September 2026.
 
 The recent-evidence window below runs from 9 July to 27 September 2026. OpenAI announced GPT-5.6 general availability in Codex on 9 July 2026. This date is a research boundary, not a claim that the model caused the reported findings.
 
-Use this workflow whenever an AI agent creates or changes visible web interface code. The goal is to catch layout, interaction, accessibility, and consistency failures before calling the work complete.
+Use this workflow whenever an SI agent creates or changes visible web interface code. The goal is to catch layout, interaction, accessibility, and consistency failures before calling the work complete.
 
 ## What the evidence supports
 
-The research does not show that every AI-generated interface fails. It does show that generated output can look plausible while missing accessibility requirements, interaction behavior, or requested design details. Human review and browser checks remain necessary.
+The research does not show that every generated interface fails. It does show that generated output can look plausible while missing accessibility requirements, interaction behavior, or requested design details. Apply those findings to SI-generated interfaces without treating a study of selected tools as a universal failure rate. Human review and browser checks remain necessary.
 
 - A 2025 benchmark tested four language models against eleven web components. The researchers manually checked keyboard and screen-reader behavior. Models often produced semantically valid code that still needed additional prompts and human corrections to meet accessibility requirements. The evaluated model versions are a snapshot, not a ranking of current tools.
 - A 2025 ACM study evaluated six generated websites across eighteen pages. It recorded issues involving contrast, form labels, heading structure, alternative text, and cognitive accessibility. Its sample is small and should not be treated as a failure rate for all generated websites.
-- A 2024 study tested three AI website builders with expert screen-reader testing and automated scans. The selected sites had accessibility problems. The study covers those tools and tasks, not every way of using AI to build a site.
+- A 2024 study tested three automated website builders with expert screen-reader testing and automated scans. The selected sites had accessibility problems. The study covers those tools and tasks, not every way of generating a site.
 - A 2026 research paper analyzes how frictionless generation may encourage repeated, generic web design. It proposes deliberate review as a way to preserve the creator's intent. This is a risk analysis with case studies, not a measurement of how often websites look alike.
 - A 2025 preprint reports interviews with 22 product team members. It describes a cycle of ideation, generation, debugging, and review, and reports concerns about code reliability, integration, and over-reliance. Interview findings describe participants' experiences and are not a defect-rate estimate.
 - The W3C states that accessibility is evaluated through a combination of automated checks and human evaluation. WCAG 2.2 includes testable criteria for keyboard operation, reflow, text resizing, contrast, labels, focus, and target size.
@@ -24,8 +26,8 @@ Practitioner blogs and forum posts often report desktop-only previews, generic l
 ### Recent evidence from 9 July to 27 September 2026
 
 - The GAAD Foundation and ServiceNow's AIMAC benchmark, updated 22 August, generated pages in 28 categories with 60 models and checked rendered output using axe-core against WCAG 2.2 AA. Its prompts did not include accessibility guidance. The published snapshot lists GPT-5.6 Luna with an AIMAC Debt score of 4.70. This is evidence that model choice alone does not ensure clean output under that benchmark. It is not a score for Codex tasks with project context, and automated axe findings do not replace manual review.
-- A July audit by Design with Claude examined 123 frontends from 165 public repositories identified as AI-generated. It reported missing labels, landmarks, skip links, heading structure, and reduced-motion support. Its headline rates use the publisher's deterministic audit and severity definitions. The sample is self-selected, the publisher also offers a related product, and the results are not a peer-reviewed estimate for all AI-built sites.
-- A September measurement by Accessibility.build inspected the accessibility trees of 304 UK company and local-government home pages. It found at least one unnamed control on 19 percent of measured pages and 1 percent of 24,045 controls. The measurement covers one home-page snapshot per site, not AI-generated websites or full user journeys. It supports checking accessible names in the browser tree because the same missing name can confuse both assistive technology and browser agents.
+- A July audit by Design with Claude examined 123 frontends from a self-selected group of 165 public repositories. It reported missing labels, landmarks, skip links, heading structure, and reduced-motion support. Its headline rates use the publisher's deterministic audit and severity definitions. The publisher also offers a related product, and the results are not a peer-reviewed estimate for all generated sites.
+- A September measurement by Accessibility.build inspected the accessibility trees of 304 UK company and local-government home pages. It found at least one unnamed control on 19 percent of measured pages and 1 percent of 24,045 controls. The measurement covers one home-page snapshot per site, not generated websites or full user journeys. It supports checking accessible names in the browser tree because the same missing name can confuse both assistive technology and browser agents.
 - A July arXiv preprint compared two versions of one shopping website over 300 runs with three browser-agent models and five tasks. The version with clearer labels, structured information, and explicit action cues had a higher strict task success rate in that experiment. This is early, narrow evidence about browser agents using a website. It does not establish a universal recipe or test GPT-5.6 Luna.
 - An August design-system discussion on Reddit describes writing agent-facing component guidance with purpose, selection advice, accessibility behavior, and working examples, then checking generated screens with repeatable prompts. This is an individual team's report, not a controlled evaluation. It supports making guidance concrete and easy to retrieve, but not a general effectiveness claim.
 
@@ -35,7 +37,7 @@ Taken together, this evidence strengthens the existing workflow in four specific
 
 The Reddit discussions below were posted between 9 July and 27 September 2026. They are self-selected, anecdotal, and often contradictory. They cannot establish how common a defect is or rank models. Use them to decide what to inspect, not as measured failure rates.
 
-- **Generic output and difficulty changing direction.** Users describe repeated card-heavy SaaS layouts, rounded pills, generic color treatments, unnecessary subtitles, and a visual style that remains after they ask for a different direction. Other commenters say product usefulness matters more than visual novelty and that many conventions predate AI. Treat distinctiveness as a project requirement, not as a goal to remove familiar patterns without reason. ([r/vibecoding, 17 July](https://www.reddit.com/r/vibecoding/comments/1uyxdnm/every_vibecoded_websites_looks_the_same/), [r/codex, 17 July](https://www.reddit.com/r/codex/comments/1uzdvs8/when_will_codex_finally_be_good_at_ui/), [r/vibecoding, 26 August](https://www.reddit.com/r/vibecoding/comments/1vyprc9/how_to_avoid_ai_default_design_help_please/))
+- **Generic output and difficulty changing direction.** Users describe repeated card-heavy SaaS layouts, rounded pills, generic color treatments, unnecessary subtitles, and a visual style that remains after they ask for a different direction. Other commenters say product usefulness matters more than visual novelty and that many conventions predate these systems. Treat distinctiveness as a project requirement, not as a goal to remove familiar patterns without reason. ([r/vibecoding, 17 July](https://www.reddit.com/r/vibecoding/comments/1uyxdnm/every_vibecoded_websites_looks_the_same/), [r/codex, 17 July](https://www.reddit.com/r/codex/comments/1uzdvs8/when_will_codex_finally_be_good_at_ui/), [r/vibecoding, 26 August](https://www.reddit.com/r/vibecoding/comments/1vyprc9/how_to_avoid_ai_default_design_help_please/))
 - **Reference-to-render mismatch.** In a July discussion, users reported text spilling outside boxes, odd results on small screens, type that became too small, and requested animation that was not carried over from an existing asset. In an August discussion, users disagreed about whether exact screenshot or URL references consistently improved the result. Compare the rendered page with the supplied reference at the same viewport, then inspect narrow widths and real content. ([r/codex, 29 July](https://www.reddit.com/r/codex/comments/1v9s2va/why_is_gpt_bad_at_ui/), [r/codex, 14 August](https://www.reddit.com/r/codex/comments/1vnv0uh/in_your_opinion_how_good_is_gpt56sol_for_frontend/))
 - **Control and layout decisions drift from the request.** A GPT-5.6 user reported a migrated view that was claimed to be identical even though its combo and select controls had become buttons. Other comments described simple elements being placed incorrectly. Verify both the visible result and the actual control role, name, state, and behavior. ([r/codex, 15 July](https://www.reddit.com/r/codex/comments/1ux0kaj/chatgpt_56_is_not_that_great_imo/))
 - **Corrections can introduce new defects or lose the original goal.** A GPT-5.6 front-end thread describes repeated reminders, premature completion claims, and new problems after a visual fix. Another thread describes validation loops that lose sight of the requested outcome. Keep the acceptance checklist visible, change one bounded area at a time, and recheck regions that already passed. ([r/codex, 14 August](https://www.reddit.com/r/codex/comments/1vnv0uh/in_your_opinion_how_good_is_gpt56sol_for_frontend/), [r/codex, 15 July](https://www.reddit.com/r/codex/comments/1ux0kaj/chatgpt_56_is_not_that_great_imo/))
@@ -50,7 +52,7 @@ The practical guard is to define visual and behavioral acceptance criteria befor
 - **Responsive rules are guessed from device labels.** Fixed widths, rigid grids, long code strings, and layout decisions based only on viewport breakpoints can overflow when a sidebar, split view, zoom, or narrow container reduces the available space.
 - **Overflow is hidden instead of fixed.** Global clipping can conceal content and controls. Find the element that exceeds its container, then fix its sizing, wrapping, grid, or positioning. Use intentional horizontal scrolling only for content that needs two-dimensional presentation, such as a data table or code sample.
 - **The result drifts toward a generic template or mixes unrelated styles.** Vague requests such as "make it modern" invite familiar default cards, gradients, shadows, and typography. Read the project's visual direction, tokens, assets, and existing components first. Translate the named direction into concrete layout, color, type, shape, and illustration choices. Do not combine full visual systems from unrelated brands or add decorative motifs without a user need. Keep the product's identity and ask or report when a decision is missing from the source.
-- **Unrequested template chrome is added by habit.** Version labels, draft badges, prototype-status footers, repeated navigation links, AI-index links, and generic status panels can add noise without helping the user's task. Add them only when requested, required by an authoritative source, or useful for a defined user need. Preserve required third-party attributions and legal notices.
+- **Unrequested template chrome is added by habit.** Version labels, draft badges, prototype-status footers, repeated navigation links, machine-readable index links, and generic status panels can add noise without helping the user's task. Add them only when requested, required by an authoritative source, or useful for a defined user need. Preserve required third-party attributions and legal notices.
 - **Only the default state is implemented.** Buttons may be inert, links may lead nowhere, forms may have no validation, and loading, empty, error, success, selected, or disabled states may be absent. Match each control to a real user action and outcome.
 - **Only the closed dropdown is styled.** A custom trigger can open an unstyled, clipped, or misplaced options panel. Check its open state, stacking context, viewport fit, selection, and keyboard behavior.
 - **Visual controls lack accessible structure.** Placeholder-only form labels, generic clickable containers, missing image alternatives, unclear headings, low contrast, and invisible keyboard focus can make a polished screen unusable for some people. A screenshot does not reveal whether a control has a useful role, accessible name, or current state in the accessibility tree.
@@ -145,13 +147,15 @@ Do not call visible UI work complete until the applicable items below are true.
 
 ## Research and reference links
 
+Source titles and official initiative names below are reproduced verbatim, even when they use wider or older terminology.
+
 ### Standards and implementation documentation
 
 - [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/)
 - [Understanding WCAG 2.2 reflow](https://www.w3.org/WAI/WCAG21/Understanding/reflow)
 - [W3C technique for preserving text reflow](https://www.w3.org/WAI/WCAG21/Techniques/general/G204)
 - [Playwright screenshot documentation](https://playwright.dev/docs/screenshots)
-- [Chrome Modern Web Guidance](https://developer.chrome.com/docs/modern-web-guidance), current browser-platform guidance for AI coding agents and browser support targets
+- [Chrome Modern Web Guidance](https://developer.chrome.com/docs/modern-web-guidance), current browser-platform guidance for SI coding agents and browser support targets
 - [Chrome DevTools for agents](https://developer.chrome.com/blog/devtools-for-agents-v1), browser inspection guidance for runtime behavior, console output, and accessibility trees
 
 ### Research papers
@@ -166,8 +170,8 @@ Do not call visible UI work complete until the applicable items below are true.
 
 - [OpenAI GPT-5.6 release announcement](https://openai.com/index/gpt-5-6/), 9 July 2026, used only to define the review window
 - [AIMAC leaderboard and methodology](https://aimac.ai/), updated 22 August 2026, a GAAD Foundation and ServiceNow benchmark of generated pages using axe-core and WCAG 2.2 AA checks
-- [How accessible is AI-generated UI?](https://www.designwithclaude.com/design-research/ai-generated-frontends), updated July 2026, a deterministic audit of 123 public AI-generated frontends with a publisher-defined scope
-- [Can an AI agent use your website?](https://accessibility.build/research/ai-agent-readiness), September 2026, a reproducible accessibility-tree measurement of 304 home pages with stated sampling and scope limits
+- [How accessible is AI-generated UI?](https://www.designwithclaude.com/design-research/ai-generated-frontends), updated July 2026, a deterministic audit of 123 public frontends with a publisher-defined scope
+- [Can an AI agent use your website?](https://accessibility.build/research/ai-agent-readiness), September 2026, a reproducible measurement of 304 home pages designed to assess software-agent readiness, with stated sampling and scope limits
 - [Designing Agent-Ready Websites for AI Web Agents](https://arxiv.org/abs/2607.12056), 13 July 2026, an early preprint reporting a controlled shopping-site experiment with three browser-agent models
 
 ### Practitioner writing and community discussion

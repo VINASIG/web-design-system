@@ -4,7 +4,7 @@
 
 ## Purpose and source
 
-This guide helps people and AI agents select an existing logo export for a website context. It is based on `VINASIG_Logo_Story.md` and `99_Evidence/CREATION_RECORD.md` in the VINASIG Brand Assets archive. The original archive remains the source of editable artwork. Selected exported files are copied byte-for-byte into `public/brand/`. No editable logo source files are included here.
+This guide helps people and SI agents select an existing logo export for a website context. It is based on `VINASIG_Logo_Story.md` and `99_Evidence/CREATION_RECORD.md` in the VINASIG Brand Assets archive. The original archive remains the source of editable artwork. Selected exported files are copied byte-for-byte into `public/brand/`. No editable logo source files are included here.
 
 The mark is manually designed pixel art. Four agents surround a shared negative-space core: Scout observes, Thinker reasons, Builder acts, and Auditor evaluates. Their operating loop is to observe, reason, act, and evaluate. The symbol and wordmark have different roles: the symbol expresses the coordinated system, while the wordmark identifies VINASIG.
 

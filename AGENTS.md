@@ -2,13 +2,17 @@
 
 ## Project context
 
-This repository contains the VINASIG Design System: a documentation website and proposed shared UI rules for websites owned by the VINASIG organization. It is intended to give both people and AI agents a clear, reusable source of interface guidance.
+This repository contains the VINASIG Design System: a documentation website and proposed shared UI rules for websites owned by the VINASIG organization. It is intended to give both people and SI agents a clear, reusable source of interface guidance.
 
 ## Status and authority
 
 This is an early prototype. Every design rule, token, component example, and pattern published here is a **draft proposal** until a VINASIG owner approves it. Do not describe draft content as an approved organization policy, and do not silently impose it on another VINASIG website.
 
 When a rule is missing or two sources disagree, explain the gap and propose an option. Do not invent a mandatory rule. Follow explicit instructions in the current task.
+
+## Project terminology
+
+Use **Super Intelligence (SI)** and **SI agents** as the preferred terms in new VINASIG-authored copy. This is a naming convention, not a claim that every current system exceeds human intelligence. Preserve original wording in research titles, quotations, official names, laws, code, and external references.
 
 ## Read the context you need
 
@@ -23,7 +27,7 @@ The documentation site is organized as follows:
 - `docs/brand/` holds logo facts, asset mapping, and draft usage recommendations.
 - `docs/components/` holds common interface controls and behavior.
 - `docs/patterns/` holds reusable page-level interaction patterns.
-- `docs/agents/ui-quality.md` records the research-backed workflow for reviewing AI-assisted interface work.
+- `docs/agents/ui-quality.md` records the research-backed workflow for reviewing SI-assisted interface work.
 - `src/pages/` contains the published documentation pages.
 - `src/layouts/` and `src/components/` contain the documentation site's own UI.
 - `public/brand/` contains exact copies of selected exported logo files. Editable artwork remains in the Brand Assets archive.
@@ -40,10 +44,10 @@ When an interface matches an entry in docs/elements/catalog.json, read its defin
 - Use semantic color tokens from `src/styles/tokens.css` and follow the color role mapping in `docs/foundations/README.md`. Keep the VINASIG identity color anchors unchanged. Use their soft, border, and strong shades for interface states. Do not add unrelated saturated colors without a documented role.
 - When a component needs additional categories, use the optional extended palette documented in the Foundations guide. Treat it as supporting color, preserve identity aliases, and keep semantic status colors in their established roles.
 - Use **Bright Playful Minimalism** as the draft visual direction for this prototype. Start with a flat, content-led minimal layout, light neutral surfaces, and selective identity color. Use pixel or rounded-square details sparingly, and add illustrations only when they explain content or support a clear user need. Follow `docs/foundations/README.md` for the full direction.
-- Do not fall back to generic AI decoration such as oversized hero type, gradients, card grids without distinct content, or decorative pills and badges. Use cards when they clarify a real content group. Do not imitate or combine Apple, GitHub, or Duolingo as complete visual systems. Borrow a specific quality only when the task names it, then express it through VINASIG's existing tokens and patterns.
+- Do not fall back to generic generated decoration such as oversized hero type, gradients, card grids without distinct content, or decorative pills and badges. Use cards when they clarify a real content group. Do not imitate or combine Apple, GitHub, or Duolingo as complete visual systems. Borrow a specific quality only when the task names it, then express it through VINASIG's existing tokens and patterns.
 - Keep pages static by default. Add browser JavaScript only for a documented interaction that needs it.
 - Use semantic HTML, visible keyboard focus, descriptive links, and accessible labels for form controls.
-- Do not add version labels, draft badges, prototype-status footers, repeated navigation links, AI-index links, or other template chrome by default. Add visible elements only when the task requests them, an authoritative requirement requires them, or they support a defined user need. Preserve required third-party attributions and legal notices.
+- Do not add version labels, draft badges, prototype-status footers, repeated navigation links, machine-readable index links, or other template chrome by default. Add visible elements only when the task requests them, an authoritative requirement requires them, or they support a defined user need. Preserve required third-party attributions and legal notices.
 - Check current official framework and browser documentation, plus the project's browser support target, before choosing an unfamiliar or recently released web API. Do not rely on model memory for changing platform behavior.
 - Treat the accessibility tree as part of the interface. Give interactive controls semantic roles, useful accessible names, and accurate selected, expanded, and disabled states. When browser automation is available, prefer locating controls by role and name.
 - For every task that creates or changes a website, inspect the shared `<head>` and confirm a favicon is configured. On VINASIG sites, use the supplied 16, 32, and 48 px favicon exports where available, and confirm the asset paths work for the deployment base URL. A header logo does not replace a browser favicon. If the required source asset is missing, report the gap instead of silently omitting or redrawing it.

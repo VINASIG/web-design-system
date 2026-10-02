@@ -2,6 +2,8 @@
 
 Review date: 28 September 2026
 
+Terminology note added 2 October 2026: current VINASIG-authored copy uses "Super Intelligence (SI)" and "SI agents" as the preferred terms. This audit retains route labels and source wording as recorded during the review.
+
 ## Icon system follow-up (29 September 2026)
 
 This audit records the site as reviewed on 28 September. Since then, the website has migrated its interface icons to Lucide SVGs and its third-party company logos to Simple Icons. The earlier Flaticon guidance and attribution finding below describe the audited state and are superseded; no Flaticon package, font, or attribution is used by the current site. A full source and specimen scan on 29 September found two missing Lucide registry entries, `MapPin` and `UsersRound`, which are now registered alongside all other static and dynamically selected icons. Replaced the CSS-drawn breadcrumb chevrons with Lucide `ChevronRight` icons. A rendered check confirmed that the Google and Apple marks remain Simple Icons in both compact and enlarged sign-in previews.

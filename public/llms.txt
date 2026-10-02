@@ -1,6 +1,6 @@
 # VINASIG Design System
 
-> A draft, AI-readable source of shared UI guidance for VINASIG websites. All rules are proposals pending approval.
+> A draft source of shared UI guidance for VINASIG websites, written for people and SI agents. All rules are proposals pending approval.
 
 Start with the repository's `AGENTS.md` for agent instructions and project context. Read the source specification linked for the task. Do not assume draft rules are approved policy.
 
@@ -12,8 +12,8 @@ Start with the repository's `AGENTS.md` for agent instructions and project conte
 - [Components](/components/) describes buttons, text inputs, status messages, and cards.
 - [Patterns](/patterns/) covers forms, empty states, loading, errors, and page layout.
 - [UI element library](/elements/) shows styled previews for all 81 entries in the NameThatUI snapshot, with 49 web entries and 32 macOS entries.
-- [AI agent guide](/agents/) explains how an agent should use this system.
-- [AI-assisted UI quality workflow](https://github.com/VINASIG/web-design-system/blob/main/docs/agents/ui-quality.md) records the research-backed review checklist for generated interface work.
+- [SI agent guide](/agents/) explains how an SI agent should use this system.
+- [SI agent UI quality workflow](https://github.com/VINASIG/web-design-system/blob/main/docs/agents/ui-quality.md) records the research-backed review checklist for generated interface work.
 
 ## Source files
 
