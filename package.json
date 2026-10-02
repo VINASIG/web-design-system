@@ -36,7 +36,7 @@
     "@astrojs/check": "0.9.10",
     "astro": "7.3.5",
     "playwright": "1.63.0",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "wrangler": "4.147.0"
   },
   "dependencies": {
