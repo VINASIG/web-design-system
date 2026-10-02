@@ -1,8 +1,6 @@
 ---
 import "../styles/tokens.css";
 import "../styles/global.css";
-import "@flaticon/flaticon-uicons/css/bold/rounded.css";
-import "@flaticon/flaticon-uicons/css/brands/all.css";
 import Icon from "../components/Icon.astro";
 
 const { title, description, eyebrow = "Shared interface guidance" } = Astro.props;
@@ -36,7 +34,7 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#443a3b" />
     <meta name="description" content={description} />
     <link rel="icon" type="image/png" sizes="16x16" href="/brand/favicons/favicon-16.png" />
@@ -91,9 +89,6 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
             <p class="page-description">{description}</p>
           </div>
           <slot />
-          <footer class="page-footer">
-            <p><a href="https://www.flaticon.com/uicons/interface-icons">UIcons by Flaticon</a></p>
-          </footer>
         </main>
       </div>
     </div>

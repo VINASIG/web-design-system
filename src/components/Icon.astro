@@ -1,28 +1,45 @@
 ---
-const iconClasses = {
-  home: "fi-br-home",
-  agents: "fi-br-robot",
-  brand: "fi-br-palette",
-  foundations: "fi-br-layers",
-  components: "fi-br-apps",
-  patterns: "fi-br-pattern",
-  elements: "fi-br-list-check",
-  info: "fi-br-info",
-  check: "fi-br-check",
-  error: "fi-br-exclamation",
-  chevronDown: "fi-br-angle-small-down",
-  externalLink: "fi-br-arrow-up-right",
-} as const;
+import {
+  Bot,
+  Check,
+  ChevronDown,
+  ExternalLink,
+  Grid2x2,
+  House,
+  Info,
+  Layers,
+  ListTodo,
+  Palette,
+  Shapes,
+  TriangleAlert,
+} from "@lucide/astro";
+import type { UIIconName } from "../scripts/icon-names";
 
-type IconName = keyof typeof iconClasses;
+const iconComponents = {
+  home: House,
+  agents: Bot,
+  brand: Palette,
+  foundations: Layers,
+  components: Grid2x2,
+  patterns: Shapes,
+  elements: ListTodo,
+  info: Info,
+  check: Check,
+  error: TriangleAlert,
+  chevronDown: ChevronDown,
+  externalLink: ExternalLink,
+} satisfies Record<UIIconName, typeof House>;
+
 const { name, class: className = "" } = Astro.props as {
-  name: IconName;
+  name: UIIconName;
   class?: string;
 };
 
-if (!(name in iconClasses)) {
+const IconComponent = iconComponents[name];
+
+if (!IconComponent) {
   throw new Error(`Unknown icon name: ${name}`);
 }
 ---
 
-<span class:list={["ui-icon", iconClasses[name], className]} aria-hidden="true"></span>
+<IconComponent class:list={["ui-icon", `ui-icon--${name}`, className]} aria-hidden="true" focusable="false" />

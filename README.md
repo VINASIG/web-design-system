@@ -7,12 +7,14 @@ An AI-readable design-system website for shared interface guidance across VINASI
 - **Astro** generates a static site by default, with very little browser-side JavaScript.
 - **Cloudflare Workers** serves the generated static files. Astro's Cloudflare adapter can be added later if a route needs server rendering, sessions, or API behavior.
 - **Space Grotesk** is the only typeface used. The variable font is served locally. The included `public/fonts/OFL.txt` is its license notice.
-- Interface arrows and pictographic icons use Flaticon UIcons Round Bold, bundled locally through `@flaticon/flaticon-uicons`. Space Grotesk symbols may appear in prose or typographic notation. The shared footer provides the required free-use attribution.
+- Interface arrows and pictographic icons use Lucide SVGs. Third-party company and product logos use Simple Icons with contextual color; provider sign-in marks follow their official brand guidance. Space Grotesk symbols may appear in prose or typographic notation.
 
 ## Run locally
 
+Use Node 24 as recorded in `.node-version`. The minimum supported Node version is 22.12.0. npm is the package manager, and `package-lock.json` is the dependency source for reproducible installs.
+
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
@@ -22,6 +24,35 @@ Build and preview the static output:
 npm run build
 npm run preview
 ```
+
+## Check changes
+
+```sh
+npm run check
+npx playwright install chromium
+npm run build
+npm test
+```
+
+- `npm run check` validates catalog coverage, icon registration, local assets, script syntax and Astro TypeScript diagnostics.
+- `npm test` checks the static routes and repaired UI states at five responsive viewports. It starts its own production preview on a free port and saves screenshots and results to `output/responsive/runs/`.
+- GitHub Actions runs the same checks for pushes to `main` and pull requests. Generated browser artifacts are retained for 14 days.
+
+See [the test guide](tests/README.md) for browser setup, custom widths and touch or motion options. Keep generated output, local logs, credentials and environment files outside Git. Check the actual rendered UI as described in [the UI quality workflow](docs/agents/ui-quality.md) when changing visible code.
+
+## Repository structure
+
+| Directory | Purpose |
+| --- | --- |
+| `src/pages/` | Static documentation routes and the element library. |
+| `src/components/` and `src/layouts/` | Shared site UI and document shell. |
+| `src/scripts/` | Browser interactions and shared icon registry. |
+| `src/styles/` | Design tokens and shared styles. |
+| `docs/` | Draft specifications, decisions and audit records. |
+| `public/` | Supplied brand exports, provider marks, local font and agent index. |
+| `scripts/` | Repository content checks. |
+| `tests/` | Portable responsive regression and preview helper. |
+| `output/` | Ignored local screenshots, logs and inspection evidence. |
 
 ## Deploy
 

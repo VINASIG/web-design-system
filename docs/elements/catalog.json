@@ -10,15 +10,42 @@
     }
   },
   "categories": [
-    { "platform": "Web", "name": "Navigation and wayfinding" },
-    { "platform": "Web", "name": "Content and data" },
-    { "platform": "Web", "name": "Forms and controls" },
-    { "platform": "Web", "name": "Feedback and overlays" },
-    { "platform": "Web", "name": "Layout and motion" },
-    { "platform": "macOS", "name": "Window and workspace" },
-    { "platform": "macOS", "name": "Menus and commands" },
-    { "platform": "macOS", "name": "Input and editing" },
-    { "platform": "macOS", "name": "System panels and status" }
+    {
+      "platform": "Web",
+      "name": "Navigation and wayfinding"
+    },
+    {
+      "platform": "Web",
+      "name": "Content and data"
+    },
+    {
+      "platform": "Web",
+      "name": "Forms and controls"
+    },
+    {
+      "platform": "Web",
+      "name": "Feedback and overlays"
+    },
+    {
+      "platform": "Web",
+      "name": "Layout and motion"
+    },
+    {
+      "platform": "macOS",
+      "name": "Window and workspace"
+    },
+    {
+      "platform": "macOS",
+      "name": "Menus and commands"
+    },
+    {
+      "platform": "macOS",
+      "name": "Input and editing"
+    },
+    {
+      "platform": "macOS",
+      "name": "System panels and status"
+    }
   ],
   "elements": [
     {
@@ -28,8 +55,8 @@
       "platform": "Web",
       "category": "Content and data",
       "definition": "A two-dimensional collection of related records arranged by rows and labeled columns.",
-      "guidance": "Use a native table for comparison and lookup. Add sorting only where it helps, identify the active sort, and preserve row and column meaning when the table scrolls or reflows.",
-      "accessibility": "Use a caption when helpful, scoped row and column headers, and labeled buttons for sortable columns. Keep keyboard access to controls inside cells."
+      "guidance": "Use a native table for comparison and lookup. Add sorting only where it helps, identify the active sort, and preserve row and column meaning when the table scrolls or reflows. If column resizing helps, keep the table geometry stable and expose a keyboard-operable resize handle.",
+      "accessibility": "Use a caption when helpful, scoped row and column headers, and labeled buttons for sortable columns. Expose selected rows and mixed select-all state. Make resize handles focusable separators with arrow-key controls, and keep keyboard access to controls inside cells."
     },
     {
       "order": 2,
@@ -39,7 +66,7 @@
       "category": "Navigation and wayfinding",
       "definition": "A compact navigation region anchored to the bottom edge that switches among a small set of primary destinations.",
       "guidance": "Use only when persistent destination switching benefits a mobile-first product. Keep the item count small, label every icon, mark the current destination, and account for device safe areas.",
-      "accessibility": "Use a labeled navigation landmark and links with a clear current-page state. Ensure the bar does not cover focused controls or page content."
+      "accessibility": "Use a labeled navigation landmark with links and aria-current=page. Pair every icon with a visible text label, give badges an accessible name, and include safe-area padding when the bar is fixed to the viewport. Reserve space for the bar so it does not cover content or focused controls."
     },
     {
       "order": 3,
@@ -78,8 +105,8 @@
       "platform": "Web",
       "category": "Navigation and wayfinding",
       "definition": "An ordered set of stages that communicates progress through a multi-step task.",
-      "guidance": "Show the current stage, completed stages, and what remains. Use it for a task flow, not as a substitute for page breadcrumbs or general navigation.",
-      "accessibility": "Represent the stages as an ordered list and identify the current step in text or with aria-current. Do not convey completion by color alone."
+      "guidance": "Show the current stage, completed stages, and what remains from one progress value. Let people return to completed stages and advance one stage at a time; do not let them jump over required steps. Use it for a task flow, not as a substitute for page breadcrumbs or general navigation.",
+      "accessibility": "Represent the stages as an ordered list and identify exactly one current step with aria-current=step. Give each step a readable label and state, keep future steps unavailable until they are next, and do not convey completion by color alone."
     },
     {
       "order": 7,
@@ -88,8 +115,8 @@
       "platform": "Web",
       "category": "Content and data",
       "definition": "A compact presentation of several people associated with a shared item or activity.",
-      "guidance": "Use when the people or group size matter. Keep overlap modest, provide a way to discover every person's identity, and show a clear count when the group is abbreviated.",
-      "accessibility": "Give each meaningful portrait a useful alternative name. If the group is summarized as one control, name the group and count, then provide access to the full member list."
+      "guidance": "Use when the people or group size matter. Keep overlap modest, provide a way to discover every person's identity, and show the number of hidden members when the group is abbreviated. The overflow control should reveal the full group.",
+      "accessibility": "Give each avatar a useful alternative name, including initials used when a photo is unavailable. Name the overflow control with the total member count, expose its expanded state and controlled list, and make every member discoverable."
     },
     {
       "order": 8,
@@ -184,12 +211,12 @@
     {
       "order": 17,
       "id": "share-card",
-      "name": "Share Card",
+      "name": "Card",
       "platform": "Web",
       "category": "Content and data",
-      "definition": "A compact preview of a specific resource paired with an action for sharing or copying its address.",
-      "guidance": "Show enough title and source context to identify the destination. Keep the share action separate from navigation, provide useful feedback after copying, and avoid nested interactive regions.",
-      "accessibility": "Give the destination link and share action distinct names. Announce copy confirmation in a polite status region and provide meaningful image alternatives."
+      "definition": "A content container with named media, header, body, metadata, and footer regions.",
+      "guidance": "Use a column layout for the card and pin its footer with margin-top: auto when cards share a row height. Keep media clipped to the card radius and place padding on the content slots. Do not nest links or buttons inside a whole-card link.",
+      "accessibility": "Use an article for a standalone card. Give the media a useful text alternative when it conveys content, and keep each footer action as a separate, clearly named control."
     },
     {
       "order": 18,
@@ -331,10 +358,10 @@
       "name": "Color Well",
       "platform": "macOS",
       "category": "Input and editing",
-      "definition": "A compact preview of the selected color that opens a color selection panel.",
-      "guidance": "Show the chosen color in context and provide a clear way to open, change, and confirm a selection. Do not make hue or contrast the only way to identify a value.",
-      "accessibility": "Name the color control, expose the selected value, and keep picker adjustments available through keyboard and assistive technology.",
-      "webGuidance": "Use a native color input or an established accessible picker. Pair the swatch with a text value or name and label the control."
+      "definition": "A two-part color control that shows the current color, opens quick swatches, and provides access to a full color panel.",
+      "guidance": "Keep the current-color swatch and the full-panel button distinct. The swatch opens quick choices and an eyedropper when the platform supports screen sampling; the adjacent panel button opens the full color panel.",
+      "accessibility": "Name both buttons and expose the current color as text. Keep palette choices keyboard-operable and associate custom color inputs with visible labels and instructions.",
+      "webGuidance": "Use a labeled color input or an accessible picker. Pair the swatch with a text value, keep the quick palette and full panel actions distinct, and offer screen sampling only when the browser supports it."
     },
     {
       "order": 32,
@@ -372,9 +399,9 @@
       "name": "Divider vs. Separator vs. Rule",
       "platform": "Web",
       "category": "Layout and motion",
-      "definition": "A divider is a visual grouping cue, a separator marks a semantic boundary, and a rule can divide topics in document content.",
-      "guidance": "Use a thematic break for a change of topic, a separator for a boundary between controls, and decoration only when it improves grouping. Avoid lines that add no structure.",
-      "accessibility": "Hide purely decorative lines from assistive technology. Give semantic separators the correct orientation and role, and do not make a static line focusable."
+      "definition": "An HTML <hr> marks a thematic break in content, role=separator marks a boundary between control groups, and a CSS border is purely visual.",
+      "guidance": "Use <hr> when the topic changes, role=separator when distinct control groups need a boundary, and a CSS border for decoration only. Set the separator orientation to match the line.",
+      "accessibility": "Hide decorative lines from assistive technology. Expose semantic separators with the correct orientation, and never make a static line focusable."
     },
     {
       "order": 36,
@@ -759,8 +786,8 @@
       "platform": "Web",
       "category": "Content and data",
       "definition": "A stack of labeled sections whose content can be expanded or collapsed.",
-      "guidance": "Use to organize secondary content, not to hide essential instructions by default. Decide whether multiple sections may stay open and preserve state when the page updates.",
-      "accessibility": "Use native details and summary for simple disclosures or implement the WAI-ARIA accordion keyboard and expanded-state pattern."
+      "guidance": "Use to organize secondary content, not to hide essential instructions by default. Native details and summary allow multiple open sections; give each details element in a group the same name when only one should stay open.",
+      "accessibility": "Use native details and summary for simple disclosures so the browser supplies disclosure semantics and keyboard behavior. Animate the revealed panel without adding redundant aria-expanded state."
     },
     {
       "order": 72,
@@ -798,9 +825,9 @@
       "name": "Sticky vs. Fixed Positioning",
       "platform": "Web",
       "category": "Layout and motion",
-      "definition": "Sticky positioning stays within its containing block while scrolling. Fixed positioning attaches an element to the viewport.",
-      "guidance": "Prefer sticky for local context and fixed only for persistent global controls. Reserve space, respect safe areas, and ensure the element does not cover content or focused targets.",
-      "accessibility": "Keep the reading order meaningful and keyboard focus visible when content scrolls. Check zoom, narrow layouts, and reduced viewport height."
+      "definition": "Sticky positioning stays within its scroll container while scrolling. Fixed positioning removes an element from normal flow and anchors it to the viewport or a transformed containing block.",
+      "guidance": "Prefer sticky for local context. It scrolls normally until it reaches its inset, then stays within its containing block. Use fixed for persistent viewport controls. Reserve space, respect safe areas, and ensure pinned content does not cover content or focused targets.",
+      "accessibility": "Keep the reading order meaningful and keyboard focus visible when content scrolls. Make scrollable regions keyboard accessible when needed. Check zoom, narrow layouts, and reduced viewport height."
     },
     {
       "order": 76,
@@ -808,9 +835,9 @@
       "name": "Focus Ring (:focus-visible)",
       "platform": "Web",
       "category": "Forms and controls",
-      "definition": "A visible indicator for the element currently receiving keyboard focus, commonly shown through the focus-visible state.",
-      "guidance": "Apply a consistent ring to every interactive control and keep it outside clipped containers. Never remove the browser outline without an equally visible replacement.",
-      "accessibility": "Maintain clear contrast on every surface and preserve focus visibility in forced-colors and high-contrast modes. Verify keyboard navigation at zoom."
+      "definition": "A visible indicator that identifies the current keyboard focus target, commonly shown with the :focus-visible state.",
+      "guidance": "Use :focus-visible for a high-contrast outline around keyboard-focused controls and leave a clear offset from the control. Use :focus only when the state should also appear for pointer or programmatic focus. Never remove the browser outline without an equally visible replacement.",
+      "accessibility": "Preserve a distinguishable outline in forced-colors and high-contrast modes. Test keyboard navigation at 200% zoom, check contrast against each surface, and keep the ring outside clipped containers."
     },
     {
       "order": 77,

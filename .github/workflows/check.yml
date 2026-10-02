@@ -1,0 +1,44 @@
+name: Repository checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+      - name: Check touch and normal motion
+        run: npm test
+        env:
+          RESPONSIVE_WIDTHS: 320,360,390
+          RESPONSIVE_TOUCH: 'true'
+          RESPONSIVE_MOTION: normal
+      - name: Keep responsive reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: responsive-${{ github.sha }}
+          path: output/responsive/runs/
+          if-no-files-found: ignore
+          retention-days: 14

@@ -58,10 +58,12 @@ select:focus-visible {
   background: var(--color-core-graphite);
   border-radius: var(--radius-sm);
   transform: translateY(-160%);
+  clip-path: inset(50%);
 }
 
 .skip-link:focus {
   transform: translateY(0);
+  clip-path: none;
 }
 
 .app-shell {
@@ -161,15 +163,13 @@ select:focus-visible {
 
 .ui-icon {
   display: inline-flex;
+  width: 1rem;
+  height: 1rem;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
   font-style: normal;
   line-height: 1;
-}
-
-.ui-icon::before {
-  display: block;
 }
 
 .page-shell {
@@ -211,6 +211,7 @@ select:focus-visible {
 }
 
 .docs-main {
+  container: docs-layout / inline-size;
   width: min(100%, 1260px);
   margin: 0 auto;
   padding: 3rem 3.5rem 4rem;
@@ -908,11 +909,11 @@ h3 {
   color: var(--color-scout-blue);
   width: 1.2rem;
   height: 1.2rem;
-  font-size: 1.125rem;
 }
 
-.iconography-demo .ui-icon.fi-br-arrow-up-right {
-  font-size: 0.9rem;
+.iconography-demo .ui-icon--externalLink {
+  width: 1rem;
+  height: 1rem;
 }
 
 .field-demo {
@@ -1257,7 +1258,7 @@ h3 {
   }
 }
 
-@media (max-width: 850px) {
+@container docs-layout (max-width: 48rem) {
   .section-heading {
     align-items: start;
     flex-direction: column;
@@ -1359,7 +1360,7 @@ h3 {
   }
 
   .type-row {
-    grid-template-columns: 4.5rem minmax(0, 1fr);
+    grid-template-columns: 5rem minmax(0, 1fr);
   }
 }
 

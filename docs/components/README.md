@@ -32,12 +32,12 @@ If the framework or requirements make a custom accessible popup unsuitable, use 
 Use icons only when they improve recognition or communicate a control state. Keep a text label when the action or destination may not be clear from the icon alone. Avoid decorative symbols that repeat nearby text.
 
 - Keep an action label and its inline icon in the same text flow. When a link wraps at high zoom or in a narrow layout, its icon must stay beside the final word instead of floating to the opposite edge.
-- Use Flaticon UIcons Round Bold for pictographic interface icons. The icon font is bundled locally through the `@flaticon/flaticon-uicons` package.
-- Render icons through `src/components/Icon.astro` and its named icon map. Do not type pictographic Unicode characters, emoji, or private-use codepoints into page markup or CSS.
-- Keep Space Grotesk as the only text typeface. Its symbols may appear in prose or typographic notation. Use UIcons for interface arrows and pictographic icons shown alongside each other so they share one visual style.
+- Use Lucide SVGs for pictographic interface icons. Render shared icons through `src/components/Icon.astro` and demo icons through `src/scripts/icons.ts`.
+- Use Simple Icons for third-party company and product logos such as Google or Apple. Their renderer inherits `currentColor` by default; choose a brand color only when it fits the use and follows current brand guidance instead of applying every `icon.hex` automatically. Provider sign-in actions follow the provider's approved mark and rules: the Google sign-in G must use its standard multicolor version. Keep company marks separate from general interface icons.
+- Do not type pictographic Unicode characters, emoji, or private-use codepoints into page markup or CSS.
+- Keep Space Grotesk as the only text typeface. Its symbols may appear in prose or typographic notation. Use Lucide for interface arrows and pictographic icons shown alongside each other so they share one visual style.
 - Mark an icon decorative when nearby text already supplies its meaning. Give an icon-only control a clear accessible name on the control itself.
 - Use a hyphen-minus or a custom layout for list markers. Never use an icon or symbol as a list marker.
-- Keep the visible `UIcons by Flaticon` attribution in the shared website footer when using the free icon pack.
 
 ## Status message
 

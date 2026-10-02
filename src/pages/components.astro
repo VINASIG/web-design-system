@@ -113,8 +113,10 @@ import Icon from "../components/Icon.astro";
         <span><Icon name="externalLink" /> Open link</span>
       </div>
       <ul class="rule-list">
-        <li><span class="rule-term">Icon set</span><span class="rule-text">Use Flaticon UIcons Round Bold through the shared <code>Icon.astro</code> component.</span></li>
-        <li><span class="rule-term">Icon style</span><span class="rule-text">Use Flaticon UIcons Round Bold for interface arrows and pictographic icons shown alongside each other so their visual style stays consistent.</span></li>
+        <li><span class="rule-term">Icon set</span><span class="rule-text">Use Lucide SVG icons through the shared <code>Icon.astro</code> component.</span></li>
+        <li><span class="rule-term">Brand logos</span><span class="rule-text">Use Simple Icons for third-party company and product logos such as Google and Apple. Their default color follows the surrounding text; choose an explicit brand color only when the context and official guidance call for it.</span></li>
+        <li><span class="rule-term">Sign-in marks</span><span class="rule-text">Follow each provider's current sign-in guidance. Google sign-in buttons use the standard multicolor G, not a monochrome logo.</span></li>
+        <li><span class="rule-term">Icon style</span><span class="rule-text">Use Lucide for interface arrows and pictographic icons shown alongside each other so their visual style stays consistent.</span></li>
         <li><span class="rule-term">Wrapped links</span><span class="rule-text">Keep action labels and their icons in the same text flow. At high zoom or narrow widths, the icon stays beside the final word rather than floating to the far edge.</span></li>
         <li><span class="rule-term">Characters</span><span class="rule-text">Space Grotesk symbols may be used as text or typographic notation. Do not substitute them for interface icons when they look different from the shared icon set.</span></li>
         <li><span class="rule-term">Custom glyphs</span><span class="rule-text">Do not type emoji, pictographic Unicode symbols, or private-use codepoints into page markup or CSS.</span></li>
@@ -122,7 +124,7 @@ import Icon from "../components/Icon.astro";
         <li><span class="rule-term">Accessibility</span><span class="rule-text">Decorative icons stay hidden from assistive technology. Give icon-only controls an accessible name.</span></li>
       </ul>
       <pre class="code-panel"><code>&lt;Icon name="info" /&gt;</code></pre>
-      <p class="card-copy">The shared footer includes the Flaticon attribution required for the free icon pack.</p>
+      <p class="card-copy">Icons render as inline vector graphics and inherit the interface color.</p>
     </article>
   </section>
 

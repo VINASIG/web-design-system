@@ -34,9 +34,9 @@ The documentation site is organized as follows:
 When an interface matches an entry in docs/elements/catalog.json, read its definition and inspect the matching rendered example in docs/elements/specimens.json. Apply Web guidance to websites. Treat macOS entries as native desktop concepts and use their web adaptation only when it fits the user need.
 
 - Use Space Grotesk as the only named typeface. Load it from `public/fonts/SpaceGrotesk-VariableFont_wght.ttf`. Do not fetch fonts from a CDN or add another font family.
-- Use Flaticon UIcons Round Bold for pictographic interface icons. Load the package locally and render icons through `src/components/Icon.astro`. Do not type pictographic Unicode characters, emoji, or private-use codepoints into page markup or CSS. The icon font is limited to icon artwork and does not add a text typeface.
-- Space Grotesk symbols may appear in prose or typographic notation. Use Flaticon UIcons for interface arrows and pictographic icons shown alongside each other so they share one visual style.
-- Keep the visible `UIcons by Flaticon` attribution in the shared website footer when using the free icon pack.
+- Use Lucide SVGs for interface icons, through the shared `src/components/Icon.astro` component or the Lucide icon registry in `src/scripts/icons.ts`. Do not type pictographic Unicode characters, emoji, or private-use codepoints into page markup or CSS.
+- Use Simple Icons for third-party company and product logos such as Google or Apple. Their renderer inherits `currentColor` by default; set a brand color only when the specific context and the brand's current rules call for it, rather than applying `icon.hex` automatically. Provider sign-in buttons must use the provider-approved mark and follow its brand rules (for example, Google sign-in uses the standard multicolor G, not a monochrome mark). Keep brand marks separate from general interface icons.
+- Space Grotesk symbols may appear in prose or typographic notation. Use Lucide for interface arrows and pictographic icons shown alongside each other so they share one visual style.
 - Use semantic color tokens from `src/styles/tokens.css` and follow the color role mapping in `docs/foundations/README.md`. Keep the VINASIG identity color anchors unchanged. Use their soft, border, and strong shades for interface states. Do not add unrelated saturated colors without a documented role.
 - When a component needs additional categories, use the optional extended palette documented in the Foundations guide. Treat it as supporting color, preserve identity aliases, and keep semantic status colors in their established roles.
 - Use **Bright Playful Minimalism** as the draft visual direction for this prototype. Start with a flat, content-led minimal layout, light neutral surfaces, and selective identity color. Use pixel or rounded-square details sparingly, and add illustrations only when they explain content or support a clear user need. Follow `docs/foundations/README.md` for the full direction.
@@ -52,6 +52,7 @@ When an interface matches an entry in docs/elements/catalog.json, read its defin
 - When the user supplies a screenshot, mockup, or URL, record what must match and preserve the existing control types and behavior. Do not replace a reference with a generic generated layout.
 - Implement visual changes in bounded slices. After each slice, inspect the real page at the target widths and recheck areas that already passed. If the same defect remains after two targeted corrections, diagnose the layout, styles, and project context before adding another override.
 - When visual browser inspection is available, inspect changed pages at wide, medium, and narrow widths, including a 320 CSS px reflow check where practical. Exercise changed controls in their open and keyboard states. Fix the cause of overflow or clipping instead of hiding it with a broad CSS workaround.
+- Use `npm run check` after source changes. For responsive work, follow `tests/README.md`, build the site and run `npm test`. Keep generated inspection evidence under ignored `output/`, and record durable audit conclusions under `docs/audits/`. Inspect screenshots before accepting a visual result.
 - Keep the existing product identity. Reuse its approved tokens, typeface, icon component, assets, and established patterns. Do not accept a generic generated layout or invent brand choices just to fill gaps. Ask or report the unresolved decision when the source context is insufficient.
 - Keep rules and examples in English in this repository.
 - When adding or changing guidance, keep its draft status visible and update both the source document and its published page.
@@ -71,8 +72,11 @@ When an interface matches an entry in docs/elements/catalog.json, read its defin
 
 ## Useful commands
 
-- `npm install`: install dependencies.
+- `npm ci`: install the locked dependencies. Use the Node version in `.node-version`.
 - `npm run dev`: start the local development server.
+- `npm run check`: validate catalog and icons, script syntax and Astro TypeScript diagnostics.
 - `npm run build`: build the static site into `dist/`.
+- `npx playwright install chromium`: install the managed browser for responsive tests.
+- `npm test`: run responsive regression against an automatically started production preview after building.
 - `npm run preview`: preview the production build locally.
 - `npm run deploy`: build and deploy to Cloudflare Workers after Cloudflare authentication is configured.
