@@ -68,7 +68,7 @@ for (const [file, source] of sources) {
 const layout = await read('src/layouts/DocsLayout.astro');
 for (const size of [16, 32, 48]) {
   const favicon = `/brand/favicons/favicon-${size}.png`;
-  assert(layout.includes(`href="${favicon}"`), `Missing ${size}px favicon in the shared head`);
+  assert(layout.includes(`href={withBase("${favicon}")}`), `Missing base-aware ${size}px favicon in the shared head`);
   await access(path.join(root, 'public', favicon));
 }
 await access(path.join(root, 'public/fonts/SpaceGrotesk-VariableFont_wght.ttf'));

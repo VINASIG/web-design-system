@@ -3,6 +3,7 @@ import { access, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { createServer } from 'node:net';
 import path from 'node:path';
+import astroConfig from '../../astro.config.mjs';
 
 const require = createRequire(import.meta.url);
 
@@ -29,7 +30,7 @@ export async function startPreview(reportDirectory) {
   const { bin } = JSON.parse(await readFile(packagePath, 'utf8'));
   const cli = path.resolve(path.dirname(packagePath), typeof bin === 'string' ? bin : bin.astro);
   const port = await freePort();
-  const baseURL = `http://127.0.0.1:${port}`;
+  const baseURL = `http://127.0.0.1:${port}${(astroConfig.base || '').replace(/\/$/, '')}`;
   const child = spawn(process.execPath, [cli, 'preview', '--host', '127.0.0.1', '--port', String(port)], {
     cwd: process.cwd(),
     windowsHide: true,
@@ -56,7 +57,7 @@ export async function startPreview(reportDirectory) {
     while (Date.now() < deadline) {
       if (failure) throw failure;
       if (child.exitCode !== null) throw new Error(`Preview stopped unexpectedly:\n${output}`);
-      const response = await fetch(baseURL, { signal: AbortSignal.timeout(1000) }).catch(() => null);
+      const response = await fetch(`${baseURL}/`, { signal: AbortSignal.timeout(1000) }).catch(() => null);
       if (response?.ok) {
         console.log(`Testing production preview at ${baseURL}`);
         return { baseURL, close };

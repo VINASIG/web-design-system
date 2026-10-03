@@ -2,6 +2,7 @@
 import DocsLayout from "../layouts/DocsLayout.astro";
 import catalog from "../../docs/elements/catalog.json";
 import specimens from "../../docs/elements/specimens.json";
+import { withBaseAttributes } from "../lib/paths";
 
 const platforms = ["Web", "macOS"] as const;
 const entriesForPlatform = (platform: (typeof platforms)[number]) =>
@@ -56,7 +57,8 @@ const slugify = (value: string) =>
               </div>
               <div class="element-list">
                 {categoryEntries.map((element) => {
-                  const specimen = (specimens as Record<string, string>)[element.id];
+                  const source = (specimens as Record<string, string>)[element.id];
+                  const specimen = source && withBaseAttributes(source);
 
                   return (
                     <article class="element-entry" id={element.id}>
@@ -1051,16 +1053,18 @@ const slugify = (value: string) =>
   .sample-pagination-slide p { margin: 0; color: var(--color-text-muted); font-size: 0.64rem; line-height: 1.4; }
   .sample-pagination-slide.is-entering { animation: sample-pagination-enter 180ms ease-out both; }
   .sample-pagination-dots { display: flex; min-height: 1.25rem; align-items: center; justify-content: center; gap: 0.38rem; }
-  .sample-pagination-dot { width: 0.42rem; height: 0.42rem; padding: 0; background: var(--color-border-strong); border: 0; border-radius: 999px; transition: width 160ms ease, background-color 160ms ease, transform 160ms ease; }
+  .sample-pagination-dot { display: grid; width: 1.5rem; height: 1.5rem; place-items: center; padding: 0; background: transparent; border: 0; border-radius: 999px; transition: transform 160ms ease; }
+  .sample-pagination-dot::before { content: ""; width: 0.42rem; height: 0.42rem; background: var(--color-border-strong); border-radius: 999px; transition: width 160ms ease, background-color 160ms ease; }
   .sample-pagination-dot:hover { transform: scale(1.18); }
-  .sample-pagination-dot.is-current { width: 1rem; background: var(--color-scout-blue-strong); }
+  .sample-pagination-dot.is-current::before { width: 1rem; background: var(--color-scout-blue-strong); }
   .sample-pagination-caption { margin: -0.22rem 0 0; color: var(--color-text-muted); font-size: 0.58rem; text-align: center; }
   @media (prefers-reduced-motion: reduce) {
     .sample-pagination-results.is-changing,
     .sample-pagination-slide.is-entering { animation: none; }
     .sample-pagination-page,
     .sample-page-step,
-    .sample-pagination-dot { transition: none; }
+    .sample-pagination-dot,
+    .sample-pagination-dot::before { transition: none; }
   }
 
   .element-preview:has(.sample-date-picker) { min-height: 7rem; overflow: visible; place-items: start center; transition: min-height 220ms cubic-bezier(0.2, 0.8, 0.2, 1); }
@@ -2881,11 +2885,13 @@ const slugify = (value: string) =>
   .sample-mac-window-frame { position: relative; min-width: 0; overflow: hidden; background: var(--color-white); border: 1px solid var(--color-border); border-radius: 0.8rem; box-shadow: 0 0.7rem 1.8rem rgb(68 58 59 / 10%); }
   .sample-window-titlebar { display: grid; min-height: 3.25rem; align-items: center; grid-template-columns: auto minmax(0.35rem, 1fr) auto auto auto; gap: 0.65rem; padding: 0.45rem 0.65rem; background: var(--color-surface-muted); }
   .sample-window-controls { display: flex; flex: 0 0 auto; align-items: center; gap: 0.35rem; }
-  .sample-window-controls > button { display: grid; width: 0.86rem; height: 0.86rem; flex: 0 0 auto; place-items: center; padding: 0; border: 1px solid rgb(68 58 59 / 14%); border-radius: 50%; transition: transform 140ms cubic-bezier(0.2, 0, 0, 1); }
-  .sample-window-controls > button:nth-child(1) { background: var(--color-auditor-red); }
-  .sample-window-controls > button:nth-child(2) { background: var(--color-thinker-orange); }
-  .sample-window-controls > button:nth-child(3) { background: var(--color-builder-green); }
-  .sample-window-controls > button > .ui-icon { width: 0.58rem; height: 0.58rem; color: var(--color-core-graphite); opacity: 0; stroke-width: 2.8; transform: scale(0.82); transition: opacity 120ms ease, transform 140ms cubic-bezier(0.2, 0, 0, 1); }
+  .sample-window-controls > button { display: grid; width: 1.5rem; height: 1.5rem; flex: 0 0 auto; place-items: center; padding: 0; background: transparent; border: 0; border-radius: 50%; transition: transform 140ms cubic-bezier(0.2, 0, 0, 1); }
+  .sample-window-controls > button::before { content: ""; width: 0.86rem; height: 0.86rem; grid-area: 1 / 1; border: 1px solid rgb(68 58 59 / 14%); border-radius: 50%; }
+  .sample-window-controls > button:nth-child(1)::before { background: var(--color-auditor-red); }
+  .sample-window-controls > button:nth-child(2)::before { background: var(--color-thinker-orange); }
+  .sample-window-controls > button:nth-child(3)::before { background: var(--color-builder-green); }
+  .sample-window-controls > button > .ui-icon { width: 0.58rem; height: 0.58rem; grid-area: 1 / 1; color: var(--color-core-graphite); opacity: 0; stroke-width: 2.8; transform: scale(0.82); transition: opacity 120ms ease, transform 140ms cubic-bezier(0.2, 0, 0, 1); }
+  .sample-window-controls > button:nth-child(1) > .ui-icon { color: var(--color-white); }
   .sample-window-controls > button:hover > .ui-icon,
   .sample-window-controls > button:focus-visible > .ui-icon { opacity: 1; transform: scale(1); }
   .sample-window-controls > button:hover { transform: scale(1.04); }
@@ -3651,7 +3657,7 @@ const slugify = (value: string) =>
   .sample-editor-color-preview-mark .ui-icon { width: 0.9rem; height: 0.9rem; color: inherit; stroke: currentColor; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
   .sample-editor-color-preview > span:nth-child(2) { display: grid; min-width: 0; gap: 0.08rem; }
   .sample-editor-color-preview strong { color: var(--color-text); font-size: 0.58rem; }
-  .sample-editor-color-preview small, .sample-editor-color-preview code { color: var(--color-text-muted); font-size: 0.53rem; }
+  .sample-editor-color-preview small, .sample-editor-color-preview code { color: var(--color-text); font-size: 0.53rem; }
   .sample-editor-color-preview code { margin-left: auto; }
   .sample-editor-document-lines { display: grid; gap: 0.27rem; max-width: 85%; }
   .sample-editor-document-lines i { height: 0.24rem; background: var(--color-surface-muted); border-radius: 999px; }
@@ -4089,13 +4095,13 @@ const slugify = (value: string) =>
   .sample-stepper { display: grid; width: min(100%, 18rem); justify-items: center; gap: 0.5rem; }
   .sample-stepper-row { display: flex; min-width: 0; align-items: center; justify-content: center; gap: 0.7rem; }
   .sample-stepper-label { color: var(--color-text); font-size: 0.9rem; font-weight: 600; }
-  .sample-stepper-control { display: grid; width: 5.2rem; min-height: 2.1rem; grid-template-columns: minmax(0, 1fr) 1.35rem; overflow: hidden; background: var(--color-white); border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); }
+  .sample-stepper-control { display: grid; width: 5.2rem; min-height: 3.125rem; grid-template-columns: minmax(0, 1fr) 1.625rem; overflow: hidden; background: var(--color-white); border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); }
   .sample-stepper-input { width: 100%; min-width: 0; padding: 0.25rem 0.45rem; color: var(--color-text); background: transparent; border: 0; font: inherit; font-size: 0.9rem; font-variant-numeric: tabular-nums; text-align: right; appearance: textfield; }
   .sample-stepper-input::-webkit-inner-spin-button,
   .sample-stepper-input::-webkit-outer-spin-button { margin: 0; appearance: none; }
   .sample-stepper-input:focus-visible { outline: 2px solid var(--color-scout-blue); outline-offset: -2px; }
   .sample-stepper-buttons { display: grid; grid-template-rows: 1fr 1fr; border-left: 1px solid var(--color-border); }
-  .sample-stepper-buttons button { display: grid; min-width: 0; min-height: 0; padding: 0; place-items: center; color: var(--color-scout-blue); background: var(--color-white); transition: color 130ms ease, background-color 130ms ease, transform 110ms cubic-bezier(0.2, 0.75, 0.25, 1); }
+  .sample-stepper-buttons button { display: grid; min-width: 1.5rem; min-height: 1.5rem; padding: 0; place-items: center; color: var(--color-scout-blue); background: var(--color-white); transition: color 130ms ease, background-color 130ms ease, transform 110ms cubic-bezier(0.2, 0.75, 0.25, 1); }
   .sample-stepper-buttons button:hover:not(:disabled) { color: var(--color-scout-blue-strong); background: var(--color-scout-blue-soft); }
   .sample-stepper-buttons button:active:not(:disabled) { background: var(--color-scout-blue-border); transform: scale(0.94); transition-duration: 70ms; }
   .sample-stepper-buttons button:focus-visible { position: relative; z-index: 1; outline-offset: -2px; }

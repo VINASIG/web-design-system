@@ -2220,6 +2220,7 @@ function clearRecipientSelection(field: HTMLElement) {
 function makeRecipientToken(recipient: RecipientToken, entering = false) {
   const pill = document.createElement("span");
   pill.className = "sample-token-pill";
+  pill.setAttribute("role", "listitem");
   pill.classList.toggle("is-entering", entering);
   pill.dataset.recipientToken = "true";
 
@@ -3221,7 +3222,10 @@ function renderColumnBrowser(browser: HTMLElement, focusItem?: { id: string; col
       option.dataset.columnIndex = String(columnIndex);
       option.setAttribute("role", "option");
       option.setAttribute("aria-selected", String(isSelected));
-      if (hasChildren) option.setAttribute("aria-expanded", String(isSelected));
+      if (hasChildren) {
+        option.dataset.hasChildren = "true";
+        option.setAttribute("aria-description", "Folder. Opens the next column.");
+      }
       option.tabIndex = isSelected || (!selectedEntry && entryIndex === 0) ? 0 : -1;
 
       const icon = document.createElement("i");
@@ -9816,6 +9820,15 @@ document.addEventListener("keydown", (event) => {
   const target = event.target instanceof HTMLElement ? event.target : null;
   if (!target) return;
 
+  if (target.matches(".sample-mac-segmented-columns") && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+    event.preventDefault();
+    const step = target.firstElementChild?.getBoundingClientRect().width ?? target.clientWidth;
+    const left = event.key === "Home" ? 0 : event.key === "End" ? target.scrollWidth
+      : target.scrollLeft + (event.key === "ArrowRight" ? step : -step);
+    target.scrollTo({ left, behavior: "instant" });
+    return;
+  }
+
   const commandRoot = target.closest<HTMLElement>(".sample-command-demo");
   if (commandRoot && !event.isComposing && !event.altKey
     && (event.ctrlKey || event.metaKey) && !event.shiftKey && event.key.toLowerCase() === "k") {
@@ -10012,9 +10025,9 @@ document.addEventListener("keydown", (event) => {
         return;
       }
 
-      if (event.key === "ArrowRight" && columnOption.hasAttribute("aria-expanded")) {
+      if (event.key === "ArrowRight" && columnOption.dataset.hasChildren === "true") {
         event.preventDefault();
-        if (columnOption.getAttribute("aria-expanded") !== "true") {
+        if (columnOption.getAttribute("aria-selected") !== "true") {
           selectColumnBrowserItem(columnOption, true);
         } else {
           const nextPane = viewport.querySelector<HTMLElement>(`.sample-column-pane[data-column-index='${columnIndex + 1}']`);

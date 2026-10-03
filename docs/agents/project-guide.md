@@ -85,4 +85,5 @@ When an interface matches an entry in docs/elements/catalog.json, read its defin
 - `npx playwright install chromium`: install the managed browser for responsive tests.
 - `npm test`: run responsive regression against an automatically started production preview after building.
 - `npm run preview`: preview the production build locally.
-- `npm run deploy`: build and deploy to Cloudflare Workers after Cloudflare authentication is configured.
+- `npm run deploy`: rerun the GitHub Actions verification and Pages deployment from the authenticated GitHub CLI.
+- `npm run deploy:cloudflare`: build at the root and deploy to an explicitly configured Cloudflare account. Set `SITE_URL` to its real origin first.

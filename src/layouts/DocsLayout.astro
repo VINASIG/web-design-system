@@ -2,9 +2,12 @@
 import "../styles/tokens.css";
 import "../styles/global.css";
 import Icon from "../components/Icon.astro";
+import { withBase } from "../lib/paths";
 
 const { title, description, eyebrow = "Shared interface guidance" } = Astro.props;
-const currentPath = Astro.url.pathname;
+const currentPath = Astro.url.pathname.slice(import.meta.env.BASE_URL.replace(/\/$/, "").length) || "/";
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const isErrorPage = currentPath === "/404.html" || currentPath.replace(/\/$/, "") === "/404";
 
 const navigation = [
   {
@@ -37,16 +40,17 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#443a3b" />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/png" sizes="16x16" href="/brand/favicons/favicon-16.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicons/favicon-32.png" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/brand/favicons/favicon-48.png" />
+    {isErrorPage ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    <link rel="icon" type="image/png" sizes="16x16" href={withBase("/brand/favicons/favicon-16.png")} />
+    <link rel="icon" type="image/png" sizes="32x32" href={withBase("/brand/favicons/favicon-32.png")} />
+    <link rel="icon" type="image/png" sizes="48x48" href={withBase("/brand/favicons/favicon-48.png")} />
     <title>{title} | VINASIG Design System</title>
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a class="skip-link" href="#main" tabindex="0">Skip to content</a>
     <div class="app-shell">
       <aside class="sidebar" aria-label="Documentation sidebar">
-        <a class="brand-lockup" href="/" aria-label="VINASIG Design System home">
+        <a class="brand-lockup" href={withBase("/")} aria-label="VINASIG Design System home">
           <span class="brand-copy">
             <span class="brand-name">VINASIG</span>
             <span class="brand-product">Design System</span>
@@ -60,7 +64,7 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
               {group.links.map((link) => (
                 <a
                   class={currentPath === link.href ? "nav-link is-active" : "nav-link"}
-                  href={link.href}
+                  href={withBase(link.href)}
                   aria-current={currentPath === link.href ? "page" : undefined}
                 >
                   <Icon name={link.icon} class="nav-icon" />
@@ -76,7 +80,7 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
       <div class="page-shell">
         <header class="topbar">
           <div class="breadcrumbs" aria-label="Breadcrumb">
-            <a href="/">VINASIG</a>
+            <a href={withBase("/")}>VINASIG</a>
             <span class="crumb-divider" aria-hidden="true"></span>
             <span aria-current="page">{breadcrumb}</span>
           </div>

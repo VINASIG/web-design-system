@@ -1,5 +1,6 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
+import { withBase } from "../lib/paths";
 import Icon from "../components/Icon.astro";
 
 const lockups = [
@@ -67,28 +68,28 @@ const lockups = [
     <div class="identity-grid">
       <article class="card identity-card">
         <div class="logo-preview logo-preview--mark">
-          <img src="/brand/marks/primary-mark.svg" alt="VINASIG four-agent Primary Brand Mark" width="25" height="25" />
+          <img src={withBase("/brand/marks/primary-mark.svg")} alt="VINASIG four-agent Primary Brand Mark" width="25" height="25" />
         </div>
         <div>
           <p class="section-kicker">Primary Brand Mark master at 25 × 25 px</p>
           <p class="card-copy">Scout observes. Thinker reasons. Builder acts. Auditor evaluates. The symbol represents a coordinated, iterative workflow.</p>
           <div class="download-actions">
-            <a class="button button-secondary" href="/brand/marks/primary-mark.svg" download>Download SVG</a>
-            <a class="text-link" href="/brand/marks/primary-mark-1000.png" download>1000 × 1000 PNG&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
+            <a class="button button-secondary" href={withBase("/brand/marks/primary-mark.svg")} download>Download SVG</a>
+            <a class="text-link" href={withBase("/brand/marks/primary-mark-1000.png")} download>1000 × 1000 PNG&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
           </div>
         </div>
       </article>
 
       <article class="card identity-card">
         <div class="logo-preview logo-preview--contained">
-          <img src="/brand/marks/contained-mark.svg" alt="VINASIG Contained Brand Mark on its white square canvas" width="27" height="27" />
+          <img src={withBase("/brand/marks/contained-mark.svg")} alt="VINASIG Contained Brand Mark on its white square canvas" width="27" height="27" />
         </div>
         <div>
           <p class="section-kicker">Contained Brand Mark master at 27 × 27 px</p>
           <p class="card-copy">The supplied contained export has a white square canvas. Its larger PNG export is available for square profile and avatar placements.</p>
           <div class="download-actions">
-            <a class="button button-secondary" href="/brand/marks/contained-mark.svg" download>Download SVG</a>
-            <a class="text-link" href="/brand/marks/contained-mark-1080.png" download>1080 × 1080 PNG&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
+            <a class="button button-secondary" href={withBase("/brand/marks/contained-mark.svg")} download>Download SVG</a>
+            <a class="text-link" href={withBase("/brand/marks/contained-mark-1080.png")} download>1080 × 1080 PNG&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
           </div>
         </div>
       </article>
@@ -104,11 +105,11 @@ const lockups = [
       {lockups.map((lockup) => (
         <article class="card lockup-card">
           <div class:list={["logo-preview", "logo-preview--lockup", lockup.variant === "dark" && "logo-preview--dark"]}>
-            <img src={lockup.src} alt={lockup.alt} />
+            <img src={withBase(lockup.src)} alt={lockup.alt} />
           </div>
           <div class="lockup-meta">
             <div><h3>{lockup.title}</h3><p class="card-copy">{lockup.detail}</p></div>
-            <a class="button button-secondary" href={lockup.src} download={lockup.file}>Download SVG</a>
+            <a class="button button-secondary" href={withBase(lockup.src)} download={lockup.file}>Download SVG</a>
           </div>
         </article>
       ))}
@@ -124,28 +125,28 @@ const lockups = [
       <article class="card">
         <h3>Favicon</h3>
         <div class="logo-preview logo-preview--favicons" aria-label="Favicon exports shown at increasing display sizes">
-          <img src="/brand/favicons/favicon-16.png" alt="16 by 16 pixel VINASIG favicon" width="16" height="16" />
-          <img src="/brand/favicons/favicon-32.png" alt="32 by 32 pixel VINASIG favicon" width="32" height="32" />
-          <img src="/brand/favicons/favicon-48.png" alt="48 by 48 pixel VINASIG favicon" width="48" height="48" />
+          <img src={withBase("/brand/favicons/favicon-16.png")} alt="16 by 16 pixel VINASIG favicon" width="16" height="16" />
+          <img src={withBase("/brand/favicons/favicon-32.png")} alt="32 by 32 pixel VINASIG favicon" width="32" height="32" />
+          <img src={withBase("/brand/favicons/favicon-48.png")} alt="48 by 48 pixel VINASIG favicon" width="48" height="48" />
         </div>
         <p class="card-copy">Original supplied PNG sizes: 16 × 16, 32 × 32, and 48 × 48 pixels.</p>
         <div class="download-row">
-          <a class="text-link" href="/brand/favicons/favicon-16.png" download>16 × 16 PNG&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
-          <a class="text-link" href="/brand/favicons/favicon-32.png" download>32 × 32 PNG&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
-          <a class="text-link" href="/brand/favicons/favicon-48.png" download>48 × 48 PNG&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
+          <a class="text-link" href={withBase("/brand/favicons/favicon-16.png")} download>16 × 16 PNG&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
+          <a class="text-link" href={withBase("/brand/favicons/favicon-32.png")} download>32 × 32 PNG&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
+          <a class="text-link" href={withBase("/brand/favicons/favicon-48.png")} download>48 × 48 PNG&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
         </div>
       </article>
 
       <article class="card">
         <h3>Monochrome Brand Mark</h3>
         <div class="mono-preview-grid">
-          <div class="logo-preview logo-preview--mark"><img src="/brand/marks/monochrome-black.png" alt="Black monochrome VINASIG Brand Mark" /></div>
-          <div class="logo-preview logo-preview--mark logo-preview--dark"><img src="/brand/marks/monochrome-white.png" alt="White monochrome VINASIG Brand Mark" /></div>
+          <div class="logo-preview logo-preview--mark"><img src={withBase("/brand/marks/monochrome-black.png")} alt="Black monochrome VINASIG Brand Mark" /></div>
+          <div class="logo-preview logo-preview--mark logo-preview--dark"><img src={withBase("/brand/marks/monochrome-white.png")} alt="White monochrome VINASIG Brand Mark" /></div>
         </div>
         <p class="card-copy">Symbol-only exports for one-color contexts. Match black with a light surface and white with a dark surface.</p>
         <div class="download-row">
-          <a class="text-link" href="/brand/marks/monochrome-black.png" download>Black PNG&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
-          <a class="text-link" href="/brand/marks/monochrome-white.png" download>White PNG&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
+          <a class="text-link" href={withBase("/brand/marks/monochrome-black.png")} download>Black PNG&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
+          <a class="text-link" href={withBase("/brand/marks/monochrome-white.png")} download>White PNG&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
         </div>
       </article>
     </div>

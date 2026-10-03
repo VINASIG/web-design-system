@@ -4,18 +4,20 @@ A source repository and static documentation website for people and SI agents th
 
 The canonical repository is [VINASIG/web-design-system](https://github.com/VINASIG/web-design-system). Shared working rules come from [VINASIG/agent-standards](https://github.com/VINASIG/agent-standards), and artwork is maintained in [VINASIG/vinasig-brand-assets](https://github.com/VINASIG/vinasig-brand-assets). This repository contains selected supplied brand exports for its documentation.
 
+Open the [documentation website](https://vinasig.github.io/web-design-system/). GitHub Actions publishes the checked static build from `main` after Linux and Windows verification.
+
 VINASIG uses **Super Intelligence (SI)** and **SI agents** as its preferred terms in project-authored copy. This is a naming convention, not a claim that every current system exceeds human intelligence. Preserve original wording in research titles, quotations, official names, laws, and technical identifiers.
 
 ## Technology
 
 - **Astro** generates a static site by default, with very little browser-side JavaScript.
-- **Cloudflare Workers** serves the generated static files. Astro's Cloudflare adapter can be added later if a route needs server rendering, sessions, or API behavior.
+- **GitHub Pages** serves the checked static documentation. Cloudflare Workers remains an optional authenticated deployment. See [the publication decision](docs/decisions/0002-github-pages-publication.md).
 - **Space Grotesk** is the only typeface used. The variable font is served locally. The included `public/fonts/OFL.txt` is its license notice.
 - Interface arrows and pictographic icons use Lucide SVGs. Third-party company and product logos use Simple Icons with contextual color; provider sign-in marks follow their official brand guidance. Space Grotesk symbols may appear in prose or typographic notation.
 
 ## Run locally
 
-Use Node 24.19.0 from `.node-version` and npm 11.17.0 from `packageManager`. This repository supports the Node 24 line. `package-lock.json` records the dependency graph for reproducible installs.
+Use Node 24.21.0 from `.node-version` and npm 11.19.0 from `packageManager`. This repository supports the Node 24 line. `package-lock.json` records the dependency graph for reproducible installs.
 
 ```sh
 git clone https://github.com/VINASIG/web-design-system.git
@@ -66,14 +68,24 @@ See [the test guide](tests/README.md) for browser setup, custom widths and touch
 
 ## Deploy
 
-The project is configured for Cloudflare Workers static assets. To deploy from a local machine, authenticate with Cloudflare once and run:
+The default publication is GitHub Pages at `/web-design-system/`. Push an authorized, reviewed change to `main` to run source, standards and browser checks on Linux and Windows. Deployment depends on both verification jobs and publishes only `dist/`. Pull requests run verification without deployment.
+
+To rerun the checked publication from an authenticated GitHub CLI:
 
 ```sh
-npx wrangler login
 npm run deploy
 ```
 
-For automatic deployments, connect this GitHub repository to **Workers Builds** and set the production branch to `main`, the build command to `npm run build`, and the deploy command to `npx wrangler deploy`. Cloudflare creates preview deployments for review.
+`BASE_PATH` and `SITE_URL` can configure another reviewed static deployment. The production preview and path regression use the configured base. Internal links, downloads, favicons and local fonts must resolve under that same path.
+
+Cloudflare Workers is optional. Authenticate with the intended Cloudflare account, set `SITE_URL` to its actual public origin, and run:
+
+```sh
+npx wrangler login
+npm run deploy:cloudflare
+```
+
+The optional Cloudflare command builds at the origin root before uploading static assets. It requires its own account configuration and is separate from GitHub Pages. The repository does not store deployment credentials.
 
 The static site can stay pre-rendered as it grows. If a future page needs request-time data, authentication, or an API, add Astro's Cloudflare adapter and render only the routes that need server behavior.
 

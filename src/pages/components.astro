@@ -1,5 +1,6 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
+import { withBase } from "../lib/paths";
 import Icon from "../components/Icon.astro";
 ---
 
@@ -12,7 +13,7 @@ import Icon from "../components/Icon.astro";
     <Icon name="info" class="callout-icon" />
     <div>
       <strong>Component guidance is still being shaped</strong>
-      <p>Use these examples to review the format. A future component page should document purpose, variants, states, keyboard behavior, responsive behavior, and accessibility. <a href="/elements/">Browse the full catalog of 81 interface entries</a>.</p>
+      <p>Use these examples to review the format. A future component page should document purpose, variants, states, keyboard behavior, responsive behavior, and accessibility. <a href={withBase("/elements/")}>Browse the full catalog of 81 interface entries</a>.</p>
     </div>
   </div>
 
@@ -26,7 +27,7 @@ import Icon from "../components/Icon.astro";
         <button class="button button-primary" type="button">Primary action</button>
         <button class="button button-secondary" type="button">Secondary action</button>
         <button class="button button-danger" type="button">Delete draft</button>
-        <a class="button button-secondary" href="/patterns/">Link action</a>
+        <a class="button button-secondary" href={withBase("/patterns/")}>Link action</a>
       </div>
       <ul class="rule-list">
         <li><span class="rule-term">Purpose</span><span class="rule-text">Perform an action in the current context.</span></li>
@@ -137,7 +138,7 @@ import Icon from "../components/Icon.astro";
       <p class="section-kicker">Foundation color</p>
       <h3>Use semantic tokens</h3>
       <p class="card-copy">Semantic tokens connect a component to its role and make system-wide changes easier to apply.</p>
-      <a class="text-link" href="/foundations/">Read color foundations&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
+      <a class="text-link" href={withBase("/foundations/")}>Read color foundations&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
     </article>
   </section>
 </DocsLayout>

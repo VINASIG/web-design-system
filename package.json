@@ -9,12 +9,18 @@
     "type": "git",
     "url": "git+https://github.com/VINASIG/web-design-system.git"
   },
-  "homepage": "https://github.com/VINASIG/web-design-system#readme",
+  "homepage": "https://vinasig.github.io/web-design-system/",
   "bugs": {
     "url": "https://github.com/VINASIG/web-design-system/issues"
   },
-  "keywords": ["vinasig", "design-system", "astro", "si-agents", "accessibility"],
-  "packageManager": "npm@11.17.0",
+  "keywords": [
+    "vinasig",
+    "design-system",
+    "astro",
+    "si-agents",
+    "accessibility"
+  ],
+  "packageManager": "npm@11.19.0",
   "engines": {
     "node": ">=24.19.0 <25",
     "npm": ">=11.17.0 <12"
@@ -23,17 +29,19 @@
     "dev": "astro dev",
     "check:content": "node scripts/check-content.mjs",
     "check:standards": "node scripts/check-standards.mjs",
-    "check:scripts": "node --check scripts/check-content.mjs && node --check scripts/check-standards.mjs && node --check tests/standards.test.mjs && node --check tests/helpers/preview.mjs && node --check tests/responsive.mjs",
+    "check:scripts": "node --check scripts/check-content.mjs && node --check scripts/check-standards.mjs && node --check tests/standards.test.mjs && node --check tests/helpers/preview.mjs && node --check tests/helpers/screenshot.mjs && node --check tests/responsive.mjs",
     "check": "npm run check:standards && npm run check:content && npm run check:scripts && astro check",
     "test:standards": "node --test tests/standards.test.mjs",
     "test": "npm run test:responsive",
     "test:responsive": "node tests/responsive.mjs",
     "build": "astro build",
     "preview": "astro preview",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "gh workflow run check.yml --ref main",
+    "deploy:cloudflare": "npm run build -- --base / && wrangler deploy"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
+    "@axe-core/playwright": "4.13.0",
     "astro": "7.3.5",
     "playwright": "1.63.0",
     "typescript": "6.0.3",

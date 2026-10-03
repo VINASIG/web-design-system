@@ -569,7 +569,7 @@ h3 {
 
 .agent-card p {
   margin-bottom: 0;
-  color: var(--color-text-muted);
+  color: var(--color-text);
 }
 
 .code-panel {

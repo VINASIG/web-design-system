@@ -33,15 +33,15 @@ Installed skills live under `.agents/skills/` and cover workflow, dependencies, 
 | Framework types | `astro check` uses Astro's strict configuration, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes` and framework-generated types. |
 | Content and assets | `scripts/check-content.mjs` checks the catalog, icon registry, font and favicon assets. |
 | Native script syntax | `node --check` covers the repository check and test scripts. |
-| Browser regression | Existing Playwright checks cover eight routes, required widths, interactive specimen states, touch and normal or reduced motion. |
+| Browser regression | Playwright checks cover eight routes, required widths, interactive specimen states, touch, normal or reduced motion, base-aware navigation, font loading and favicon requests. |
 | CI | The same gates run on Ubuntu and Windows. Actions are pinned to reviewed commits. |
 | Dependency maintenance | Direct versions and the lockfile are pinned. Dependabot proposes reviewed updates and does not merge them automatically. |
 
-The imported lint, formatting, HTML validation and Lighthouse presets are reference configurations. Importing them does not execute their tools. Typed ESLint for Astro, Stylelint, generated HTML validation, automated axe audits and Lighthouse budgets have not been connected to this repository's gates in this publication change. Existing source and browser assertions remain required and have not been removed or weakened.
+The imported lint, formatting, HTML validation and Lighthouse presets are reference configurations. Importing them does not execute their tools. Typed ESLint for Astro, Stylelint, generated HTML validation and Lighthouse budgets have not been connected to this repository's gates. Automated axe audits were connected to every route and responsive viewport on 2026-10-03. They include the WCAG 2.2 target-size rules. Existing source and browser assertions remain required and have not been removed or weakened.
 
 This is an explicit phased adoption inventory reviewed on 2026-10-02, with the next review proposed for 2026-10-16. Framework parser and file coverage must be tested before adopting those presets. Any exception to a mandatory rule requires the owner, reason and review date recorded through the shared exception procedure. This inventory is not an approval to suppress defects or claim full standards conformance.
 
-The current automated browser matrix uses managed Chromium. Firefox, WebKit, real phones and screen-reader sessions are `NOT_RUN` for this publication. They remain target compatibility checks before making broader support or WCAG conformance claims. The accessibility target is WCAG 2.2 AA. Existing geometry and keyboard assertions provide partial evidence, not a full accessibility audit.
+The browser matrix was expanded on 2026-10-03 to managed Chromium, Firefox and WebKit on Linux and Windows. Read the final revision's CI results for observed outcomes. Real phones and screen-reader sessions remain `NOT_RUN`. The accessibility target is WCAG 2.2 AA. Existing geometry and keyboard assertions provide partial evidence, not a full accessibility audit.
 
 ## Reproduce or update the snapshot
 

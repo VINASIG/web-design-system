@@ -1,7 +1,10 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { chromium } from 'playwright';
+import { chromium, firefox, webkit } from 'playwright';
 import { startPreview } from './helpers/preview.mjs';
+import { capturePage } from './helpers/screenshot.mjs';
+import AxeBuilder from '@axe-core/playwright';
+import astroConfig from '../astro.config.mjs';
 
 const phase = process.argv[2] || new Date().toISOString().replaceAll(':', '-');
 if (!/^[a-zA-Z0-9_.-]+$/.test(phase) || phase === '.' || phase === '..') {
@@ -19,19 +22,34 @@ const routes = (await fs.readdir(new URL('../src/pages/', import.meta.url)))
   .filter((file) => file.endsWith('.astro'))
   .map((file) => file === 'index.astro' ? '/' : `/${file.replace('.astro', '')}/`);
 const results=[];
+const engines = { chromium, firefox, webkit };
+const engine = process.env.RESPONSIVE_ENGINE || 'chromium';
+if (!Object.hasOwn(engines, engine)) throw new Error('RESPONSIVE_ENGINE must be chromium, firefox or webkit.');
+if (process.env.RESPONSIVE_BROWSER && engine !== 'chromium') throw new Error('A Chromium channel requires RESPONSIVE_ENGINE=chromium.');
 const preview = await startPreview(root);
 const base = preview.baseURL;
 let browser;
 const check=(name,pass,detail)=>results.push({width:currentWidth,name,pass,detail});
 let currentWidth=0;
 try {
-  browser = await chromium.launch({
+  browser = await engines[engine].launch({
     ...(process.env.RESPONSIVE_BROWSER ? { channel: process.env.RESPONSIVE_BROWSER } : {}),
     headless: true,
   });
+  const requests = await browser.newContext();
+  const sitemap = await requests.request.get(`${base}/sitemap.xml`);
+  check('sitemap responds with XML',sitemap.ok()&&sitemap.headers()['content-type']?.includes('xml'));
+  const sitemapText = await sitemap.text();
+  for(const route of routes.filter(route=>route!=='/404/')) {
+    const url = new URL(`${base}${route}`);
+    check(`sitemap includes the canonical ${route}`,sitemapText.includes(`<loc>${new URL(url.pathname,astroConfig.site).href}</loc>`));
+  }
+  check('sitemap excludes the error page',!sitemapText.includes('/404/'));
+  await requests.close();
   for (const [width,height] of sizes) {
     currentWidth=width;
-    const context=await browser.newContext({viewport:{width,height},deviceScaleFactor:1,reducedMotion:process.env.RESPONSIVE_MOTION==='normal'?'no-preference':'reduce',hasTouch:process.env.RESPONSIVE_TOUCH==='true',isMobile:process.env.RESPONSIVE_TOUCH==='true'&&width<600});
+    // Firefox exposes touch input but Playwright does not support its isMobile flag.
+    const context=await browser.newContext({viewport:{width,height},deviceScaleFactor:1,reducedMotion:process.env.RESPONSIVE_MOTION==='normal'?'no-preference':'reduce',hasTouch:process.env.RESPONSIVE_TOUCH==='true',isMobile:process.env.RESPONSIVE_TOUCH==='true'&&width<600&&engine!=='firefox'});
     const page=await context.newPage();
     const errors=[];
     page.on('pageerror',e=>errors.push(e.message));
@@ -47,8 +65,22 @@ try {
       check(`${route} has no page overflow`, geometry.scroll <= geometry.width + 1, geometry);
       check(`${route} exposes its heading`, await page.locator('main h1').isVisible());
       check(`${route} has no broken images`, await page.locator('img').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth > 0)));
-      await page.screenshot({ path: path.join(dir, `route-${route === '/' ? 'index' : route.split('/')[1]}--default.png`), fullPage: true });
+      check(`${route} loads the local Space Grotesk font`, await page.evaluate(() => [...document.fonts].some((font) => font.family.replaceAll('"', '') === 'Space Grotesk' && font.status === 'loaded')));
+      for (const icon of await page.locator('link[rel="icon"]').evaluateAll((icons) => icons.map((icon) => icon.href))) {
+        check(`${route} resolves favicon ${icon.split('/').at(-1)}`, (await page.request.get(icon)).ok());
+      }
+      const accessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+      check(`${route} has no automated accessibility violations`, accessibility.violations.length === 0, accessibility.violations.map((violation) => ({ id: violation.id, nodes: violation.nodes.map((node) => ({ target: node.target, summary: node.failureSummary })) })));
+      await capturePage(page, path.join(dir, `route-${route === '/' ? 'index' : route.split('/')[1]}--default.png`));
     }
+    await page.goto(`${base}/`, { waitUntil: 'networkidle' });
+    await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Brand & logo' }).focus();
+    await Promise.all([
+      page.waitForURL(`${base}/brand/`, { waitUntil: 'networkidle' }),
+      page.keyboard.press('Enter'),
+    ]);
+    check('keyboard navigation opens the base-aware brand route', page.url() === `${base}/brand/`);
+    check('brand navigation exposes the active page', await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Brand & logo' }).getAttribute('aria-current') === 'page');
     const missing = await page.goto(`${base}/__responsive_missing_page__/`, { waitUntil: 'networkidle' });
     check('unknown route returns HTTP 404', missing?.status() === 404, missing?.status());
     check('unknown route renders the custom error page', await page.getByRole('heading', { name: 'Page not found', level: 1 }).isVisible());
@@ -203,9 +235,16 @@ try {
     await shot('segmented-control-macos','columns');
     if(await columnView.evaluate(el=>el.scrollWidth>el.clientWidth+1)) {
       await columnView.focus();
+      check('narrow column view receives keyboard focus',await columnView.evaluate(el=>el===document.activeElement));
       await page.keyboard.press('ArrowRight');
       await page.waitForTimeout(250);
       check('narrow column view supports keyboard scrolling',await columnView.evaluate(el=>el.scrollLeft>0));
+      await page.keyboard.press('ArrowLeft');
+      check('narrow column view can scroll back with ArrowLeft',await columnView.evaluate(el=>el.scrollLeft===0));
+      await page.keyboard.press('End');
+      check('narrow column view reaches its end with End',await columnView.evaluate(el=>el.scrollLeft>=el.scrollWidth-el.clientWidth-1));
+      await page.keyboard.press('Home');
+      check('narrow column view returns to its start with Home',await columnView.evaluate(el=>el.scrollLeft===0));
       const finalColumn=await columnView.evaluate(el=>{
         el.scrollLeft=el.scrollWidth;
         const a=el.lastElementChild.getBoundingClientRect(),b=el.getBoundingClientRect();

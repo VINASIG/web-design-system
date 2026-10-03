@@ -2,6 +2,10 @@ version: 2
 updates:
   - package-ecosystem: npm
     directory: /
+    # Reviewed 2026-10-03. Revisit when the compiler/checker peers support TS 7.
+    ignore:
+      - dependency-name: typescript
+        versions: [">=7.0.0 <8.0.0"]
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
