@@ -97,7 +97,24 @@ try {
     const visibleRect=async locator=>locator.evaluate(el=>{
       const r=el.getBoundingClientRect();return {fits:r.left>=-1&&r.right<=innerWidth+1&&r.top>=-1&&r.bottom<=innerHeight+1,x:r.x,y:r.y,width:r.width,height:r.height};
     });
-    const tap=async locator=>process.env.RESPONSIVE_TOUCH==='true'?locator.tap():locator.click();
+    const tap=async locator=>{
+      await locator.scrollIntoViewIfNeeded();
+      // Root smooth scrolling can keep moving a control after protocol scrolling.
+      // Wait for its actual viewport geometry; retain normal motion in the page.
+      await locator.evaluate(async element=>{
+        let previous=element.getBoundingClientRect(),stable=0;
+        for(let frame=0;frame<180;frame++) {
+          await new Promise(resolve=>requestAnimationFrame(resolve));
+          const current=element.getBoundingClientRect();
+          const unchanged=Math.abs(current.x-previous.x)<0.1&&Math.abs(current.y-previous.y)<0.1&&Math.abs(current.width-previous.width)<0.1&&Math.abs(current.height-previous.height)<0.1;
+          stable=unchanged?stable+1:0;
+          if(stable>=4)return;
+          previous=current;
+        }
+        throw new Error('The interactive control did not settle within 180 animation frames.');
+      });
+      return process.env.RESPONSIVE_TOUCH==='true'?locator.tap():locator.click();
+    };
     const settle=async()=>page.waitForTimeout(process.env.RESPONSIVE_MOTION==='normal'?300:40);
     let geom=await noHorizontal();check('page horizontal overflow',geom.scroll<=geom.width+1,geom);
     await page.keyboard.press('Tab');
@@ -107,7 +124,9 @@ try {
     check('skip link reaches main content',await page.evaluate(()=>location.hash==='#main'));
     await page.keyboard.press('Tab');
     const calendar=entry('date-picker').locator('[data-action="calendar-toggle"]');
-    if(await calendar.getAttribute('aria-expanded')==='false')await calendar.click();
+    if(await calendar.getAttribute('aria-expanded')==='false')await tap(calendar);
+    await entry('date-picker').locator('.sample-calendar').waitFor({state:'visible'});
+    check('calendar trigger opens a visible panel',await entry('date-picker').locator('.sample-calendar').isVisible());
     const rows=await entry('date-picker').locator('.sample-calendar-grid [role="row"]').evaluateAll(els=>els.map(el=>{
       const children=[...el.children].map(e=>e.getBoundingClientRect());return {columns:getComputedStyle(el).gridTemplateColumns.split(' ').length,minWidth:Math.min(...children.map(c=>c.width)),height:el.getBoundingClientRect().height};
     }));
@@ -168,8 +187,17 @@ try {
     await shot('token-field','long-recipient');
     const colors=entry('color-well');
     for(const action of ['toggle-color-palette','toggle-color-panel']) {
-      await colors.locator(`[data-action='${action}']`).first().click();
-      if(action==='toggle-color-panel') await colors.locator('[data-action="toggle-color-picker"]').click();
+      await tap(colors.locator(`[data-action='${action}']`).first());
+      if(action==='toggle-color-panel') {
+        const panel=colors.locator('.sample-color-panel');
+        await panel.waitFor({state:'visible'});
+        // The child moves during overlay entry. Wait for that finite transition
+        // before selecting it, and use touch input in the touch run.
+        await panel.evaluate(async element=>{await Promise.all(element.getAnimations().map(animation=>animation.finished));});
+        await tap(colors.locator('[data-action="toggle-color-picker"]'));
+        await colors.locator('.sample-color-picker').waitFor({state:'visible'});
+        check('full color panel opens its nested picker',await colors.locator('.sample-color-picker').isVisible());
+      }
       await page.waitForTimeout(150);
       const selector=action==='toggle-color-panel'?'.sample-color-panel':'.sample-color-popover';
       const color=await within(`#color-well ${selector}`,'#color-well .element-preview');
@@ -184,7 +212,10 @@ try {
         await page.setViewportSize({width,height});
         await settle();
         const surface=colors.locator('.sample-color-picker-surface');
+        check('nested color picker stays open across live resize',await surface.isVisible());
+        await surface.waitFor({state:'visible'});
         const size=await surface.boundingBox();
+        if(!size)throw new Error('The open color picker must expose a measurable surface.');
         await surface.click({position:{x:size.width-6,y:6}});
         await surface.press('End');
         await surface.press('PageUp');
