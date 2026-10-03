@@ -6,13 +6,13 @@ Start with the repository's `AGENTS.md` for agent instructions and project conte
 
 ## Published guides
 
-- [Overview](https://vinasig.github.io/web-design-system/) explains the purpose and current status.
-- [Brand and logo](https://vinasig.github.io/web-design-system/brand/) describes logo variants, asset downloads, and draft usage recommendations.
-- [Foundations](https://vinasig.github.io/web-design-system/foundations/) defines the draft visual direction and covers color, typography, spacing, responsive behavior, accessibility, and writing style.
-- [Components](https://vinasig.github.io/web-design-system/components/) describes buttons, text inputs, status messages, and cards.
-- [Patterns](https://vinasig.github.io/web-design-system/patterns/) covers forms, empty states, loading, errors, and page layout.
-- [UI element library](https://vinasig.github.io/web-design-system/elements/) shows styled previews for all 81 entries in the NameThatUI snapshot, with 49 web entries and 32 macOS entries.
-- [SI agent guide](https://vinasig.github.io/web-design-system/agents/) explains how an SI agent should use this system.
+- [Overview](https://design.vinasig.io.vn/) explains the purpose and current status.
+- [Brand and logo](https://design.vinasig.io.vn/brand/) describes logo variants, asset downloads, and draft usage recommendations.
+- [Foundations](https://design.vinasig.io.vn/foundations/) defines the draft visual direction and covers color, typography, spacing, responsive behavior, accessibility, and writing style.
+- [Components](https://design.vinasig.io.vn/components/) describes buttons, text inputs, status messages, and cards.
+- [Patterns](https://design.vinasig.io.vn/patterns/) covers forms, empty states, loading, errors, and page layout.
+- [UI element library](https://design.vinasig.io.vn/elements/) shows styled previews for all 81 entries in the NameThatUI snapshot, with 49 web entries and 32 macOS entries.
+- [SI agent guide](https://design.vinasig.io.vn/agents/) explains how an SI agent should use this system.
 - [Shared working standard](https://github.com/VINASIG/agent-standards) provides reviewed snapshot imports and namespaced skills. A link alone does not import instructions.
 - [SI agent UI quality workflow](https://github.com/VINASIG/web-design-system/blob/main/docs/agents/ui-quality.md) records the research-backed review checklist for generated interface work.
 

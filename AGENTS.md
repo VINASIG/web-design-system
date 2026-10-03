@@ -25,6 +25,11 @@ This Astro repository publishes documentation, source tokens and interactive UI 
 - Check the shared favicon, open dropdowns, keyboard behavior, names and states of changed controls. Fix overflow at its source. A successful build or automated assertion does not prove visual correctness.
 - Keep screenshots, browser reports, local bundles and logs under ignored `output/`. Record durable conclusions under `docs/audits/`. Report actual PASS, FAIL, NOT_RUN or NOT_APPLICABLE outcomes with evidence and limits.
 - Read [the rights record](LICENSE_STATUS.md) before copying or redistributing source or assets. Do not invent a license grant, author attribution or deployment hostname.
+
+## Canonical domain
+
+The owner authorized the custom-domain migration on 4 October 2026. Publish this site at https://design.vinasig.io.vn/ with an origin-root base. Preserve that domain in canonical/social metadata, sitemap, robots, package homepage, preview and browser assertions. Keep GitHub repository/source links intact. Read docs/DOMAIN.md. GitHub Actions deploys through the repository Pages custom-domain setting; a CNAME file alone does not configure an Actions deployment.
+
 <!-- VINASIG STANDARDS BEGIN -->
 ## VINASIG SI agent standards 0.1.0
 

@@ -1,8 +1,8 @@
 import { defineConfig } from "astro/config";
 
 export default defineConfig({
-  site: process.env.SITE_URL || "https://vinasig.github.io",
-  base: process.env.BASE_PATH ?? "/web-design-system",
+  site: process.env.SITE_URL || "https://design.vinasig.io.vn",
+  base: process.env.BASE_PATH ?? "/",
   trailingSlash: "always",
   output: "static",
   devToolbar: {

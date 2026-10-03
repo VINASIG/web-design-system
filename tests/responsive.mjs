@@ -46,6 +46,18 @@ try {
     check(`sitemap includes the canonical ${route}`,sitemapText.includes(`<loc>${new URL(url.pathname,astroConfig.site).href}</loc>`));
   }
   check('sitemap excludes the error page',!sitemapText.includes('/404/'));
+  const robots = await requests.request.get(`${base}/robots.txt`);
+  const robotsText = await robots.text();
+  check(
+    "robots allows crawling at the origin root",
+    robots.ok() && robotsText.includes("Allow: /"),
+  );
+  check(
+    "robots declares the canonical sitemap",
+    robotsText.includes(
+      `Sitemap: ${new URL(new URL(`${base}/sitemap.xml`).pathname, astroConfig.site).href}`,
+    ),
+  );
   await requests.close();
   for (const [width,height] of sizes) {
     currentWidth=width;
@@ -62,6 +74,17 @@ try {
       await page.evaluate(() => document.fonts.ready);
       // The explicit 404 page is a static resource. An unknown URL must produce the error status.
       check(`${route} responds`, response?.status() === 200, response?.status());
+      if (route !== "/404/") {
+        const canonical = await page
+          .locator('link[rel="canonical"]')
+          .getAttribute("href");
+        check(
+          `${route} has the configured canonical`,
+          canonical ===
+            new URL(new URL(`${base}${route}`).pathname, astroConfig.site).href,
+          canonical,
+        );
+      }
       const geometry = await page.evaluate(() => ({ width: innerWidth, scroll: document.documentElement.scrollWidth }));
       check(`${route} has no page overflow`, geometry.scroll <= geometry.width + 1, geometry);
       check(`${route} exposes its heading`, await page.locator('main h1').isVisible());

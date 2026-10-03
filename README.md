@@ -4,7 +4,7 @@ A source repository and static documentation website for people and SI agents th
 
 The canonical repository is [VINASIG/web-design-system](https://github.com/VINASIG/web-design-system). Shared working rules come from [VINASIG/agent-standards](https://github.com/VINASIG/agent-standards), and artwork is maintained in [VINASIG/vinasig-brand-assets](https://github.com/VINASIG/vinasig-brand-assets). This repository contains selected supplied brand exports for its documentation.
 
-Open the [documentation website](https://vinasig.github.io/web-design-system/). GitHub Actions publishes the checked static build from `main` after Linux and Windows verification.
+Open the [documentation website](https://design.vinasig.io.vn/). GitHub Actions publishes the checked static build from `main` after Linux and Windows verification.
 
 VINASIG uses **Super Intelligence (SI)** and **SI agents** as its preferred terms in project-authored copy. This is a naming convention, not a claim that every current system exceeds human intelligence. Preserve original wording in research titles, quotations, official names, laws, and technical identifiers.
 
@@ -68,7 +68,7 @@ See [the test guide](tests/README.md) for browser setup, custom widths and touch
 
 ## Deploy
 
-The default publication is GitHub Pages at `/web-design-system/`. Push an authorized, reviewed change to `main` to run source, standards and browser checks on Linux and Windows. Deployment depends on both verification jobs and publishes only `dist/`. Pull requests run verification without deployment.
+The default publication is GitHub Pages at https://design.vinasig.io.vn/ with an origin-root base. Push an authorized, reviewed change to `main` to run source, standards and browser checks on Linux and Windows. Deployment depends on both verification jobs and publishes only `dist/`. Pull requests run verification without deployment.
 
 To rerun the checked publication from an authenticated GitHub CLI:
 
@@ -113,6 +113,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for changes and bug reports, [SECURITY.md
 The owner selected AGPL-3.0-or-later for the website implementation and CC-BY-SA-4.0 for authored documentation. The package keeps `private: true` to prevent accidental npm publication. See [LICENSES.md](LICENSES.md) for exact scopes and [LICENSE_STATUS.md](LICENSE_STATUS.md) for the current rights record.
 
 Space Grotesk retains its SIL Open Font License notice. `public/brand/` contains exact copies of supplied VINASIG exports governed by [the separate brand policy](BRAND_POLICY.md). Third-party marks remain subject to their owners' rights and brand rules.
+
+## Canonical domain
+
+The public site uses [design.vinasig.io.vn](https://design.vinasig.io.vn/) at the origin root. GitHub Pages remains the deployment service. [Domain maintenance](docs/DOMAIN.md) records DNS, HTTPS, search submission and verification boundaries.
 
 ## License scopes
 
