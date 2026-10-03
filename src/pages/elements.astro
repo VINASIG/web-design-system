@@ -3,12 +3,15 @@ import DocsLayout from "../layouts/DocsLayout.astro";
 import catalog from "../../docs/elements/catalog.json";
 import specimens from "../../docs/elements/specimens.json";
 import { withBaseAttributes } from "../lib/paths";
+import "../styles/range-control.css";
 
 const platforms = ["Web", "macOS"] as const;
 const entriesForPlatform = (platform: (typeof platforms)[number]) =>
   catalog.elements.filter((element) => element.platform === platform);
 const slugify = (value: string) =>
   value.toLowerCase().replaceAll(" ", "-").replaceAll("&", "and");
+const displayName = (value: string) =>
+  value.replace(/\s*\(([^)]+)\)/g, " - $1").replaceAll(" / ", " - ");
 ---
 
 <DocsLayout
@@ -65,7 +68,7 @@ const slugify = (value: string) =>
                       <header class="element-entry-heading">
                         <span class="element-order">{String(element.order).padStart(2, "0")}</span>
                         <span class="element-name">
-                          <strong>{element.name}</strong>
+                          <strong>{displayName(element.name)}</strong>
                           <small>{element.id}</small>
                         </span>
                       </header>
@@ -629,7 +632,7 @@ const slugify = (value: string) =>
   .sample-bottom-screen.is-entering { animation: sample-bottom-panel-enter 200ms ease-out both; }
   @keyframes sample-bottom-panel-enter { from { opacity: 0.7; transform: translateY(0.25rem); } to { opacity: 1; transform: translateY(0); } }
   .sample-bottom-screen-header { display: grid; gap: 0.2rem; }
-  .sample-bottom-screen-header small { color: var(--color-text-muted); font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  .sample-bottom-screen-header small { color: var(--color-text-muted); font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em; text-transform: none; }
   .sample-bottom-screen-header h3 { margin: 0; font-size: 1rem; }
   .sample-bottom-screen-content { display: grid; gap: 0.5rem; }
   .sample-bottom-summary { margin: 0 0 0.15rem; color: var(--color-text-muted); font-size: 0.7rem; }
@@ -890,7 +893,7 @@ const slugify = (value: string) =>
   .sample-multi-transfer-variant { grid-column: 1 / -1; }
   .sample-multi-transfer-content { display: grid; align-items: center; gap: 0.6rem; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
   .sample-multi-transfer-column { display: grid; min-width: 0; gap: 0.25rem; }
-  .sample-multi-transfer-column > strong { color: var(--color-text-muted); font-size: 0.66rem; letter-spacing: 0.05em; text-transform: uppercase; }
+  .sample-multi-transfer-column > strong { color: var(--color-text-muted); font-size: 0.66rem; letter-spacing: 0.05em; text-transform: none; }
   .sample-multi-transfer-list { display: grid; min-width: 0; min-height: 6rem; max-height: 8rem; align-content: start; gap: 0.1rem; overflow: auto; padding: 0.25rem; background: var(--color-surface-muted); border: 1px solid var(--color-border); border-radius: var(--radius-sm); scrollbar-color: var(--color-border-strong) var(--color-surface-muted); scrollbar-width: thin; }
   .sample-multi-transfer-list::-webkit-scrollbar { width: 0.6rem; }
   .sample-multi-transfer-list::-webkit-scrollbar-track { background: var(--color-surface-muted); border-radius: var(--radius-pill); }
@@ -1953,7 +1956,7 @@ const slugify = (value: string) =>
   .sample-kanban-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 0.8rem; }
   .sample-kanban-column { min-width: 0; padding: 0.65rem; background: var(--color-surface-muted); border: 1px solid var(--color-border); border-radius: var(--radius-sm); transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease; }
   .sample-kanban-column > header { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.6rem; }
-  .sample-kanban-column h3 { margin: 0; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.055em; text-transform: uppercase; }
+  .sample-kanban-column h3 { margin: 0; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.055em; text-transform: none; }
   .sample-kanban-column [data-column-count] { display: grid; min-width: 1.4rem; height: 1.4rem; place-items: center; padding-inline: 0.3rem; color: var(--color-text-muted); background: var(--color-surface); border-radius: 999px; font-size: 0.68rem; font-variant-numeric: tabular-nums; }
   .sample-kanban-list { display: grid; min-height: 6rem; align-content: start; gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
   .sample-task-card { position: relative; display: grid; min-width: 0; align-items: center; gap: 0.25rem; grid-template-columns: 1.25rem minmax(0, 1fr); padding: 0.35rem 0.4rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: calc(var(--radius-sm) - 2px); box-shadow: 0 1px 2px rgb(68 58 59 / 6%); transition: opacity 140ms ease, box-shadow 140ms ease, transform 140ms ease; }
@@ -2259,7 +2262,7 @@ const slugify = (value: string) =>
   .sample-overlay-trio:has(.sample-overlay-tooltip:not([hidden])) { min-height: 14rem; align-content: start; }
   .sample-overlay-trio:has(.sample-overlay-tooltip:not([hidden])) > .sample-overlay-feedback { margin-top: 6rem; }
   .sample-overlay-example { position: relative; display: grid; min-width: 0; align-content: start; gap: 0.5rem; }
-  .sample-overlay-kicker { color: var(--color-text-muted); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .sample-overlay-kicker { color: var(--color-text-muted); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: none; }
   .sample-overlay-example .sample-anchor { display: flex; width: 100%; min-width: 0; min-height: 2.55rem; align-items: center; justify-content: center; gap: 0.45rem; padding: 0.45rem 0.55rem; color: var(--color-text); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font: inherit; font-size: 0.86rem; font-weight: 600; cursor: pointer; }
   .sample-overlay-example .sample-anchor:hover,
   .sample-overlay-example .sample-anchor[aria-expanded="true"] { background: var(--color-scout-blue-soft); border-color: var(--color-scout-blue-border); }
@@ -3363,7 +3366,7 @@ const slugify = (value: string) =>
   .sample-column-view { display: flex; width: 100%; min-width: 0; min-height: 14rem; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); scrollbar-color: var(--color-border-strong) var(--color-surface-muted); scrollbar-width: thin; scroll-behavior: smooth; }
   .sample-column-pane { display: flex; min-width: 10rem; flex: 0 0 clamp(10rem, 28%, 15rem); flex-direction: column; gap: 0.35rem; padding: 0.6rem; border-right: 1px solid var(--color-border); background: var(--color-surface); }
   .sample-column-pane:last-child { border-right: 0; }
-  .sample-column-heading { padding: 0.1rem 0.25rem 0.25rem; color: var(--color-text-muted); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+  .sample-column-heading { padding: 0.1rem 0.25rem 0.25rem; color: var(--color-text-muted); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.04em; text-transform: none; }
   .sample-column-pane [role='listbox'] { display: grid; align-content: start; gap: 0.15rem; }
   .sample-column-item { display: flex; width: 100%; min-width: 0; min-height: 2rem; align-items: center; gap: 0.45rem; padding: 0.35rem 0.4rem; border: 1px solid transparent; border-radius: var(--radius-sm); background: transparent; color: var(--color-text); cursor: pointer; font-size: 0.7rem; text-align: left; transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease; }
   .sample-column-item > .ui-icon { width: 0.85rem; height: 0.85rem; flex: 0 0 auto; color: var(--color-text-muted); }

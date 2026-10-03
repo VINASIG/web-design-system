@@ -2,6 +2,7 @@
 import DocsLayout from "../layouts/DocsLayout.astro";
 import { withBase } from "../lib/paths";
 import Icon from "../components/Icon.astro";
+import "../styles/select-control.css";
 ---
 
 <DocsLayout
@@ -65,23 +66,23 @@ import Icon from "../components/Icon.astro";
     </div>
     <article class="card component-showcase">
       <div class="dropdown-example">
-        <div class="dropdown-visual" aria-hidden="true">
-          <div class="dropdown-trigger-visual"><span>Bottom center</span><Icon name="chevronDown" class="dropdown-chevron" /></div>
-          <ul class="dropdown-options-visual">
-            <li>Bottom left</li>
-            <li class="is-selected">Bottom center</li>
-            <li>Bottom right</li>
-          </ul>
+        <div class="field-demo">
+          <label for="placement">Placement</label>
+          <select id="placement" data-custom-select>
+            <option value="left">Bottom left</option>
+            <option value="center" selected>Bottom center</option>
+            <option value="right">Bottom right</option>
+          </select>
         </div>
-        <p class="card-copy">Static visual reference only. A production dropdown must implement the interaction and accessibility behavior specified below.</p>
+        <p class="card-copy">Open the menu to inspect its options. Use arrow keys to move, Enter to select and Escape to keep the current value.</p>
       </div>
       <ul class="rule-list">
-        <li><span class="rule-term">Both states</span><span class="rule-text">Customize the closed trigger and opened options panel when the design calls for a branded menu. Native select popup styling varies by browser and operating system.</span></li>
+        <li><span class="rule-term">Both states</span><span class="rule-text">Style the closed trigger and the open options panel with the same tokens and font. Operating-system popups do not meet the VINASIG control requirement.</span></li>
         <li><span class="rule-term">Keyboard</span><span class="rule-text">Support opening, arrow-key navigation, Enter or Space to select, Escape to close, visible focus, and normal focus exit.</span></li>
         <li><span class="rule-term">Accessibility</span><span class="rule-text">Use a visible label and an established accessible select or listbox pattern. Announce the current value and selected option.</span></li>
         <li><span class="rule-term">Responsive</span><span class="rule-text">Keep the popup attached to its trigger and inside the viewport on narrow screens.</span></li>
       </ul>
-      <p class="card-copy">This visual example is a draft. Read the complete single-select dropdown specification before implementing a control.</p>
+      <p class="card-copy">The reusable control retains a hidden native select for form state. Read the component specification and test the consumer's real interactions before adoption.</p>
     </article>
   </section>
 
@@ -115,7 +116,7 @@ import Icon from "../components/Icon.astro";
       </div>
       <ul class="rule-list">
         <li><span class="rule-term">Icon set</span><span class="rule-text">Use Lucide SVG icons through the shared <code>Icon.astro</code> component.</span></li>
-        <li><span class="rule-term">Brand logos</span><span class="rule-text">Use Simple Icons for third-party company and product logos such as Google and Apple. Their default color follows the surrounding text; choose an explicit brand color only when the context and official guidance call for it.</span></li>
+        <li><span class="rule-term">Brand logos</span><span class="rule-text">Use Simple Icons for third-party company and product logos such as Google and Apple. Their default color follows the surrounding text. Choose an explicit brand color only when the context and official guidance call for it.</span></li>
         <li><span class="rule-term">Sign-in marks</span><span class="rule-text">Follow each provider's current sign-in guidance. Google sign-in buttons use the standard multicolor G, not a monochrome logo.</span></li>
         <li><span class="rule-term">Icon style</span><span class="rule-text">Use Lucide for interface arrows and pictographic icons shown alongside each other so their visual style stays consistent.</span></li>
         <li><span class="rule-term">Wrapped links</span><span class="rule-text">Keep action labels and their icons in the same text flow. At high zoom or narrow widths, the icon stays beside the final word rather than floating to the far edge.</span></li>
@@ -142,3 +143,7 @@ import Icon from "../components/Icon.astro";
     </article>
   </section>
 </DocsLayout>
+<script>
+  import { installSelects } from "../scripts/select-control";
+  installSelects();
+</script>

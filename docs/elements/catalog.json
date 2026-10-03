@@ -105,7 +105,7 @@
       "platform": "Web",
       "category": "Navigation and wayfinding",
       "definition": "An ordered set of stages that communicates progress through a multi-step task.",
-      "guidance": "Show the current stage, completed stages, and what remains from one progress value. Let people return to completed stages and advance one stage at a time; do not let them jump over required steps. Use it for a task flow, not as a substitute for page breadcrumbs or general navigation.",
+      "guidance": "Show the current stage, completed stages, and what remains from one progress value. Let people return to completed stages and advance one stage at a time. Do not let them jump over required steps. Use it for a task flow, not as a substitute for page breadcrumbs or general navigation.",
       "accessibility": "Represent the stages as an ordered list and identify exactly one current step with aria-current=step. Give each step a readable label and state, keep future steps unavailable until they are next, and do not convey completion by color alone."
     },
     {
@@ -144,9 +144,9 @@
       "name": "Inline Alert vs. Callout vs. Banner",
       "platform": "Web",
       "category": "Feedback and overlays",
-      "definition": "Three notice placements: an inline alert belongs to a task or field, a callout explains nearby content, and a banner spans a page or region.",
+      "definition": "Three notice placements have different roles. An inline alert belongs to a task or field, a callout explains nearby content, and a banner spans a page or region.",
       "guidance": "Choose placement by scope and urgency. Keep persistent information in the page, reserve live alerts for timely changes, and use a banner only when the message affects the wider page.",
-      "accessibility": "Pair severity color with a visible label or icon. Keep static page-load notices out of live alert roles; use status or alert semantics only when content is added dynamically, according to its urgency."
+      "accessibility": "Pair severity color with a visible label or icon. Keep static page-load notices out of live alert roles. Use status or alert semantics only when content is added dynamically, according to its urgency."
     },
     {
       "order": 11,
@@ -215,7 +215,7 @@
       "platform": "Web",
       "category": "Content and data",
       "definition": "A content container with named media, header, body, metadata, and footer regions.",
-      "guidance": "Use a column layout for the card and pin its footer with margin-top: auto when cards share a row height. Keep media clipped to the card radius and place padding on the content slots. Do not nest links or buttons inside a whole-card link.",
+      "guidance": "Use a column layout for the card and pin its footer with automatic top spacing when cards share a row height. Keep media clipped to the card radius and place padding on the content slots. Do not nest links or buttons inside a whole-card link.",
       "accessibility": "Use an article for a standalone card. Give the media a useful text alternative when it conveys content, and keep each footer action as a separate, clearly named control."
     },
     {
@@ -359,7 +359,7 @@
       "platform": "macOS",
       "category": "Input and editing",
       "definition": "A two-part color control that shows the current color, opens quick swatches, and provides access to a full color panel.",
-      "guidance": "Keep the current-color swatch and the full-panel button distinct. The swatch opens quick choices and an eyedropper when the platform supports screen sampling; the adjacent panel button opens the full color panel.",
+      "guidance": "Keep the current-color swatch and the full-panel button distinct. The swatch opens quick choices and an eyedropper when the platform supports screen sampling. The adjacent panel button opens the full color panel.",
       "accessibility": "Name both buttons and expose the current color as text. Keep palette choices keyboard-operable and associate custom color inputs with visible labels and instructions.",
       "webGuidance": "Use a labeled color input or an accessible picker. Pair the swatch with a text value, keep the quick palette and full panel actions distinct, and offer screen sampling only when the browser supports it."
     },
@@ -370,7 +370,7 @@
       "platform": "Web",
       "category": "Forms and controls",
       "definition": "A single data-entry control with a persistent label, optional placeholder, helper text, and validation state.",
-      "guidance": "Keep labels visible, mark required fields, and use helper text for format or purpose. Show a specific error after invalid input without clearing the entered value; restore the helper when the value is valid.",
+      "guidance": "Keep labels visible, mark required fields, and use helper text for format or purpose. Show a specific error after invalid input without clearing the entered value. Restore the helper when the value is valid.",
       "accessibility": "Associate each label with its input using for/id. Connect the active helper or error using aria-describedby, set aria-invalid when invalid, and never use a placeholder as the only label."
     },
     {
@@ -391,7 +391,7 @@
       "category": "Forms and controls",
       "definition": "An interaction for moving an item to another position or destination by dragging it.",
       "guidance": "Show a clear drag grip, destination highlight, and insertion position. Provide a visible move control for keyboard and touch users, and confirm where the item moved.",
-      "accessibility": "Announce pickup and the completed move in a live region, keep focus on the moved item, and make dragging optional. A resize handle changes size; it does not move an item."
+      "accessibility": "Announce pickup and the completed move in a live region, keep focus on the moved item, and make dragging optional. A resize handle changes size. It does not move an item."
     },
     {
       "order": 35,
@@ -786,7 +786,7 @@
       "platform": "Web",
       "category": "Content and data",
       "definition": "A stack of labeled sections whose content can be expanded or collapsed.",
-      "guidance": "Use to organize secondary content, not to hide essential instructions by default. Native details and summary allow multiple open sections; give each details element in a group the same name when only one should stay open.",
+      "guidance": "Use to organize secondary content, not to hide essential instructions by default. Native details and summary allow multiple open sections. Give each details element in a group the same name when only one should stay open.",
       "accessibility": "Use native details and summary for simple disclosures so the browser supplies disclosure semantics and keyboard behavior. Animate the revealed panel without adding redundant aria-expanded state."
     },
     {

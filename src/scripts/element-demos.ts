@@ -295,7 +295,7 @@ function initializeTextScramble(sample: HTMLElement) {
   textScrambleControllers.get(sample)?.cleanup();
   const target = demo.dataset.scrambleTarget ?? output.textContent ?? "";
   const characters = Array.from(target);
-  const charset = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789!?#+";
+  const charset = "abcdefghjkmnpqrstuvwxyz23456789!?#+";
   const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
   let frame = 0;
   let holdTimer = 0;
@@ -306,7 +306,7 @@ function initializeTextScramble(sample: HTMLElement) {
     frame = 0;
     demo.classList.remove("is-running");
     output.textContent = target;
-    status.textContent = "DECODED";
+    status.textContent = "Decoded";
     if (progress) progress.style.transform = "scaleX(1)";
   };
 
@@ -319,12 +319,12 @@ function initializeTextScramble(sample: HTMLElement) {
     output.textContent = target;
     if (progress) progress.style.transform = "scaleX(1)";
     if (motionPreference.matches) {
-      status.textContent = "DECODED";
+      status.textContent = "Decoded";
       return;
     }
 
     demo.classList.add("is-running");
-    status.textContent = "DECRYPTING…";
+    status.textContent = "Decoding…";
     if (progress) progress.style.transform = "scaleX(0)";
     const leadIn = 400;
     const lockInterval = 128;
@@ -370,10 +370,10 @@ function initializeTextScramble(sample: HTMLElement) {
   textScrambleControllers.set(sample, { replay, cleanup });
 
   output.textContent = target;
-  status.textContent = "DECODE SEQUENCE";
+  status.textContent = "Decode sequence";
   if (progress) progress.style.transform = "scaleX(1)";
   if (motionPreference.matches) {
-    status.textContent = "DECODED";
+    status.textContent = "Decoded";
     return;
   }
 
@@ -1363,7 +1363,7 @@ function updateDockBadge(sample: HTMLElement, requestedCount: number) {
   } else {
     badge.hidden = true;
   }
-  countLabel.textContent = hasBadge ? `${count} unread ${count === 1 ? "item" : "items"}` : "All caught up · no badge";
+  countLabel.textContent = hasBadge ? `${count} unread ${count === 1 ? "item" : "items"}` : "All caught up. No badge";
   app.setAttribute("aria-label", hasBadge ? `Projects app icon with ${count} unread ${count === 1 ? "item" : "items"}` : "Projects app icon with no unread items");
   if (clearButton) clearButton.disabled = !hasBadge;
   return count;
@@ -1399,7 +1399,7 @@ function updateStepsSample(sample: HTMLElement, nextIndex?: number) {
 
   const status = demo.querySelector<HTMLElement>(".sample-steps-status");
   const label = items[currentIndex]?.querySelector<HTMLElement>(".sample-step-label")?.textContent?.trim() ?? `Step ${currentIndex + 1}`;
-  if (status) status.textContent = `${label} · Step ${currentIndex + 1} of ${items.length}`;
+  if (status) status.textContent = `${label}. Step ${currentIndex + 1} of ${items.length}`;
 }
 
 function initializeStepsSample(sample: HTMLElement) {
@@ -1677,7 +1677,7 @@ function renderDataTable(table: HTMLElement, animateRows = false) {
   const selection = table.querySelector<HTMLElement>("[data-table-selection]");
   if (selection) selection.textContent = `${selectedCount} selected`;
   const range = table.querySelector<HTMLElement>("[data-table-range]");
-  if (range) range.textContent = rows.length ? `Rows ${firstIndex + 1}–${lastIndex} of ${rows.length}` : "No customers";
+  if (range) range.textContent = rows.length ? `Rows ${firstIndex + 1}-${lastIndex} of ${rows.length}` : "No customers";
   const pageLabel = table.querySelector<HTMLElement>("[data-table-page]");
   if (pageLabel) pageLabel.textContent = `Page ${page} of ${pageCount}`;
   const previous = table.querySelector<HTMLButtonElement>("[data-action='table-page-prev']");
@@ -2031,8 +2031,8 @@ function initializeScrollView(sample: HTMLElement) {
     shell.dataset.scrollMode = overlay ? "overlay" : "legacy";
     toggle.setAttribute("aria-pressed", String(overlay));
     if (caption) caption.textContent = overlay
-      ? "Overlay scroller · floats over content and fades when idle."
-      : "Legacy scroller · the track reserves space beside the content.";
+      ? "Overlay scroller. floats over content and fades when idle."
+      : "Legacy scroller. the track reserves space beside the content.";
     if (status) status.textContent = `${overlay ? "Overlay" : "Legacy"} scroller style selected.`;
     update();
     if (overlay) revealOverlay();
@@ -2752,7 +2752,7 @@ function selectToggleRadio(button: HTMLElement, focus = false) {
     preview.style.textAlign = value;
   }
   const status = sample.querySelector<HTMLElement>(".sample-toggle-status");
-  if (status) status.textContent = `Single selection · ${value[0]?.toUpperCase()}${value.slice(1)}`;
+  if (status) status.textContent = `Single selection. ${value[0]?.toUpperCase()}${value.slice(1)}`;
   if (selectionChanged && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     [preview, status].forEach((element) => {
       if (!element) return;
@@ -3031,7 +3031,7 @@ function updateLevelMeter(meter: HTMLElement, requestedValue: number) {
 
   const card = meter.closest<HTMLElement>(".sample-level-card");
   const output = card?.querySelector<HTMLOutputElement>("[data-level-output]");
-  if (output) output.textContent = `${value} of ${max} · ${status}`;
+  if (output) output.textContent = `${value} of ${max}. ${status}`;
   const range = card?.querySelector<HTMLInputElement>("input[type='range']");
   if (range && Number(range.value) !== value) range.value = String(value);
 }
@@ -3261,17 +3261,17 @@ function renderColumnBrowser(browser: HTMLElement, focusItem?: { id: string; col
   renderIcons(viewport);
 
   const pathLabels = selectedEntries.map((entry) => entry.label);
-  const visiblePath = pathLabels.length ? pathLabels.join(" / ") : "Files";
+  const visiblePath = pathLabels.length ? pathLabels.join(" - ") : "Files";
   const pathOutput = browser.querySelector<HTMLOutputElement>("[data-column-path-output]");
   const status = browser.querySelector<HTMLElement>("[data-column-status]");
   const lastEntry = selectedEntries.at(-1);
   if (pathOutput) pathOutput.textContent = visiblePath;
   if (status) {
     status.textContent = lastEntry?.kind === "file"
-      ? `${visiblePath} · ${lastEntry.detail ?? "File selected."}`
+      ? `${visiblePath}. ${lastEntry.detail ?? "File selected."}`
       : lastEntry?.kind === "folder" && !lastEntry.children?.length
-        ? `${visiblePath} · This folder is empty.`
-        : `${visiblePath} · Select a folder to reveal its contents in the next column.`;
+        ? `${visiblePath}. This folder is empty.`
+        : `${visiblePath}. Select a folder to reveal its contents in the next column.`;
   }
 
   const maxScrollLeft = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
@@ -3613,10 +3613,10 @@ function updateCalendarDisplay(picker: HTMLElement) {
     const sameYear = startDate.getFullYear() === endDate.getFullYear();
     const startLabel = formatCalendarDate(start, sameYear ? { month: "short", day: "numeric" } : { month: "short", day: "numeric", year: "numeric" });
     const endLabel = formatCalendarDate(end, { month: "short", day: "numeric", year: "numeric" });
-    value.textContent = `${startLabel} – ${endLabel}`;
+    value.textContent = `${startLabel} - ${endLabel}`;
     if (hint) hint.textContent = "Choose a new start date to change this range.";
   } else if (start) {
-    value.textContent = `${formatCalendarDate(start)} – Choose end date`;
+    value.textContent = `${formatCalendarDate(start)} - Choose end date`;
     if (hint) hint.textContent = `Choose an end date on or after ${formatCalendarDate(start, { month: "long", day: "numeric", year: "numeric" })}.`;
   } else {
     value.textContent = "Choose a date range";
@@ -4051,7 +4051,7 @@ function renderInboxSplitView(root: HTMLElement, options: { preserveSelection?: 
   });
   if (!selected) {
     if (detail) detail.hidden = true;
-    if (footer) footer.textContent = rows.length ? `No message selected · ${label}` : `No messages in ${label}`;
+    if (footer) footer.textContent = rows.length ? `No message selected. ${label}` : `No messages in ${label}`;
     announce(root.closest<HTMLElement>(".ui-sample") ?? root, rows.length ? "No message selected." : `No messages in ${label}.`);
     return;
   }
@@ -4069,12 +4069,12 @@ function renderInboxSplitView(root: HTMLElement, options: { preserveSelection?: 
     const element = root.querySelector<HTMLElement>(selector);
     if (element) element.textContent = value;
   };
-  setText("[data-inbox-folder-label]", label.toLocaleUpperCase());
+  setText("[data-inbox-folder-label]", label);
   setText("[data-inbox-sender]", selected.dataset.sender ?? "");
   setText("[data-inbox-subject]", selected.dataset.subject ?? "");
   setText("[data-inbox-preview]", selected.dataset.preview ?? "");
   setText("[data-inbox-time]", selected.dataset.time ?? "");
-  setText("[data-inbox-sender-avatar]", (selected.dataset.sender ?? "").split(/\s+/).map((part) => part[0]).slice(0, 2).join("").toLocaleUpperCase());
+  setText("[data-inbox-sender-avatar]", (selected.dataset.sender ?? "").split(/\s+/).map((part, index) => index === 0 ? part[0] : part[0]?.toLocaleLowerCase()).slice(0, 2).join(""));
   const body = root.querySelector<HTMLElement>("[data-inbox-body]");
   if (body) setInboxBody(body, selected.dataset.body ?? "");
   const star = root.querySelector<HTMLButtonElement>("[data-action='inbox-toggle-star']");
@@ -4091,7 +4091,7 @@ function renderInboxSplitView(root: HTMLElement, options: { preserveSelection?: 
     archive.setAttribute("aria-label", archived ? "Message already archived" : "Archive message");
   }
   const count = rows.length;
-  if (footer) footer.textContent = `${count} ${count === 1 ? "message" : "messages"} in ${label} · ${selected.dataset.subject ?? "Selected"}`;
+  if (footer) footer.textContent = `${count} ${count === 1 ? "message" : "messages"} in ${label}. ${selected.dataset.subject ?? "Selected"}`;
   announce(root.closest<HTMLElement>(".ui-sample") ?? root, `${count} ${count === 1 ? "message" : "messages"} in ${label}. Selected ${selected.dataset.subject}.`);
 }
 
@@ -4224,7 +4224,7 @@ const savePanelContents: Record<string, Array<{ name: string; icon: string }>> =
 };
 
 const savePanelFormats: Record<string, { label: string; extension: string }> = {
-  pdf: { label: "PDF Document (.pdf)", extension: ".pdf" },
+  pdf: { label: "PDF document - .pdf", extension: ".pdf" },
   pages: { label: "Pages Document (.pages)", extension: ".pages" },
   png: { label: "PNG Image (.png)", extension: ".png" },
 };
@@ -4430,16 +4430,16 @@ const desktopSidebarSources: Record<string, {
   items: Array<{ icon: string; name: string; detail: string }>;
 }> = {
   projects: {
-    group: "LIBRARY",
+    group: "Library",
     description: "Active work and shared spaces.",
     items: [
-      { icon: "folder", name: "Brand system", detail: "Updated today · 8 items" },
-      { icon: "folder", name: "Website redesign", detail: "Updated yesterday · 12 items" },
-      { icon: "folder", name: "Launch checklist", detail: "Updated Sep 24 · 5 items" },
+      { icon: "folder", name: "Brand system", detail: "Updated today. 8 items" },
+      { icon: "folder", name: "Website redesign", detail: "Updated yesterday. 12 items" },
+      { icon: "folder", name: "Launch checklist", detail: "Updated Sep 24. 5 items" },
     ],
   },
   recent: {
-    group: "LIBRARY",
+    group: "Library",
     description: "Files opened by your team this week.",
     items: [
       { icon: "file-text", name: "Brand guidelines", detail: "Opened 10 minutes ago" },
@@ -4448,7 +4448,7 @@ const desktopSidebarSources: Record<string, {
     ],
   },
   favorites: {
-    group: "LIBRARY",
+    group: "Library",
     description: "Pinned work stays close at hand.",
     items: [
       { icon: "star", name: "VINASIG Design System", detail: "Design library" },
@@ -4457,21 +4457,21 @@ const desktopSidebarSources: Record<string, {
     ],
   },
   documents: {
-    group: "LOCATIONS",
+    group: "Locations",
     description: "Documents shared in this workspace.",
     items: [
-      { icon: "file-text", name: "Q3 report", detail: "Updated today · 2.4 MB" },
-      { icon: "file-text", name: "Meeting notes", detail: "Updated yesterday · 8 KB" },
-      { icon: "file-image", name: "Reference board", detail: "Updated Sep 25 · 1.8 MB" },
+      { icon: "file-text", name: "Q3 report", detail: "Updated today. 2.4 MB" },
+      { icon: "file-text", name: "Meeting notes", detail: "Updated yesterday. 8 KB" },
+      { icon: "file-image", name: "Reference board", detail: "Updated Sep 25. 1.8 MB" },
     ],
   },
   downloads: {
-    group: "LOCATIONS",
+    group: "Locations",
     description: "Exports saved from this workspace.",
     items: [
-      { icon: "file-archive", name: "Logo exports.zip", detail: "Downloaded today · 12 MB" },
-      { icon: "file-text", name: "Color tokens.csv", detail: "Downloaded yesterday · 18 KB" },
-      { icon: "file-image", name: "Social preview.png", detail: "Downloaded Sep 25 · 640 KB" },
+      { icon: "file-archive", name: "Logo exports.zip", detail: "Downloaded today. 12 MB" },
+      { icon: "file-text", name: "Color tokens.csv", detail: "Downloaded yesterday. 18 KB" },
+      { icon: "file-image", name: "Social preview.png", detail: "Downloaded Sep 25. 640 KB" },
     ],
   },
 };
@@ -5705,7 +5705,7 @@ function initializeMacosFocusRing(sample: HTMLElement) {
     saveButton.tabIndex = accessToggle.checked ? 0 : -1;
     status.textContent = accessToggle.checked
       ? "Full Keyboard Access is on. Tab can reach the text field, this checkbox, and Save."
-      : "Full Keyboard Access is off. Tab skips Save; click it to activate it.";
+      : "Full Keyboard Access is off. Tab skips Save. Click it to activate it.";
   };
 
   accessToggle.addEventListener("change", updateKeyboardAccess);
@@ -5717,7 +5717,7 @@ function initializeMacosFocusRing(sample: HTMLElement) {
     if (event.relatedTarget instanceof Node && sample.contains(event.relatedTarget)) return;
     status.textContent = accessToggle.checked
       ? "Full Keyboard Access is on. Focus a control to see its ring."
-      : "Full Keyboard Access is off. Tab skips Save; click it to activate it.";
+      : "Full Keyboard Access is off. Tab skips Save. Click it to activate it.";
   });
   updateKeyboardAccess();
 }
@@ -6276,7 +6276,7 @@ function updateEditorDocumentColor(demo: HTMLElement, color: string, name: strin
   if (customColor && customColor.value.toUpperCase() !== normalizedColor) customColor.value = normalizedColor;
   if (customSwatch) customSwatch.style.backgroundColor = normalizedColor;
   syncEditorCustomColorPicker(demo, normalizedColor);
-  if (status && announceStatus) status.textContent = `${name} selected. The document preview updated; no file was changed.`;
+  if (status && announceStatus) status.textContent = `${name} selected. The document preview updated. No file was changed.`;
 }
 
 function renderEditorCustomColorPicker(demo: HTMLElement, hue: number, saturation: number, brightness: number) {
@@ -7041,15 +7041,15 @@ for (const eventName of ["pointerup", "pointercancel"] as const) {
     const demo = activeColorPickerPointer.surface.closest<HTMLElement>(".sample-editor-colors-demo");
     const color = demo?.querySelector<HTMLElement>("[data-editor-color-value]")?.textContent;
     const status = demo?.querySelector<HTMLElement>(".sample-editor-colors-status");
-    if (demo && color && status) status.textContent = `Custom color ${color} selected. The document preview updated; no file was changed.`;
+    if (demo && color && status) status.textContent = `Custom color ${color} selected. The document preview updated. No file was changed.`;
     activeColorPickerPointer = null;
   });
 }
 
 const lightboxPhotos = [
-  { name: "Dune light", location: "Erg Chebbi · Morocco", alt: "Sunset over golden dunes", scene: "dunes" },
-  { name: "Coastal road", location: "Algarve · Portugal", alt: "A quiet road above the blue coast", scene: "coast" },
-  { name: "Forest calm", location: "Dolomites · Italy", alt: "Misty pines in the morning", scene: "forest" },
+  { name: "Dune light", location: "Erg Chebbi. Morocco", alt: "Sunset over golden dunes", scene: "dunes" },
+  { name: "Coastal road", location: "Algarve. Portugal", alt: "A quiet road above the blue coast", scene: "coast" },
+  { name: "Forest calm", location: "Dolomites. Italy", alt: "Misty pines in the morning", scene: "forest" },
 ] as const;
 
 type HoverCardState = {
@@ -7256,7 +7256,7 @@ function updateLightbox(root: HTMLElement, index: number, viewer = root.querySel
   const count = viewer?.querySelector<HTMLElement>("[data-lightbox-count]");
   if (title) title.textContent = photo.name;
   if (location) location.textContent = photo.location;
-  if (count) count.textContent = `${String(photoIndex + 1).padStart(2, "0")} / ${String(lightboxPhotos.length).padStart(2, "0")}`;
+  if (count) count.textContent = `${String(photoIndex + 1).padStart(2, "0")} - ${String(lightboxPhotos.length).padStart(2, "0")}`;
   viewer?.querySelectorAll<HTMLButtonElement>("[data-action='lightbox-select']").forEach((thumbnail, thumbnailIndex) => {
     thumbnail.setAttribute("aria-pressed", String(thumbnailIndex === photoIndex));
   });
@@ -7767,7 +7767,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       if (!status || button.getAttribute("aria-pressed") === "true") break;
       status.textContent = "Read";
       button.setAttribute("aria-pressed", "true");
-      button.setAttribute("aria-label", "Read by Sam Kim: Yes! Booking the room now.");
+      button.setAttribute("aria-label", "Read by Sam Kim. Yes! Booking the room now.");
       break;
     }
     case "avatar-group-toggle":
@@ -8146,7 +8146,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       const label = button.dataset.menuLabel ?? "Menu";
       menu.setAttribute("aria-label", `${label} menu`);
       const feedback = bar.parentElement?.querySelector<HTMLElement>("[data-menu-feedback]");
-      if (feedback) feedback.textContent = `${label} menu opened. Choose an item to see the sample feedback; no system commands are run.`;
+      if (feedback) feedback.textContent = `${label} menu opened. Choose an item to see the sample feedback. No system commands are run.`;
       type MenuBarCommand = { label: string; shortcut?: string; detail?: string } | { separator: true };
       const commands: Record<string, MenuBarCommand[]> = {
         Apple: [
@@ -8846,7 +8846,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         .map((input) => input.value);
       const contact = sample.querySelector<HTMLInputElement>(".sample-choice-group input[type='radio']:checked")?.value;
       const selectedTopics = topics.length ? topics.join(" and ") : "no summary topics";
-      announce(sample, `Preview only. Preferences saved: alerts ${notifications?.checked ? "on" : "off"}; ${selectedTopics}; contact by ${contact ?? "no selected method"}.`);
+      announce(sample, `Preview only. Preferences saved: alerts ${notifications?.checked ? "on" : "off"}. ${selectedTopics}. Contact by ${contact ?? "no selected method"}.`);
       break;
     }
     case "toast-save": {
@@ -9340,7 +9340,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
     }
     case "dock-clear-badge": {
       updateDockBadge(sample, 0);
-      announce(sample, "Badge cleared; the zero label is hidden. This preview does not update the system Dock.");
+      announce(sample, "Badge cleared. The zero label is hidden. This preview does not update the system Dock.");
       break;
     }
     case "dock-request-attention": {
@@ -11116,7 +11116,7 @@ document.addEventListener("change", (event) => {
     const demo = input.closest<HTMLElement>(".sample-editor-colors-demo");
     const status = demo?.querySelector<HTMLElement>(".sample-editor-colors-status");
     const color = demo?.querySelector<HTMLElement>("[data-editor-color-value]")?.textContent;
-    if (status && color) status.textContent = `Custom color ${color} selected. The document preview updated; no file was changed.`;
+    if (status && color) status.textContent = `Custom color ${color} selected. The document preview updated. No file was changed.`;
     return;
   }
   if (input.dataset.inputAction === "editor-hide-inactive") {
@@ -11147,7 +11147,7 @@ document.addEventListener("change", (event) => {
     refreshMultiSelectShowcase(showcase);
     const selected = Array.from(showcase.querySelectorAll<HTMLInputElement>("input[data-input-action='multi-checkbox-option']:checked"))
       .map((option) => option.value);
-    announce(sample, selected.length ? "Selected teams: " + selected.join(", ") + "." : "No teams selected.");
+    announce(sample, selected.length ? "Selected teams are " + selected.join(", ") + "." : "No teams selected.");
     return;
   }
   if (input.dataset.inputAction === "table-select-all" || input.dataset.inputAction === "table-row-select") {
@@ -11188,7 +11188,7 @@ function updatePositioningState(pane: HTMLElement) {
     const isPinned = pane.scrollTop > 0 && sticky.getBoundingClientRect().top <= pane.getBoundingClientRect().top + 1;
     if (sticky.classList.contains("is-pinned") === isPinned) return;
     sticky.classList.toggle("is-pinned", isPinned);
-    state.textContent = isPinned ? "PINNED · top: 0" : "IN FLOW";
+    state.textContent = isPinned ? "Pinned at the top" : "In flow";
   });
 }
 

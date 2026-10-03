@@ -8,9 +8,9 @@ This project imports a reviewed local snapshot from [VINASIG/agent-standards](ht
 | --- | --- |
 | Standards version | `0.1.0` public preview |
 | Consumer profile | `web-typescript` |
-| Source commit | `c9d33c73a89edaf1773fa4d31f1c7258e549b7b1` |
-| Bundle SHA-256 | `ad5dcbe4601a9a3668d3433330a582e6d780b8f2527e1dcc8cfbb93f8f264870` |
-| Installed payload | 37 owned files, including seven namespaced skills |
+| Source commit | `76901601b193c963b849b253d11f51363b447ffe` |
+| Bundle SHA-256 | `bb555aad2e5c66da8ba2cdd5530446ca95c1235bb28706cb82066222adcb61f1` |
+| Installed payload | 38 owned files, including seven namespaced skills |
 | Source record | `.vinasig/provenance.json` |
 | Installed manifest | `.vinasig/manifest.json` |
 
@@ -45,7 +45,7 @@ The browser matrix was expanded on 2026-10-03 to managed Chromium, Firefox and W
 
 ## Reproduce or update the snapshot
 
-Use a clean checkout of the reviewed agent-standards commit. Follow its [integration contract](https://github.com/VINASIG/agent-standards/blob/c9d33c73a89edaf1773fa4d31f1c7258e549b7b1/docs/integration.md) to build a fresh bundle and inspect the file inventory and digest. A consumer checkout does not need the standards source or network access for ordinary checks.
+Use a clean checkout of the reviewed agent-standards commit. Follow its [integration contract](https://github.com/VINASIG/agent-standards/blob/76901601b193c963b849b253d11f51363b447ffe/docs/integration.md) to build a fresh bundle and inspect the file inventory and digest. A consumer checkout does not need the standards source or network access for ordinary checks.
 
 From the separate standards checkout, in PowerShell:
 
@@ -55,7 +55,7 @@ npm run build
 $taskBundle = node dist/bundle.js output/bundles/wds-reviewed | ConvertFrom-Json
 $taskTarget = (Resolve-Path ../web-design-system).Path
 # Use a digest only after reviewing the source, inventory and bundle.
-$approvedSha256 = 'ad5dcbe4601a9a3668d3433330a582e6d780b8f2527e1dcc8cfbb93f8f264870'
+$approvedSha256 = 'bb555aad2e5c66da8ba2cdd5530446ca95c1235bb28706cb82066222adcb61f1'
 node dist/cli.js init --target $taskTarget --bundle $taskBundle.path --sha256 $approvedSha256 --profile web-typescript --dry-run --json
 node dist/cli.js init --target $taskTarget --bundle $taskBundle.path --sha256 $approvedSha256 --profile web-typescript --json
 node dist/cli.js doctor --target $taskTarget --json
@@ -64,3 +64,9 @@ node dist/cli.js doctor --target $taskTarget --json
 `init` with the same snapshot is idempotent. For a different reviewed snapshot, use the CLI's `diff`, `update --dry-run` and `update` sequence. Review owned changes and the root block, then update this project's provenance record and integration table with the new source commit, bundle digest and manifest digest. Run all affected project checks before committing.
 
 Do not edit managed payload files or reformat the generated block. Put project-specific additions in the owner guide, or propose a shared change upstream. Installer backups and the exclusive installation lock are ignored local recovery material. Never commit an arbitrary backup, account token or personal machine path.
+
+## Interface rules approved on 3 October 2026
+
+The owner requested this standards update across VINASIG. LANG-004 requires natural punctuation, sentence case and custom list markers in authored interfaces. LANG-005 requires ordinary-reader language and limits parenthetical labels. Required code, URLs, times, regulatory identifiers, official names and user input retain their correct syntax.
+
+WEB-008 requires matching closed and opened dropdown, calendar, color and slider controls. Operating-system popups do not satisfy the requirement. The snapshot includes `templates/web/interface.mjs` for rendered-copy and control regressions. Consumer tests exercise real routes and dynamic states. Visual, keyboard and ordinary-language review remain necessary.

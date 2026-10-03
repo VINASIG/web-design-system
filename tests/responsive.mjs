@@ -3,6 +3,7 @@ import path from 'node:path';
 import { chromium, firefox, webkit } from 'playwright';
 import { startPreview } from './helpers/preview.mjs';
 import { capturePage } from './helpers/screenshot.mjs';
+import { inspectInterface } from '../.vinasig/standards/templates/web/interface.mjs';
 import AxeBuilder from '@axe-core/playwright';
 import astroConfig from '../astro.config.mjs';
 
@@ -73,6 +74,26 @@ try {
       check(`${route} has no automated accessibility violations`, accessibility.violations.length === 0, accessibility.violations.map((violation) => ({ id: violation.id, nodes: violation.nodes.map((node) => ({ target: node.target, summary: node.failureSummary })) })));
       await capturePage(page, path.join(dir, `route-${route === '/' ? 'index' : route.split('/')[1]}--default.png`));
     }
+    await page.goto(`${base}/components/`, { waitUntil: 'networkidle' });
+    const placement = page.getByRole('combobox', { name: 'Placement', exact: true });
+    await placement.scrollIntoViewIfNeeded();
+    if (process.env.RESPONSIVE_TOUCH === 'true') await placement.tap();
+    else await placement.click();
+    const placementPanel = page.locator('#placement-options');
+    check('Placement exposes its styled options', await placementPanel.isVisible());
+    check('Placement open copy meets interface rules', (await page.evaluate(inspectInterface)).length === 0);
+    const placementBounds = await placementPanel.boundingBox();
+    check('Placement options fit the viewport', !!placementBounds && placementBounds.x >= 0 && placementBounds.x + placementBounds.width <= width + 1 && placementBounds.y >= 0 && placementBounds.y + placementBounds.height <= height + 1, placementBounds);
+    await page.screenshot({ path: path.join(dir, 'placement--open.png') });
+    await page.keyboard.press('End');
+    await page.keyboard.press('Escape');
+    check('Placement cancellation preserves its value and focus', await page.locator('#placement').inputValue() === 'center' && await placement.evaluate(el => el === document.activeElement));
+    await placement.press('Home');
+    await placement.press('Enter');
+    check('Placement keyboard selection updates form state', await page.locator('#placement').inputValue() === 'left');
+    await placement.click();
+    await placementPanel.getByRole('option', { name: 'Bottom right', exact: true }).click();
+    check('Placement pointer selection updates form state', await page.locator('#placement').inputValue() === 'right');
     await page.goto(`${base}/`, { waitUntil: 'networkidle' });
     await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Brand & logo' }).focus();
     await Promise.all([

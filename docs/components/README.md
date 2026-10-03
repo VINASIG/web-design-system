@@ -1,6 +1,6 @@
 # Components
 
-**Status:** Draft proposal. Component behavior and examples are not approved policy yet.
+**Status:** General component proposals remain draft. The owner approved the interface-writing and custom-control requirements below on 3 October 2026.
 
 The [UI element catalog](../elements/README.md) defines all 81 entries in the NameThatUI snapshot. Use it to identify the relevant pattern, then use this document for the component implementation guidance available here.
 
@@ -14,18 +14,24 @@ Show a persistent label. Use helper text for instructions and error text for a c
 
 ## Single-select dropdown
 
-**Draft proposal.**
+**Approved requirement from 3 October 2026.**
 
-A selection dropdown has a closed trigger and an open options panel. When a design reference calls for a custom dropdown, customize both states to match the interface. Styling only the closed `<select>` control does not style the browser or operating-system popup. Inspect the opened menu rather than assuming it inherits the page styles.
+A selection dropdown has a closed trigger and an open options panel. Both must match the interface's tokens and Space Grotesk. Styling only the closed `<select>` does not style its browser or operating-system popup. Platform select popups do not satisfy this requirement.
 
-- Prefer the project's existing accessible select or listbox component when one is available. Use a native `<select>` when platform behavior is an intentional fit for the task. Do not treat the default native popup as a custom branded menu.
+- Prefer a reviewed accessible select or listbox control. The working component-page example uses `src/scripts/select-control.ts` with `src/styles/select-control.css`. Its hidden native select retains values, form reset and disabled state. The visible combobox implements keyboard navigation, selection, type-ahead and cancellation.
 - For a custom single-select popup, use an accessible button and listbox pattern, with a visible label, selected value, `aria-expanded`, `aria-controls`, an appropriate popup role, and an announced selected option.
 - Support keyboard operation: open and move through options with the expected keys, select with Enter or Space, close with Escape, and allow focus to leave without trapping the user. Keep focus visible.
 - Style the trigger and popup, including selected, hover, focus, disabled, and open states. Keep the popup legible, attached to its trigger, and within the viewport.
 - Keep the value synchronized with the form or application state. Do not make a visual-only fake dropdown or use clickable generic containers without accessible interaction semantics.
 - Before completion, inspect the open state, selection change, keyboard behavior, and narrow-screen placement.
 
-If the framework or requirements make a custom accessible popup unsuitable, use a native select and document that choice. Do not silently ship a platform popup when the design explicitly requires a custom menu.
+Date and time controls must retain direct entry and a styled picker when needed. Color controls must expose styled color choices and editable values. Native ranges may retain browser semantics, with styled tracks and thumbs in every supported engine. Use `src/styles/range-control.css` as the baseline and preserve hue tracks where color is the value being chosen. File-selection, print and download browser dialogs remain platform interactions.
+
+Test closed and opened controls, keyboard, touch, selected/disabled/error states, form reset, light/dark themes where supported, narrow viewports and enlarged text. Keep popups within the viewport. An axe result complements interaction and screenshot review. The implementation follows the [WAI select-only combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/). Actual screen-reader and device coverage must be reported separately.
+
+## Interface writing
+
+Apply LANG-004 and LANG-005 from the imported standards to every locale and dynamic state. Use natural sentences, ASCII hyphens and readable labels. Avoid semicolons, en/em dashes, label-colon fragments, slash separators, all-caps styling, unnecessary abbreviations and parenthetical explanations. Use semantic lists with a hyphen marker or custom row layout. Keep required code, URL, time and legal syntax correct. Catalog source names remain unchanged, while the displayed aliases use a readable hyphen layout.
 
 ## Iconography
 

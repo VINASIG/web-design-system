@@ -10,6 +10,8 @@ The recent-evidence window below runs from 9 July to 27 September 2026. OpenAI a
 
 Use this workflow whenever an SI agent creates or changes visible web interface code. The goal is to catch layout, interaction, accessibility, and consistency failures before calling the work complete.
 
+The owner approved LANG-004, LANG-005 and WEB-008 on 3 October 2026. Apply the imported rules to every visible locale and dynamic state. Inspect opened dropdowns, calendars, color choosers and slider tracks/thumbs. Default operating-system popups fail the control requirement. Run the rendered-interface inspector alongside this workflow. Required notation and user data retain their syntax. Other design proposals in this document remain draft.
+
 ## What the evidence supports
 
 The research does not show that every generated interface fails. It does show that generated output can look plausible while missing accessibility requirements, interaction behavior, or requested design details. Apply those findings to SI-generated interfaces without treating a study of selected tools as a universal failure rate. Human review and browser checks remain necessary.
