@@ -74,6 +74,15 @@ try {
       check(`${route} has no automated accessibility violations`, accessibility.violations.length === 0, accessibility.violations.map((violation) => ({ id: violation.id, nodes: violation.nodes.map((node) => ({ target: node.target, summary: node.failureSummary })) })));
       await capturePage(page, path.join(dir, `route-${route === '/' ? 'index' : route.split('/')[1]}--default.png`));
     }
+    const unavailable = await context.newPage();
+    await unavailable.route(/\/_astro\/[^/]+\.js$/u, route => route.abort('blockedbyclient'));
+    await unavailable.goto(`${base}/components/`, { waitUntil: 'networkidle' });
+    await unavailable.evaluate(() => document.fonts.ready);
+    check('Placement stays disabled before its controller loads', await unavailable.getByRole('combobox', { name: 'Placement', exact: true }).isDisabled());
+    check('Placement never exposes an operating-system select', !(await unavailable.locator('#placement').isVisible()));
+    check('unavailable controller copy meets interface rules', (await unavailable.evaluate(inspectInterface)).length === 0);
+    await capturePage(unavailable, path.join(dir, 'route-components--script-blocked.png'));
+    await unavailable.close();
     await page.goto(`${base}/components/`, { waitUntil: 'networkidle' });
     const placement = page.getByRole('combobox', { name: 'Placement', exact: true });
     await placement.scrollIntoViewIfNeeded();

@@ -1,4 +1,5 @@
 ---
+import SelectControl from "../components/SelectControl.astro";
 import DocsLayout from "../layouts/DocsLayout.astro";
 import { withBase } from "../lib/paths";
 import Icon from "../components/Icon.astro";
@@ -67,12 +68,12 @@ import "../styles/select-control.css";
     <article class="card component-showcase">
       <div class="dropdown-example">
         <div class="field-demo">
-          <label for="placement">Placement</label>
-          <select id="placement" data-custom-select>
+          <label for="placement-control">Placement</label>
+          <SelectControl id="placement" label="Placement" valueLabel="Bottom center">
             <option value="left">Bottom left</option>
             <option value="center" selected>Bottom center</option>
             <option value="right">Bottom right</option>
-          </select>
+          </SelectControl>
         </div>
         <p class="card-copy">Open the menu to inspect its options. Use arrow keys to move, Enter to select and Escape to keep the current value.</p>
       </div>

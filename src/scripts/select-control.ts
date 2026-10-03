@@ -5,7 +5,12 @@ export function installSelects(root: ParentNode = document): void {
   )) {
     if (select.dataset['enhanced']) continue;
     select.dataset['enhanced'] = 'true';
-    const trigger = document.createElement('button');
+    const existingTrigger = document.getElementById(select.id + '-control');
+    const trigger =
+      existingTrigger instanceof HTMLButtonElement
+        ? existingTrigger
+        : document.createElement('button');
+    trigger.replaceChildren();
     trigger.type = 'button';
     trigger.id = select.id + '-control';
     trigger.className = 'select-control';
@@ -32,13 +37,20 @@ export function installSelects(root: ParentNode = document): void {
     line.setAttribute('d', 'm6 9 6 6 6-6');
     icon.append(line);
     trigger.append(icon);
-    const panel = document.createElement('div');
+    const existingPanel = document.getElementById(select.id + '-options');
+    const panel =
+      existingPanel instanceof HTMLDivElement
+        ? existingPanel
+        : document.createElement('div');
+    panel.replaceChildren();
     panel.id = select.id + '-options';
     panel.className = 'select-options';
     panel.hidden = true;
     panel.setAttribute('role', 'listbox');
     trigger.setAttribute('aria-controls', panel.id);
-    const labels = [...select.labels];
+    const labels = [...document.querySelectorAll('label')].filter(
+      (label) => label.htmlFor === select.id || label.htmlFor === trigger.id,
+    );
     const labelIds = labels
       .map((label, index) => {
         if (!label.id) label.id = select.id + '-label-' + String(index);
