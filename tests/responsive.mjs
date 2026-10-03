@@ -174,8 +174,15 @@ try {
       const selector=action==='toggle-color-panel'?'.sample-color-panel':'.sample-color-popover';
       const color=await within(`#color-well ${selector}`,'#color-well .element-preview');
       check(`${action} remains in preview`,color.fits,color);
+      check(`${action} reserves its measured height`,await colors.locator(selector).evaluate(panel=>parseFloat(getComputedStyle(panel.closest('.ui-sample')).paddingBottom)>=panel.offsetHeight+11));
       await shot('color-well',action);
       if(action==='toggle-color-panel') {
+        await page.setViewportSize({width:width-10,height});
+        await settle();
+        const resizedColor=await within(`#color-well ${selector}`,'#color-well .element-preview');
+        check('open color panel adapts its reserved space to live resize',resizedColor.fits,resizedColor);
+        await page.setViewportSize({width,height});
+        await settle();
         const surface=colors.locator('.sample-color-picker-surface');
         const size=await surface.boundingBox();
         await surface.click({position:{x:size.width-6,y:6}});

@@ -35,6 +35,10 @@ Screenshots and structured reports retain the earlier failing runs separately. T
 
 ## Publication gate and limits
 
+The first expanded CI run found two additional defects: Firefox's 320 px segmented labels needed smaller inline padding, and WebKit on Linux briefly laid out the color panel beyond the preview's reserved height. The follow-up reserves the panel's untransformed height as wrapper padding and checks both that reservation and an open-panel resize. Existing label and containment assertions remain unchanged. Failing CI images are retained separately in the organization audit output; the final CI run establishes whether these repairs pass all engines.
+
+After those repairs, the source check and build passed again, and targeted local WebKit verification passed **564/564** assertions at 320x900, 360x800, 390x844 and 1024x768 in `output/responsive/runs/org-controls-webkit/`. The earlier Chromium breakpoint review covered 34 widths around all 16 CSS media-query boundaries, plus intermediate widths, with no observed overflow or axe violation in the default overview and element-library states. The final candidate receives a separate breakpoint run to preserve those earlier images.
+
 GitHub Actions requires Chromium, Firefox and WebKit on both Ubuntu and Windows, including touch with normal motion. Deployment can use only the verified static artifact from `main` after all six jobs pass. The final pushed revision, CI run and HTTP/browser receipts establish completion; this source audit cannot contain its own final commit hash.
 
 Local Firefox could not launch in this Windows environment. It is required in the CI matrix. The adopted typed-lint, Stylelint, generated-HTML and Lighthouse presets remain phased items in [the adoption inventory](../agents/standards.md). Passing these checks does not establish full standards or WCAG certification, physical-device coverage, field performance or independent SI-agent task success.

@@ -6685,7 +6685,7 @@ function refreshColorWellIds(well: HTMLElement, instance: string) {
   const resizeObserver = new ResizeObserver(() => {
     const openPanel = well.querySelector<HTMLElement>(".sample-color-popover:not([hidden]), .sample-color-panel:not([hidden])");
     if (openPanel && panelTrigger) positionColorWellPanel(well, panelTrigger, openPanel);
-    else well.style.removeProperty("--sample-color-panel-space");
+    else well.closest<HTMLElement>(".ui-sample")?.style.removeProperty("--sample-color-panel-space");
   });
   if (palette) resizeObserver.observe(palette);
   if (colorPanel) resizeObserver.observe(colorPanel);
@@ -6693,7 +6693,7 @@ function refreshColorWellIds(well: HTMLElement, instance: string) {
 }
 
 function closeColorWellPanels(well: HTMLElement) {
-  well.style.removeProperty("--sample-color-panel-space");
+  well.closest<HTMLElement>(".ui-sample")?.style.removeProperty("--sample-color-panel-space");
   well.querySelectorAll<HTMLElement>(".sample-color-popover, .sample-color-panel").forEach((panel) => {
     panel.hidden = true;
     panel.classList.remove("opens-up");
@@ -6720,7 +6720,9 @@ function positionColorWellPanel(well: HTMLElement, trigger: HTMLElement, panel: 
   if (well.closest(".element-preview, .element-demo-stage")) {
     panel.classList.remove("opens-up");
     panel.style.maxHeight = `${Math.min(560, window.innerHeight - 48)}px`;
-    well.style.setProperty("--sample-color-panel-space", `${Math.ceil(panel.getBoundingClientRect().height) + 12}px`);
+    // Reserve the untransformed panel height in the wrapper's flow. Flex-item
+    // margins can leave the ancestor too short while WebKit lays out the panel.
+    well.closest<HTMLElement>(".ui-sample")?.style.setProperty("--sample-color-panel-space", `${panel.offsetHeight + 12}px`);
     return;
   }
   const triggerBounds = trigger.getBoundingClientRect();
