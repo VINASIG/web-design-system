@@ -28,6 +28,10 @@ Immutable initial header screenshots are under ignored `output/responsive/header
 
 This is a local verification record. Current-head CI and GitHub Pages publication are verified separately before task completion. No font, business calculation, generated output, private data or original logo artwork was changed by the header work.
 
+## Documentation consistency follow-up
+
+The final instruction review found an older native-popup exception in `docs/agents/ui-quality.md`, despite its opening statement already adopting WEB-008. The implementation section now requires a reviewed custom dropdown and explains the native select's hidden form-state role. It also applies the rule to calendars, color choosers, slider tracks and thumbs, and meaningful disabled initial HTML. The interface implementation and original artwork are unchanged by this documentation correction.
+
 ## Additional completed gates
 
 The final adopted snapshot passed the project's source checks and 7 unit tests. The two deployment-path unit tests and the eight-page production build also passed. The complete five-viewport Chromium responsive run passed 747 checks. A WebKit touch run with normal motion at 360 and 390 px passed 317 checks. Both retain the blocked-script custom-control assertions.

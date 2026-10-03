@@ -95,7 +95,8 @@ Before coding, state what the user needs to accomplish and how the changed inter
 - Prefer content-driven sizing and flexible grids. Allow children to shrink and text to wrap where meaning permits.
 - Keep icons beside their labels in the same inline flow. Do not substitute pictographic text characters for the project's icon component.
 - Build actual interaction behavior and feedback. Do not ship decorative controls that appear functional but do nothing.
-- Keep custom dropdown trigger and popup as one designed and tested interaction. Prefer a native select when its platform popup is an intentional fit or a custom accessible pattern is not justified.
+- Use a reviewed custom dropdown whose trigger and open options panel share the project's tokens and Space Grotesk. A hidden native select may retain form values, reset and disabled state. Do not expose its operating-system popup as the intended VINASIG interface.
+- Apply the same complete-control requirement to calendars and color choosers. Style slider tracks and thumbs in every supported engine while retaining native keyboard behavior. Initial HTML must present meaningful styled controls, disabled until their handlers attach, with direct text entry retained where useful.
 
 ### 4. Inspect the rendered page at multiple sizes
 
