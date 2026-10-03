@@ -50,11 +50,9 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
     <a class="skip-link" href="#main" tabindex="0">Skip to content</a>
     <div class="app-shell">
       <aside class="sidebar" aria-label="Documentation sidebar">
-        <a class="brand-lockup" href={withBase("/")} aria-label="VINASIG Design System home">
-          <span class="brand-copy">
-            <span class="brand-name">VINASIG</span>
-            <span class="brand-product">Design System</span>
-          </span>
+        <a class="brand-lockup" data-brand-logo href={withBase("/")} aria-label="VINASIG Design System home">
+          <img src={withBase("/brand/lockups/reversed.svg")} width="540" height="140" alt="VINASIG" />
+          <span class="brand-product">Design System</span>
         </a>
 
         <nav class="nav-groups" aria-label="Primary navigation">

@@ -1,6 +1,14 @@
 # VINASIG Logo Usage
 
-**Draft proposal.** The variant names, master sizes, typeface, and logo concept below are facts recorded in the supplied VINASIG Brand Assets package. Recommendations are not an approved organization policy.
+**Draft proposal except for the approved header rule below.** The variant names, master sizes, typeface, and logo concept below are facts recorded in the supplied VINASIG Brand Assets package. Other recommendations remain proposals.
+
+## Website header approved on 4 October 2026
+
+Use the original transparent horizontal lockup directly on the header surface. Primary Color, Color Black and Monochrome Black suit light surfaces. Reversed and Monochrome White suit dark surfaces. Select the variant using the actual surface, including light-only websites and consistently dark sidebars. A theme-aware header must select its asset without waiting for JavaScript.
+
+Do not add a white background, padded or rounded card, border frame, shadow, filter or cropped corners around the logo. Keep its supplied aspect ratio and internal white geometry. Use surrounding layout spacing and a link target of at least 44 by 44 CSS px independently of the image size. Keep the accessible link name and original image rather than reconstructing the wordmark with live text. An unavoidable background exception needs owner review and a recorded reason.
+
+The owner explicitly approved this header rule. It does not approve every other draft recommendation or grant artwork rights. Asset byte integrity and rendered-browser checks are separate requirements.
 
 ## Purpose and source
 
