@@ -1,19 +1,5 @@
-# Source and asset rights
+# Current license status
 
-## Repository source
+The owner selected AGPL-3.0-or-later for VINASIG-authored software and CC-BY-SA-4.0 for authored documentation on 4 October 2026. This replaces the earlier pending-license status.
 
-No general source license has been granted for this repository. The npm manifest records `UNLICENSED` and `private: true`. Public GitHub visibility does not create an open-source license or an npm publication. An owner must choose a license before this project promises general reuse, modification or redistribution rights.
-
-## Space Grotesk
-
-The locally served font retains the [SIL Open Font License notice](public/fonts/OFL.txt). Follow that license when using or redistributing the font. It does not license the rest of this repository.
-
-## VINASIG identity
-
-The selected files under `public/brand/` are supplied VINASIG logo, lockup and favicon exports used in documentation. This repository does not grant rights to the VINASIG name, trademarks or artwork. Preserve the export files and do not infer an author attribution or permission to redraw them. See [the brand source record](docs/brand/README.md).
-
-## Other material
-
-Lucide, Simple Icons and other dependencies retain their respective licenses and notices. Third-party brand and provider marks remain subject to their owners' applicable rules. External research titles and links retain their original names. The interface catalog uses recorded element names with project-authored definitions, guidance and implementations, as described in [the element guide](docs/elements/README.md).
-
-The imported agent-standards snapshot retains its documented preview and rights status. It adds no general license grant for this repository or its assets.
+Read [LICENSE](LICENSE), [the material map](LICENSES.md), [VINASIG Brand Usage Policy](BRAND_POLICY.md) and [the dated review](docs/audits/licensing-2026-10-04.md). Fonts, dependency notices and official identity assets keep their separate terms. The npm package remains private to prevent accidental publication, while the source grant is open.

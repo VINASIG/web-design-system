@@ -4,15 +4,15 @@ This project imports a reviewed local snapshot from [VINASIG/agent-standards](ht
 
 ## Reviewed source
 
-| Item | Value |
-| --- | --- |
-| Standards version | `0.1.0` public preview |
-| Consumer profile | `web-typescript` |
-| Source commit | `7c699d1dccd05c1dd2c4f0de4bb3abae23174ccd` |
-| Bundle SHA-256 | `bd59e07ba80969e9e5b6788a9438e81ba14a6e22ce121e6ef192ef89f54cd07f` |
-| Installed payload | 38 owned files, including seven namespaced skills |
-| Source record | `.vinasig/provenance.json` |
-| Installed manifest | `.vinasig/manifest.json` |
+| Item               | Value                                                              |
+| ------------------ | ------------------------------------------------------------------ |
+| Standards version  | `0.1.0` public preview                                             |
+| Consumer profile   | `web-typescript`                                                   |
+| Source commit      | `31b105622b1c70f6ad362eaaab429a9afa4b1a18`                         |
+| Bundle SHA-256     | `e7d0fe4b417a782f0613a3367c458e9ff384fed1c43435f76c17252b5c7560e1` |
+| Installed payload  | 47 owned files, including seven namespaced skills                  |
+| Source record      | `.vinasig/provenance.json`                                         |
+| Installed manifest | `.vinasig/manifest.json`                                           |
 
 The manifest's `source.ref` identifies a content digest, not a Git commit or release tag. The separate provenance record pins the reviewed Git source and manifest digest. Integrity hashes detect drift against reviewed bytes. They are not signatures or a security boundary against a writer who can edit both source and provenance.
 
@@ -26,16 +26,16 @@ Installed skills live under `.agents/skills/` and cover workflow, dependencies, 
 
 ## Actual enforcement
 
-| Area | Repository enforcement |
-| --- | --- |
-| Snapshot integrity | `npm run check:standards` checks owned hashes, source provenance, instruction block, root override and 8 KiB budget without network access. |
-| Gate regression | `npm run test:standards` uses isolated positive and negative fixtures. |
-| Framework types | `astro check` uses Astro's strict configuration, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes` and framework-generated types. |
-| Content and assets | `scripts/check-content.mjs` checks the catalog, icon registry, font and favicon assets. |
-| Native script syntax | `node --check` covers the repository check and test scripts. |
-| Browser regression | Playwright checks cover eight routes, required widths, interactive specimen states, touch, normal or reduced motion, base-aware navigation, font loading and favicon requests. |
-| CI | The same gates run on Ubuntu and Windows. Actions are pinned to reviewed commits. |
-| Dependency maintenance | Direct versions and the lockfile are pinned. Dependabot proposes reviewed updates and does not merge them automatically. |
+| Area                   | Repository enforcement                                                                                                                                                         |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Snapshot integrity     | `npm run check:standards` checks owned hashes, source provenance, instruction block, root override and 8 KiB budget without network access.                                    |
+| Gate regression        | `npm run test:standards` uses isolated positive and negative fixtures.                                                                                                         |
+| Framework types        | `astro check` uses Astro's strict configuration, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes` and framework-generated types.                                       |
+| Content and assets     | `scripts/check-content.mjs` checks the catalog, icon registry, font and favicon assets.                                                                                        |
+| Native script syntax   | `node --check` covers the repository check and test scripts.                                                                                                                   |
+| Browser regression     | Playwright checks cover eight routes, required widths, interactive specimen states, touch, normal or reduced motion, base-aware navigation, font loading and favicon requests. |
+| CI                     | The same gates run on Ubuntu and Windows. Actions are pinned to reviewed commits.                                                                                              |
+| Dependency maintenance | Direct versions and the lockfile are pinned. Dependabot proposes reviewed updates and does not merge them automatically.                                                       |
 
 The imported lint, formatting, HTML validation and Lighthouse presets are reference configurations. Importing them does not execute their tools. Typed ESLint for Astro, Stylelint, generated HTML validation and Lighthouse budgets have not been connected to this repository's gates. Automated axe audits were connected to every route and responsive viewport on 2026-10-03. They include the WCAG 2.2 target-size rules. Existing source and browser assertions remain required and have not been removed or weakened.
 
@@ -45,7 +45,7 @@ The browser matrix was expanded on 2026-10-03 to managed Chromium, Firefox and W
 
 ## Reproduce or update the snapshot
 
-Use a clean checkout of the reviewed agent-standards commit. Follow its [integration contract](https://github.com/VINASIG/agent-standards/blob/7c699d1dccd05c1dd2c4f0de4bb3abae23174ccd/docs/integration.md) to build a fresh bundle and inspect the file inventory and digest. A consumer checkout does not need the standards source or network access for ordinary checks.
+Use a clean checkout of the reviewed agent-standards commit. Follow its [integration contract](https://github.com/VINASIG/agent-standards/blob/31b105622b1c70f6ad362eaaab429a9afa4b1a18/docs/integration.md) to build a fresh bundle and inspect the file inventory and digest. A consumer checkout does not need the standards source or network access for ordinary checks.
 
 From the separate standards checkout, in PowerShell:
 
@@ -55,7 +55,7 @@ npm run build
 $taskBundle = node dist/bundle.js output/bundles/wds-reviewed | ConvertFrom-Json
 $taskTarget = (Resolve-Path ../web-design-system).Path
 # Use a digest only after reviewing the source, inventory and bundle.
-$approvedSha256 = 'bd59e07ba80969e9e5b6788a9438e81ba14a6e22ce121e6ef192ef89f54cd07f'
+$approvedSha256 = 'e7d0fe4b417a782f0613a3367c458e9ff384fed1c43435f76c17252b5c7560e1'
 node dist/cli.js init --target $taskTarget --bundle $taskBundle.path --sha256 $approvedSha256 --profile web-typescript --dry-run --json
 node dist/cli.js init --target $taskTarget --bundle $taskBundle.path --sha256 $approvedSha256 --profile web-typescript --json
 node dist/cli.js doctor --target $taskTarget --json
@@ -76,3 +76,7 @@ WEB-008 requires matching closed and opened dropdown, calendar, color and slider
 The owner approved original transparent horizontal logos selected for the actual header surface under WEB-001. Keep the source asset bytes, proportions and internal artwork. Avoid white panels, padded or rounded cards and artwork effects. Maintain the accessible logo link and its usable target independently of image size.
 
 This reviewed snapshot adds `inspectHeaderBrand` to `templates/web/interface.mjs`. The consumer browser regressions check the real header alongside rendered copy. Asset integrity, screenshot review and script-unavailable states remain separate checks.
+
+## Licensing adopted on 4 October 2026
+
+The reviewed snapshot includes the licensing policy, LIC-001 through LIC-004, full GPL/CC texts, material map, brand policy, review template and license checker. It retains its own software/prose grants rather than setting this project's primary license. The owner separately selected this project's scopes in LICENSES.md. Use npm run check:licenses for source metadata/text verification. Web builds also verify published legal text and source notices. Original assets and existing gates remain required.

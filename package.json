@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Draft interface guidance, design tokens and UI specimens for VINASIG websites and SI agents.",
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0-or-later",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/VINASIG/web-design-system.git"
@@ -30,14 +30,15 @@
     "check:content": "node scripts/check-content.mjs",
     "check:standards": "node scripts/check-standards.mjs",
     "check:scripts": "node --check scripts/check-content.mjs && node --check scripts/check-standards.mjs && node --check tests/standards.test.mjs && node --check tests/helpers/preview.mjs && node --check tests/helpers/screenshot.mjs && node --check tests/responsive.mjs",
-    "check": "npm run check:standards && npm run check:content && npm run check:scripts && astro check",
+    "check": "npm run check:standards && npm run check:content && npm run check:scripts && astro check && npm run check:licenses",
     "test:standards": "node --test tests/standards.test.mjs",
     "test": "npm run test:responsive",
     "test:responsive": "node tests/responsive.mjs",
-    "build": "astro build",
+    "build": "astro build && npm run check:licenses -- --built",
     "preview": "astro preview",
     "deploy": "gh workflow run check.yml --ref main",
-    "deploy:cloudflare": "npm run build -- --base / && wrangler deploy"
+    "deploy:cloudflare": "npm run build -- --base / && wrangler deploy",
+    "check:licenses": "node .vinasig/standards/templates/check-licenses.mjs"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",

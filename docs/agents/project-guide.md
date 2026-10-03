@@ -63,7 +63,7 @@ When an interface matches an entry in docs/elements/catalog.json, read its defin
 - Keep rules and examples in English in this repository.
 - When adding or changing guidance, keep its draft status visible and update both the source document and its published page.
 - Use only the owner-provided logo exports in `public/brand/`. Do not redraw, alter, or add editable logo source files.
-- The repository adds no license for VINASIG logo artwork. Do not infer an author name or licensing terms that are not in the source record.
+- VINASIG logo artwork is excluded from the software and documentation grants. Follow BRAND_POLICY.md for permitted references. Do not infer an author name, assignment or broader permission from repository access.
 - Use only Space Grotesk for typography. Do not add other fonts, remote font services, or third-party imagery without an explicit project decision.
 
 ## Writing and typography

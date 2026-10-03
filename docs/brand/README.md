@@ -23,17 +23,17 @@ The logo package records **Space Grotesk** as the typeface and these master size
 
 ## Choose a variant
 
-| Variant | Use when | Export in this repository |
-| --- | --- | --- |
-| Primary Brand Mark | The symbol can identify VINASIG on its own because the name is already clear nearby. | `public/brand/marks/primary-mark.svg`, `public/brand/marks/primary-mark-1000.png` |
-| Contained Brand Mark | A square profile or avatar format needs the contained version. Its exported canvas includes a white field. | `public/brand/marks/contained-mark.svg`, `public/brand/marks/contained-mark-1080.png` |
-| Favicon | The browser or platform asks for one of the supplied icon sizes. | `public/brand/favicons/favicon-16.png`, `favicon-32.png`, `favicon-48.png` |
-| Primary Color Horizontal Lockup | A light surface can use the colored mark with a Core Graphite wordmark. | `public/brand/lockups/primary-color.svg` |
-| Color Black Horizontal Lockup | A light surface calls for the colored mark with a black wordmark. | `public/brand/lockups/color-black.svg` |
-| Reversed Horizontal Lockup | A dark surface calls for the colored mark with a white wordmark. | `public/brand/lockups/reversed.svg` |
-| Monochrome Black Horizontal Lockup | A single-color black lockup is needed on a light surface. | `public/brand/lockups/monochrome-black.svg` |
-| Monochrome White Horizontal Lockup | A single-color white lockup is needed on a dark surface. | `public/brand/lockups/monochrome-white.svg` |
-| Monochrome Brand Mark | A symbol-only, one-color application is required. Select black for a light surface or white for a dark surface. | `public/brand/marks/monochrome-black.png`, `public/brand/marks/monochrome-white.png` |
+| Variant                            | Use when                                                                                                        | Export in this repository                                                             |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Primary Brand Mark                 | The symbol can identify VINASIG on its own because the name is already clear nearby.                            | `public/brand/marks/primary-mark.svg`, `public/brand/marks/primary-mark-1000.png`     |
+| Contained Brand Mark               | A square profile or avatar format needs the contained version. Its exported canvas includes a white field.      | `public/brand/marks/contained-mark.svg`, `public/brand/marks/contained-mark-1080.png` |
+| Favicon                            | The browser or platform asks for one of the supplied icon sizes.                                                | `public/brand/favicons/favicon-16.png`, `favicon-32.png`, `favicon-48.png`            |
+| Primary Color Horizontal Lockup    | A light surface can use the colored mark with a Core Graphite wordmark.                                         | `public/brand/lockups/primary-color.svg`                                              |
+| Color Black Horizontal Lockup      | A light surface calls for the colored mark with a black wordmark.                                               | `public/brand/lockups/color-black.svg`                                                |
+| Reversed Horizontal Lockup         | A dark surface calls for the colored mark with a white wordmark.                                                | `public/brand/lockups/reversed.svg`                                                   |
+| Monochrome Black Horizontal Lockup | A single-color black lockup is needed on a light surface.                                                       | `public/brand/lockups/monochrome-black.svg`                                           |
+| Monochrome White Horizontal Lockup | A single-color white lockup is needed on a dark surface.                                                        | `public/brand/lockups/monochrome-white.svg`                                           |
+| Monochrome Brand Mark              | A symbol-only, one-color application is required. Select black for a light surface or white for a dark surface. | `public/brand/marks/monochrome-black.png`, `public/brand/marks/monochrome-white.png`  |
 
 The five named identity colors recorded in the logo story are Scout Blue `#21497B`, Thinker Orange `#EB7114`, Builder Green `#47A036`, Auditor Red `#971607`, and Core Graphite `#443A3B`. White and black are also used by the exported reversed and monochrome variants.
 
@@ -44,9 +44,24 @@ Whenever an agent creates or changes a VINASIG website, it must inspect the shar
 Use the supplied favicon exports at all three provided sizes and verify that the URLs match the site's deployment base path:
 
 ```html
-<link rel="icon" type="image/png" sizes="16x16" href="/brand/favicons/favicon-16.png" />
-<link rel="icon" type="image/png" sizes="32x32" href="/brand/favicons/favicon-32.png" />
-<link rel="icon" type="image/png" sizes="48x48" href="/brand/favicons/favicon-48.png" />
+<link
+  rel="icon"
+  type="image/png"
+  sizes="16x16"
+  href="/brand/favicons/favicon-16.png"
+/>
+<link
+  rel="icon"
+  type="image/png"
+  sizes="32x32"
+  href="/brand/favicons/favicon-32.png"
+/>
+<link
+  rel="icon"
+  type="image/png"
+  sizes="48x48"
+  href="/brand/favicons/favicon-48.png"
+/>
 ```
 
 Before considering the website task complete, check that each referenced file is present in the build or deployment output. If a project has a non-root base path, adapt the URLs to that base. If a needed favicon export is missing, report the gap and request the proper asset instead of omitting the favicon or inventing a replacement.
@@ -63,4 +78,4 @@ The supplied source material does **not** define a minimum display size, clear-s
 
 ## Asset provenance and permissions
 
-Files in `public/brand/` are unchanged copies of exported files from the VINASIG Brand Assets archive. They are included to illustrate the guidance and make the supplied variants available to this project. This repository adds no license for the VINASIG logo artwork.
+Files in `public/brand/` are unchanged copies of exports from VINASIG Brand Assets. They illustrate the guidance and retain their separate identity rights. The [VINASIG Brand Usage Policy](../../BRAND_POLICY.md) governs permitted references. The software and documentation grants exclude the logo artwork.

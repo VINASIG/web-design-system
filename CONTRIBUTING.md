@@ -31,3 +31,7 @@ Use a pull request to make a reviewable change. Describe what changed, why, whic
 ## Rights
 
 Contributions do not introduce a new license or transfer rights to existing artwork. Check [LICENSE_STATUS.md](LICENSE_STATUS.md) before including third-party material. License grants, package releases and production deployment require their own owner decision.
+
+## Contribution licensing
+
+Read [LICENSES.md](LICENSES.md) before submitting material. New contributions use the applicable software, documentation or data scope unless a different compatible license is explicitly identified and accepted. Preserve authorship and third-party notices. Submit only material you have authority to license. This does not require a blanket copyright assignment or grant permission to redesign the official identity assets.

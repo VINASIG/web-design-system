@@ -52,19 +52,19 @@ See [the test guide](tests/README.md) for browser setup, custom widths and touch
 
 ## Repository structure
 
-| Directory | Purpose |
-| --- | --- |
-| `src/pages/` | Static documentation routes and the element library. |
-| `src/components/` and `src/layouts/` | Shared site UI and document shell. |
-| `src/scripts/` | Browser interactions and shared icon registry. |
-| `src/styles/` | Design tokens and shared styles. |
-| `docs/` | Draft specifications, decisions and audit records. |
-| `public/` | Supplied brand exports, provider marks, local font and agent index. |
-| `scripts/` | Repository content checks. |
-| `tests/` | Portable responsive regression and preview helper. |
-| `.agents/skills/` | Locally imported VINASIG skills for a fresh agent session. |
-| `.vinasig/` | Reviewed standards snapshot, manifest and source provenance. |
-| `output/` | Ignored local screenshots, logs and inspection evidence. |
+| Directory                            | Purpose                                                             |
+| ------------------------------------ | ------------------------------------------------------------------- |
+| `src/pages/`                         | Static documentation routes and the element library.                |
+| `src/components/` and `src/layouts/` | Shared site UI and document shell.                                  |
+| `src/scripts/`                       | Browser interactions and shared icon registry.                      |
+| `src/styles/`                        | Design tokens and shared styles.                                    |
+| `docs/`                              | Draft specifications, decisions and audit records.                  |
+| `public/`                            | Supplied brand exports, provider marks, local font and agent index. |
+| `scripts/`                           | Repository content checks.                                          |
+| `tests/`                             | Portable responsive regression and preview helper.                  |
+| `.agents/skills/`                    | Locally imported VINASIG skills for a fresh agent session.          |
+| `.vinasig/`                          | Reviewed standards snapshot, manifest and source provenance.        |
+| `output/`                            | Ignored local screenshots, logs and inspection evidence.            |
 
 ## Deploy
 
@@ -110,6 +110,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for changes and bug reports, [SECURITY.md
 
 ## Rights and provenance
 
-The repository currently grants no general source license and keeps `private: true` to prevent accidental npm publication. Public visibility and a scoped package name do not grant reuse rights or publish a package. See [LICENSE_STATUS.md](LICENSE_STATUS.md) for the source and asset distinctions.
+The owner selected AGPL-3.0-or-later for the website implementation and CC-BY-SA-4.0 for authored documentation. The package keeps `private: true` to prevent accidental npm publication. See [LICENSES.md](LICENSES.md) for exact scopes and [LICENSE_STATUS.md](LICENSE_STATUS.md) for the current rights record.
 
-Space Grotesk retains its SIL Open Font License notice. `public/brand/` contains exact copies of selected supplied VINASIG exports. The repository adds no license for VINASIG names, marks or artwork. Third-party marks remain subject to their applicable rights and brand rules.
+Space Grotesk retains its SIL Open Font License notice. `public/brand/` contains exact copies of supplied VINASIG exports governed by [the separate brand policy](BRAND_POLICY.md). Third-party marks remain subject to their owners' rights and brand rules.
+
+## License scopes
+
+VINASIG-authored software uses **AGPL-3.0-or-later**. Authored documentation uses **CC-BY-SA-4.0**. Commercial use is allowed under those standard licenses. Fonts and third-party components retain their original terms. Official VINASIG identity assets follow the separate brand policy.
+
+Read [LICENSE](LICENSE), [LICENSES.md](LICENSES.md), [VINASIG Brand Usage Policy](BRAND_POLICY.md) and [the licensing review](docs/audits/licensing-2026-10-04.md) for exact scopes, rationale and remaining review.
