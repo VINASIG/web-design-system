@@ -5822,12 +5822,18 @@ function fitMacPopoverPreview(demo: HTMLElement) {
   const header = demo.querySelector<HTMLElement>(".sample-popover-window-header");
   if (!panel || !anchor || !header) return;
   const previewWindow = demo.querySelector<HTMLElement>(".sample-popover-window");
-  if (previewWindow) demo.style.setProperty("--sample-popover-width", `${Math.max(0, previewWindow.clientWidth - 24)}px`);
+  if (previewWindow) {
+    const width = `${Math.max(0, previewWindow.clientWidth - 24)}px`;
+    if (demo.style.getPropertyValue("--sample-popover-width") !== width) {
+      demo.style.setProperty("--sample-popover-width", width);
+    }
+  }
   const previousSpace = Number.parseFloat(demo.style.getPropertyValue("--sample-popover-space")) || 0;
   const anchorTop = anchor.getBoundingClientRect().top - previousSpace;
-  const requiredTop = header.getBoundingClientRect().bottom + panel.getBoundingClientRect().height + 16;
+  // Layout space must not follow the panel's animated transform.
+  const requiredTop = header.getBoundingClientRect().bottom + panel.offsetHeight + 16;
   const space = demo.dataset.popoverOpen === "true" ? Math.max(0, Math.ceil(requiredTop - anchorTop)) : 0;
-  demo.style.setProperty("--sample-popover-space", `${space}px`);
+  if (space !== previousSpace) demo.style.setProperty("--sample-popover-space", `${space}px`);
 }
 
 function setMacPopoverOpen(demo: HTMLElement, open: boolean, restoreFocus = false) {
@@ -5877,7 +5883,16 @@ function initializeMacPopoverDemo(sample: HTMLElement, instance = sample.dataset
   trigger.setAttribute("aria-expanded", String(initiallyOpen));
   panel.setAttribute("aria-hidden", String(!initiallyOpen));
   panel.inert = !initiallyOpen;
-  const resizeObserver = new ResizeObserver(() => fitMacPopoverPreview(demo));
+  let resizeFrame = 0;
+  const resizeObserver = new ResizeObserver(() => {
+    cancelAnimationFrame(resizeFrame);
+    // Reserving space changes the observed ancestor. Defer that write until
+    // after observer delivery so viewport changes cannot trigger a resize loop.
+    resizeFrame = requestAnimationFrame(() => {
+      resizeFrame = 0;
+      fitMacPopoverPreview(demo);
+    });
+  });
   resizeObserver.observe(panel);
   resizeObserver.observe(demo);
   fitMacPopoverPreview(demo);
@@ -6682,10 +6697,17 @@ function refreshColorWellIds(well: HTMLElement, instance: string) {
     }
     if (label) label.htmlFor = input.id;
   }
+  let resizeFrame = 0;
   const resizeObserver = new ResizeObserver(() => {
-    const openPanel = well.querySelector<HTMLElement>(".sample-color-popover:not([hidden]), .sample-color-panel:not([hidden])");
-    if (openPanel && panelTrigger) positionColorWellPanel(well, panelTrigger, openPanel);
-    else well.closest<HTMLElement>(".ui-sample")?.style.removeProperty("--sample-color-panel-space");
+    cancelAnimationFrame(resizeFrame);
+    // Update ancestors outside ResizeObserver delivery to avoid a resize loop
+    // while the open panel, picker or viewport changes size.
+    resizeFrame = requestAnimationFrame(() => {
+      resizeFrame = 0;
+      const openPanel = well.querySelector<HTMLElement>(".sample-color-popover:not([hidden]), .sample-color-panel:not([hidden])");
+      if (openPanel && panelTrigger) positionColorWellPanel(well, panelTrigger, openPanel);
+      else well.closest<HTMLElement>(".ui-sample")?.style.removeProperty("--sample-color-panel-space");
+    });
   });
   if (palette) resizeObserver.observe(palette);
   if (colorPanel) resizeObserver.observe(colorPanel);
@@ -6722,7 +6744,11 @@ function positionColorWellPanel(well: HTMLElement, trigger: HTMLElement, panel: 
     panel.style.maxHeight = `${Math.min(560, window.innerHeight - 48)}px`;
     // Reserve the untransformed panel height in the wrapper's flow. Flex-item
     // margins can leave the ancestor too short while WebKit lays out the panel.
-    well.closest<HTMLElement>(".ui-sample")?.style.setProperty("--sample-color-panel-space", `${panel.offsetHeight + 12}px`);
+    const sample = well.closest<HTMLElement>(".ui-sample");
+    const space = `${panel.offsetHeight + 12}px`;
+    if (sample && sample.style.getPropertyValue("--sample-color-panel-space") !== space) {
+      sample.style.setProperty("--sample-color-panel-space", space);
+    }
     return;
   }
   const triggerBounds = trigger.getBoundingClientRect();
