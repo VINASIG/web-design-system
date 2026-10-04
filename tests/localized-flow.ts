@@ -5,7 +5,16 @@ import dictionary from '../src/locales/runtime-vi.json' with {type:'json'};
 export async function checkVietnameseFlow(browser:Browser,base:string,output:string):Promise<void>{
  const context=await browser.newContext({viewport:{width:390,height:844},colorScheme:'dark',reducedMotion:'reduce'});
  try{
-  const page=await context.newPage();const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));await page.goto(base+'/vi/elements/');
+  const page=await context.newPage();const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
+  await page.goto(base+'/vi/');
+  const instructions=page.getByRole('region',{name:dictionary['Agent instructions example'],exact:true});
+  assert((await instructions.innerText()).includes('Read the root AGENTS.md.'));
+  await page.goto(base+'/vi/agents/');
+  const faviconCode=page.getByRole('region',{name:dictionary['Favicon HTML example'],exact:true});
+  assert((await faviconCode.innerText()).includes('sizes="16x16"'));
+  const integrationCode=page.getByRole('region',{name:dictionary['Agent integration example'],exact:true});
+  assert((await integrationCode.innerText()).includes('# AGENTS.md in a consuming website repository'));
+  await page.goto(base+'/vi/elements/');
   const sample=(id:string)=>page.locator('.element-preview .ui-sample[data-specimen-id="'+id+'"]');
   const windows=sample('mac-window');
   await windows.getByRole('button',{name:dictionary['Close window'],exact:true}).click();

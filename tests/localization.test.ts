@@ -12,3 +12,12 @@ await test('textarea guidance translates while its content remains literal', () 
     '<textarea placeholder="Sao chép" aria-label="Xin chào và tạm biệt">Copy</textarea>',
   );
 });
+
+await test('authored code-panel labels translate while code and user panels stay literal', () => {
+  assert.equal(
+    translateHtml('<pre role="region" aria-label="Copy"><code title="Copy">Copy</code></pre>', dictionary),
+    '<pre role="region" aria-label="Sao chép"><code title="Copy">Copy</code></pre>',
+  );
+  const userPanel = '<pre data-user-content aria-label="Copy"><code>Copy</code></pre>';
+  assert.equal(translateHtml(userPanel, dictionary), userPanel);
+});

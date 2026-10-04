@@ -16,7 +16,7 @@ export function collectAuthoredCopy(): string[] {
     }
   }
   for (const element of document.body.querySelectorAll('*')) {
-    if (element.closest(skip.replace(',textarea', ''))) continue;
+    if (element.closest(skip.replace(',textarea', '').replace(',pre', '')) || element.parentElement?.closest('pre')) continue;
     for (const name of ['aria-label', 'aria-description', 'aria-valuetext', 'aria-roledescription', 'title', 'alt', 'placeholder']) {
       const text = (element.getAttribute(name) ?? '').replace(/\s+/g, ' ').trim();
       if (text) values.push(text);

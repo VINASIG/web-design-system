@@ -18,7 +18,7 @@ export function escapeHtml(value: string): string {
 }
 
 /** Translate only authored text and accessible labels in trusted, rendered templates.
- * Code, scripts, styles, user regions, input values and protocol attributes stay byte-for-byte intact.
+ * Code contents, scripts, styles, user regions, input values and protocol attributes stay byte-for-byte intact.
  * This is a template-copy transformer, never an HTML sanitizer or an untrusted markup parser.
  */
 export function translateHtml(html: string, dictionary: Dictionary, links: Readonly<Record<string,string>> = {}): string {
@@ -45,7 +45,7 @@ export function translateHtml(html: string, dictionary: Dictionary, links: Reado
       result += token;
       continue;
     }
-    const protectedRegion = stack.some(item => item.protected) || ['code', 'pre', 'svg'].includes(tag) || /\bdata-user-content(?:[\s=>]|$)/.test(token);
+    const protectedRegion = stack.some(item => item.protected) || ['code', 'svg'].includes(tag) || /\bdata-user-content(?:[\s=>]|$)/.test(token);
     result += token.replace(/([\w:-]+)=(["'])([\s\S]*?)\2/g, (attribute: string, name: string, quote: string, value: string) => {
       if (!protectedRegion && ['aria-label', 'aria-description', 'aria-valuetext', 'aria-roledescription','title','alt','placeholder','content'].includes(name.toLowerCase())) {
         const translated = translateCopy(value, dictionary);

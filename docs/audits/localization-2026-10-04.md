@@ -12,12 +12,13 @@ Only the theme preference uses local storage. User inputs and files stay local, 
 
 ## Observed local evidence
 
-- Unit regression passed 13 cases across localization, standards and paths. Source checks and production builds were run separately.
+- Unit regression passed 14 cases across localization, standards and paths. Source checks and production builds were run separately.
 - Localization preferences were exercised in Chromium, Firefox and WebKit, including no-script navigation, metadata, system appearance, explicit persistence, denied storage, keyboard activation, current input retention and section links.
 - All eight routes in each language, translated navigation and specimen controls, custom calendar, window close/restore, modal and 200 percent text on the overview. Three original responsive runs passed 784 checks per engine before the final large-text repair; the final localization suite and 228-case matrix verify that repair.
 - The shared final matrix passed 228 cases for this website. It covers both languages and themes at 360 x 800, 390 x 844, 768 x 1024, 1024 x 768 and 1440 x 900, actual breakpoint neighbors and 200 percent text. Full-page traversal checks offscreen images and unintended document overflow.
 - Screenshots were captured and representative mobile, desktop, light and dark images were opened. DOM geometry and automated accessibility checks supplement visual inspection.
 - A follow-up source audit replaced English-label selectors in the level controls with stable component relationships, so translated inputs retain their description references. Custom chip labels remain literal and their removal announcements use translated templates. The Vietnamese flow now verifies both level descriptions and keyboard limits, plus adding and removing a literal email recipient. Source checks, a fresh production build and all three browser localization runs passed after this repair.
+- Live visual and accessibility inspection found that code-panel region names were still in English. Authored outer labels now translate while code contents, nested code attributes and user-provided panels remain literal. A unit regression and the real Vietnamese overview and agent-guide flows verify this boundary. Copy coverage includes outer code-panel attributes, preventing the previous blanket exclusion from missing their translations.
 
 Before and after matrix evidence is retained under the sibling favicon-forge checkout at ignored `output/responsive/localization-2026-10-04/`. This project's localized interaction screenshots remain under ignored `output/`. Before images were preserved.
 
