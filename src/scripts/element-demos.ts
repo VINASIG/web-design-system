@@ -2165,7 +2165,7 @@ function addChip(container: HTMLElement, label: string, className = "sample-sele
   const chip = document.createElement("span");
   chip.className = className;
   const text = document.createElement("span");
-  text.textContent = interfaceCopy(label);
+  text.textContent = label;
   const remove = document.createElement("button");
   remove.type = "button";
   remove.className = "sample-chip-remove";
@@ -2175,7 +2175,7 @@ function addChip(container: HTMLElement, label: string, className = "sample-sele
   removeIcon.setAttribute("aria-hidden", "true");
   remove.append(removeIcon);
   renderIcons(remove);
-  setAction(remove, "remove-chip", `Remove ${label}`);
+  setAction(remove, "remove-chip", interfaceCopy("Remove {0}").replace("{0}", label));
   chip.append(text, remove);
   const multiSelectInput = container.matches(".sample-multiselect")
     ? container.querySelector<HTMLElement>(".sample-input-line")
@@ -3071,7 +3071,7 @@ function initializeLevelIndicator(sample: HTMLElement, instance = sample.dataset
     const kind = help.dataset.levelHelp;
     if (!kind) return;
     help.id = `${prefix}-${kind}-help`;
-    sample.querySelector<HTMLInputElement>(`.sample-level-card input[data-input-action='level-value'][aria-label='${kind === "capacity" ? "Units used" : "Match score"}']`)
+    help.closest(".sample-level-card")?.querySelector<HTMLInputElement>("input[data-input-action='level-value']")
       ?.setAttribute("aria-describedby", help.id);
   });
 
@@ -8748,10 +8748,13 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       announce(sample, "Design filter restored and selected.");
       break;
     }
-    case "remove-chip":
-      button.closest(".sample-selected, .sample-token-field > div > b")?.remove();
-      announce(sample, `${button.getAttribute("aria-label")?.replace("Remove ", "") ?? "Item"} removed.`);
+    case "remove-chip": {
+      const token = button.closest<HTMLElement>(".sample-selected, .sample-token-field > div > b");
+      const name = token?.textContent?.trim() || interfaceCopy("Item");
+      token?.remove();
+      announce(sample, interfaceCopy("{0} removed.").replace("{0}", name));
       break;
+    }
     case "multi-dropdown-toggle": {
       const owner = button.closest<HTMLElement>(".sample-multi-checkbox");
       const panel = owner?.querySelector<HTMLElement>(".sample-multi-checkbox-options");
