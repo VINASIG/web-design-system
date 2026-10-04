@@ -766,6 +766,23 @@ function showSurfaceFeedback(feedback: HTMLElement, message: string) {
   surfaceFeedbackTimers.set(feedback, timer);
 }
 
+function positionSurfaceDrawer(panel: HTMLDialogElement) {
+  if (!panel.open || panel.dataset.surfacePanel !== "drawer") return;
+  // A mobile viewport may pan independently of the layout viewport after focus.
+  // Follow its current bounds rather than assuming a scrollbar-sized offset.
+  const viewport = window.visualViewport;
+  panel.style.setProperty("--surface-drawer-top", `${viewport?.offsetTop ?? 0}px`);
+  panel.style.setProperty("--surface-drawer-height", `${viewport?.height ?? window.innerHeight}px`);
+}
+
+function repositionSurfaceDrawers() {
+  document.querySelectorAll<HTMLDialogElement>("dialog.sample-surface-drawer[open]").forEach(positionSurfaceDrawer);
+}
+
+window.addEventListener("resize", repositionSurfaceDrawers);
+window.visualViewport?.addEventListener("resize", repositionSurfaceDrawers);
+window.visualViewport?.addEventListener("scroll", repositionSurfaceDrawers, { passive: true });
+
 function initializeSurfaceDemo(sample: HTMLElement) {
   const demo = sample.querySelector<HTMLElement>(".sample-surface-demo");
   const controls = demo?.querySelectorAll<HTMLButtonElement>(".sample-surface-options [data-action='surface-select']");
@@ -798,6 +815,8 @@ function initializeSurfaceDemo(sample: HTMLElement) {
 
     if (!initializedSurfaceDialogs.has(panel)) {
       panel.addEventListener("close", () => {
+        panel.style.removeProperty("--surface-drawer-top");
+        panel.style.removeProperty("--surface-drawer-height");
         const openPanel = panels.find((candidate) => candidate.open);
         demo.dataset.surfaceOpen = String(Boolean(openPanel));
         controls.forEach((control) => {
@@ -809,6 +828,7 @@ function initializeSurfaceDemo(sample: HTMLElement) {
           showSurfaceFeedback(feedback, `${label} example closed.`);
         }
       });
+      panel.addEventListener("animationend", () => positionSurfaceDrawer(panel));
       panel.addEventListener("click", (event) => {
         if (event.target !== panel) return;
         const rect = panel.getBoundingClientRect();
@@ -8921,6 +8941,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       const panel = demo.querySelector<HTMLDialogElement>(`dialog[data-surface-panel='${surface}']`);
       if (!panel || panel.open) break;
       panel.showModal();
+      positionSurfaceDrawer(panel);
       demo.dataset.surfaceOpen = "true";
       demo.querySelectorAll<HTMLButtonElement>(".sample-surface-options [data-action='surface-select']").forEach((control) => {
         control.setAttribute("aria-expanded", String(control === button));

@@ -381,6 +381,12 @@ try {
       const dialog=page.locator('dialog:modal');
       const rect=await visibleRect(dialog);
       check(name+' fits the viewport',rect.fits,rect);
+      if(name==='Drawer') {
+        const viewport=await page.evaluate(()=>({width:visualViewport?.width??innerWidth,height:visualViewport?.height??innerHeight}));
+        check('Drawer fits the visible viewport after opening a dialog',rect.x>=-1&&rect.y>=-1&&rect.x+rect.width<=viewport.width+1&&rect.y+rect.height<=viewport.height+1,{rect,viewport});
+        const binding=await dialog.evaluate(element=>{const style=getComputedStyle(element);return {top:parseFloat(style.top),height:parseFloat(style.height),visibleTop:visualViewport?.offsetTop??0,visibleHeight:visualViewport?.height??innerHeight};});
+        check('Drawer follows the current mobile viewport origin and height',Math.abs(binding.top-binding.visibleTop)<1&&binding.height<=binding.visibleHeight+1,binding);
+      }
       const close=dialog.locator('[data-action="surface-dismiss"]').first();
       const closeRect=await visibleRect(close);
       check(name+' close control fits the viewport',closeRect.fits,closeRect);

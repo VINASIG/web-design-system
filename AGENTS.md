@@ -23,6 +23,7 @@ This Astro repository publishes documentation, source tokens and interactive UI 
 - Run `npm run check` and `npm run build` after implementation changes. Run `npm run test:standards` when changing the snapshot integrity gate.
 - After UI changes, run `npm test` against the built site, inspect screenshots at the five standard viewports and include 320 px, affected breakpoints, touch, normal and reduced motion where relevant. Follow [the test guide](tests/README.md).
 - Check the shared favicon, open dropdowns, keyboard behavior, names and states of changed controls. Fix overflow at its source. A successful build or automated assertion does not prove visual correctness.
+- For masked control glyphs, verify actual forced-colors pixels in both light and dark palettes. A `currentColor` background can be replaced with Canvas and disappear. Use the user's system foreground, preserve state shapes, and require contrast in `tests/control-surfaces.mjs`. Keep the shared stylesheet copies consistent across consuming websites.
 - Keep screenshots, browser reports, local bundles and logs under ignored `output/`. Record durable conclusions under `docs/audits/`. Report actual PASS, FAIL, NOT_RUN or NOT_APPLICABLE outcomes with evidence and limits.
 - Read [the rights record](LICENSE_STATUS.md) before copying or redistributing source or assets. Do not invent a license grant, author attribution or deployment hostname.
 

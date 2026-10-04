@@ -188,7 +188,8 @@ try {
             await disclosure.screenshot({
               path: path.join(folder, "disclosure-open.png"),
             });
-            if (engine === "chromium" && locale === "en" && theme === "light") {
+            const forcedGlyphs = [];
+            if (engine === "chromium") {
               await page.emulateMedia({ forcedColors: "active" });
               assert(
                 await page.evaluate(
@@ -218,9 +219,74 @@ try {
                   knob.height > 1,
                 JSON.stringify(knob),
               );
+              for (const state of ["open", "closed"]) {
+                if (state === "closed") await summary.click();
+                assert.equal(
+                  await disclosure.evaluate((element) => element.open),
+                  state === "open",
+                );
+                const forcedGlyph = await summary.evaluate((element) => {
+                  const probe = document.createElement("span");
+                  probe.style.cssText =
+                    "color:CanvasText;background:Canvas;forced-color-adjust:none";
+                  document.body.append(probe);
+                  const palette = getComputedStyle(probe);
+                  const mark = getComputedStyle(element, "::before");
+                  const channels = (color) =>
+                    (color.match(/[\d.]+/g) || []).slice(0, 3).map(Number);
+                  const luminance = (color) =>
+                    channels(color)
+                      .map((channel) => {
+                        const value = channel / 255;
+                        return value <= 0.04045
+                          ? value / 12.92
+                          : ((value + 0.055) / 1.055) ** 2.4;
+                      })
+                      .reduce(
+                        (sum, value, index) =>
+                          sum + value * [0.2126, 0.7152, 0.0722][index],
+                        0,
+                      );
+                  const foreground = luminance(mark.backgroundColor);
+                  const background = luminance(palette.backgroundColor);
+                  const result = {
+                    background: mark.backgroundColor,
+                    systemText: palette.color,
+                    canvas: palette.backgroundColor,
+                    display: mark.display,
+                    width: parseFloat(mark.width),
+                    height: parseFloat(mark.height),
+                    contrast:
+                      (Math.max(foreground, background) + 0.05) /
+                      (Math.min(foreground, background) + 0.05),
+                  };
+                  probe.remove();
+                  return result;
+                });
+                assert.equal(forcedGlyph.background, forcedGlyph.systemText);
+                assert(
+                  forcedGlyph.display !== "none" &&
+                    forcedGlyph.width > 1 &&
+                    forcedGlyph.height > 1 &&
+                    forcedGlyph.contrast >= 3,
+                  JSON.stringify(forcedGlyph),
+                );
+                await summary.screenshot({
+                  path: path.join(folder, `forced-disclosure-${state}.png`),
+                });
+                forcedGlyphs.push({ state, ...forcedGlyph });
+              }
             }
             assert.deepEqual(errors, []);
-            results.push({ engine, locale, theme, marks, glyph, folder });
+            results.push({
+              engine,
+              locale,
+              theme,
+              marks,
+              glyph,
+              forcedGlyphs,
+              folder,
+            });
           } finally {
             await context.close();
           }
@@ -240,6 +306,10 @@ console.log(
   JSON.stringify({
     status: "PASS",
     cases: results.length,
+    forcedColorStates: results.reduce(
+      (count, row) => count + row.forcedGlyphs.length,
+      0,
+    ),
     engines,
     output: directory,
   }),
