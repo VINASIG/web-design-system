@@ -118,6 +118,7 @@ export async function checkLocalization(
         await page.evaluate(async () => {
           await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => { resolve(); })));
         });
+        await inspectThemeIcons(page);
         const light = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
         await page.reload();
         await page.waitForFunction(() => document.documentElement.dataset['theme'] === 'light');
