@@ -12,6 +12,10 @@ The offline installer applied the reviewed bundle from agent-standards commit `0
 
 ## Browser verification
 
+The first exact-commit WebKit CI sweep reproduced a 360 px save-panel reading-width regression. Its non-overlay authored page scrollbar reduced the specimen's available width to 224.6 px, below the existing 234 px requirement. The save specimen now uses smaller outer preview padding under the existing narrow-screen breakpoint. Typography, document content, save controls, scrollbar visibility and the original assertion remain intact. Before captures and geometry remain under `before-save-fit/`.
+
+Published QR screenshots exposed another shared-style issue. An absolutely positioned disclosure glyph ignored the host summary's padding and appeared above its text. The shared glyph now participates in normal inline text flow with an explicit value gap. This stylesheet correction is reused by all seven sites and has a permanent open/closed regression in `tests/control-surfaces.mjs`.
+
 The local production-preview sweep covered 160 Chromium cases over routes `/`, `foundations/`, `components/`, `elements/`, `patterns/`, `agents/`, `brand/`, `404.html`, `vi/`, `vi/foundations/`, `vi/components/`, `vi/elements/`, `vi/patterns/`, `vi/agents/`, `vi/brand/`, `vi/404/` in both languages and both themes. It used 360 x 800, 390 x 844, 768 x 1024, 1024 x 768 and 1440 x 900. Each case traversed the whole page scroll range, captured full-page images or all segments of a long page, and checked page width, runtime errors, interface copy, control surfaces, ordinary indicators and the header.
 
 A separate 60-capture state review exercised the changed and retained controls at 390 x 844 in Chromium, Firefox and WebKit, both locales and themes. Opened images and contact sheets were inspected.
