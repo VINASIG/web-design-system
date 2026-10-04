@@ -6,6 +6,8 @@ import {
   ExternalLink,
   Grid2x2,
   House,
+  Sun,
+  Moon,
   Info,
   Layers,
   ListTodo,
@@ -17,6 +19,8 @@ import type { UIIconName } from "../scripts/icon-names";
 
 const iconComponents = {
   home: House,
+  sun: Sun,
+  moon: Moon,
   agents: Bot,
   brand: Palette,
   foundations: Layers,
@@ -30,9 +34,10 @@ const iconComponents = {
   externalLink: ExternalLink,
 } satisfies Record<UIIconName, typeof House>;
 
-const { name, class: className = "" } = Astro.props as {
+const { name, class: className = "", size = 24 } = Astro.props as {
   name: UIIconName;
   class?: string;
+  size?: number;
 };
 
 const IconComponent = iconComponents[name];
@@ -42,4 +47,4 @@ if (!IconComponent) {
 }
 ---
 
-<IconComponent class:list={["ui-icon", `ui-icon--${name}`, className]} aria-hidden="true" focusable="false" />
+<IconComponent size={size} class:list={["ui-icon", `ui-icon--${name}`, className]} aria-hidden="true" focusable="false" />

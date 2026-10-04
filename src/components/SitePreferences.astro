@@ -1,5 +1,6 @@
 ---
 import '../styles/preferences.css';
+import Icon from './Icon.astro';
 interface Props {
   lang: 'vi' | 'en';
   alternate: string;
@@ -22,7 +23,8 @@ const label =
     aria-pressed="false"
     disabled
   >
-    <span aria-hidden="true"></span>
+    <Icon name="sun" class="theme-sun" size={20} />
+    <Icon name="moon" class="theme-moon" size={20} />
   </button>
   <a
     class="language-switch"

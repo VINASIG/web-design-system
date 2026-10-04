@@ -1,5 +1,7 @@
 export type UIIconName =
   | "home"
+  | "sun"
+  | "moon"
   | "agents"
   | "brand"
   | "foundations"

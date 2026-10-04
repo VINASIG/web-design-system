@@ -62,3 +62,7 @@ Use a card to group related content. Make a card clickable only when the whole r
 ## Component page checklist
 
 Every future component specification should document its purpose, anatomy, variants, interaction states, keyboard behavior, responsive behavior, accessibility requirements, and a working example. For dropdowns, the example must show both the closed trigger and the open options panel.
+
+## Appearance control approved on 5 October 2026
+
+The owner selected the existing TOTP and QR Scanner appearance pattern for VINASIG websites. Use decorative Lucide Sun and Moon SVGs at 20 CSS px inside a button with a target of at least 44 CSS px. Light mode shows Moon to offer dark mode. Dark mode shows Sun to offer light mode. Keep a localized action name, pressed state, visible keyboard focus and the unchanged language link. Do not replace these recognizable icons with filled squares. Regression checks inspect both icons, their visibility and dimensions before and after toggling, persistence and blocked storage.

@@ -1,4 +1,6 @@
 {
+  "Appearance control": "Đổi giao diện",
+  "The appearance button shows a moon in light mode and a sun in dark mode. Its accessible name describes the theme you can switch to.": "Nút đổi giao diện hiện mặt trăng khi dùng nền sáng và mặt trời khi dùng nền tối. Tên của nút cho biết giao diện sẽ chuyển sang.",
   "The VINASIG logo links to the organization homepage. Project navigation and source links remain separate.": "Logo VINASIG dẫn về trang chủ của tổ chức. Điều hướng của dự án và liên kết mã nguồn được đặt riêng.",
   "Keep at least 16 pixels between the arrow's box and the inner edge of the field, and 12 pixels between the selected text and the arrow. Preserve the icon size when text wraps or grows.": "Giữ ít nhất 16 pixel giữa vùng chứa mũi tên và mép trong của ô chọn, cùng 12 pixel giữa chữ đã chọn và mũi tên. Giữ nguyên kích thước biểu tượng khi chữ xuống dòng hoặc tăng cỡ.",
   "Specimens keep their reference appearance when the documentation theme changes.": "Mẫu giữ giao diện tham chiếu khi giao diện tài liệu đổi sáng hoặc tối.",
