@@ -8,6 +8,8 @@ Use the original transparent horizontal lockup directly on the header surface. P
 
 Do not add a white background, padded or rounded card, border frame, shadow, filter or cropped corners around the logo. Keep its supplied aspect ratio and internal white geometry. Use surrounding layout spacing and a link target of at least 44 by 44 CSS px independently of the image size. Keep the accessible link name and original image rather than reconstructing the wordmark with live text. An unavoidable background exception needs owner review and a recorded reason.
 
+On VINASIG websites, the native header or sidebar logo link opens `https://vinasig.io.vn/` with a localized homepage name. Project navigation and GitHub source links remain separate. Verify the destination and original transparent asset in the local build and on the deployed site.
+
 The owner explicitly approved this header rule. It does not approve every other draft recommendation or grant artwork rights. Asset byte integrity and rendered-browser checks are separate requirements.
 
 ## Purpose and source
