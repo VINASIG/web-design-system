@@ -3,7 +3,7 @@ import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { chromium, firefox, webkit } from "playwright";
 import { startPreview } from "./helpers/preview.mjs";
-import { inspectControlIndicators } from "../.vinasig/standards/templates/web/interface.mjs";
+import { inspectControlIndicators, inspectControlSurfaces } from "../.vinasig/standards/templates/web/interface.mjs";
 
 const root = "output/responsive/control-indicators";
 const app = await startPreview(root);
@@ -50,6 +50,7 @@ try {
               page.on("pageerror", (error) => errors.push(error.message));
               const url = `${app.baseURL}/${locale === "vi" ? "vi/" : ""}components/`;
               await page.goto(url);
+              assert.deepEqual(await page.evaluate(inspectControlSurfaces), []);
               await page.evaluate(() => document.fonts.ready);
               const placement = page.getByRole("combobox", {
                 name: locale === "vi" ? "Vị trí" : "Placement",
@@ -93,6 +94,7 @@ try {
                 path: path.join(directory, "closed.png"),
               });
               await placement.click();
+              assert.deepEqual(await page.evaluate(inspectControlSurfaces), []);
               assert.deepEqual(
                 await page.evaluate(inspectControlIndicators),
                 [],

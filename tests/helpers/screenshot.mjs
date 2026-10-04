@@ -1,6 +1,6 @@
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { inspectInterface, inspectHeaderBrand } from '../../.vinasig/standards/templates/web/interface.mjs';
+import { inspectInterface, inspectHeaderBrand, inspectControlSurfaces } from '../../.vinasig/standards/templates/web/interface.mjs';
 
 // WebKit limits screenshots to 32767 px per dimension. Retain the real viewport
 // and capture every scroll segment of longer pages rather than clipping content.
@@ -9,6 +9,7 @@ export async function capturePage(page, file) {
   if (height <= 30000) {
     await page.screenshot({ path: file, fullPage: true });
     assert.deepEqual(await page.evaluate(inspectInterface), [], file);
+    assert.deepEqual(await page.evaluate(inspectControlSurfaces), [], file);
     assert.deepEqual(await page.evaluate(inspectHeaderBrand), [], file);
     return;
   }
@@ -24,5 +25,6 @@ export async function capturePage(page, file) {
   }
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
   assert.deepEqual(await page.evaluate(inspectInterface), [], file);
+    assert.deepEqual(await page.evaluate(inspectControlSurfaces), [], file);
     assert.deepEqual(await page.evaluate(inspectHeaderBrand), [], file);
 }

@@ -97,6 +97,7 @@ Before coding, state what the user needs to accomplish and how the changed inter
 - Build actual interaction behavior and feedback. Do not ship decorative controls that appear functional but do nothing.
 - Use a reviewed custom dropdown whose trigger and open options panel share the project's tokens and Space Grotesk. A hidden native select may retain form values, reset and disabled state. Do not expose its operating-system popup as the intended VINASIG interface.
 - Apply the same complete-control requirement to calendars and color choosers. Style slider tracks and thumbs in every supported engine while retaining native keyboard behavior. Initial HTML must present meaningful styled controls, disabled until their handlers attach, with direct text entry retained where useful.
+- Inventory all reachable controls before implementation, including conditional fields. Apply `src/styles/control-surfaces.css` to checkbox/radio marks, search clearing, progress/meter values, disclosures and scrollbars. Review number steppers, upload buttons and switch states too. Preserve real wheel, touch, keyboard and scrollbar dragging. Do not hide a scrollbar to avoid styling it. Keep an accessible forced-colors fallback.
 
 ### 4. Inspect the rendered page at multiple sizes
 
@@ -110,6 +111,7 @@ Use the real browser preview when available. Capture or inspect each changed rou
 - Check for horizontal page scrolling, clipped text, overlapping cards, detached icons, controls outside the viewport, and sticky elements covering keyboard focus.
 - Check long words, URLs, code, empty data, and populated data. Do not use global `overflow-x: hidden` to mask a layout defect.
 - Measure ordinary dropdown indicators under WEB-008. Require at least 16 CSS px from the SVG box to the inner trailing border, a 12 CSS px gap from the selected value and the declared SVG dimensions. Run `inspectControlIndicators` on initial and enhanced HTML, open and disabled controls, long selected values and 200% text sizing in both locales/themes. Open before/after screenshots at a useful scale. Compact platform-reference specimens retain their documented metrics.
+- Run `inspectControlSurfaces` with a nonzero expected-control count on actual routes. Open each popup, scroll to the final choice and exercise selection, cancellation and reset. Capture and open the full control, including scrollbar and subparts. Check all supported engines, both locales/themes and the published site. Bring catalog examples below the fold into view before measuring their viewport fit.
 - Compare the actual result with each supplied visual reference at the same viewport. Check small-screen text size, overflow, element placement, and behavior rather than inferring them from the desktop view.
 - When motion is present, check behavior with reduced motion enabled. Check color contrast on actual rendered foreground and background pairs, not on swatches in isolation.
 

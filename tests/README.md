@@ -54,3 +54,9 @@ Read docs/LOCALIZATION.md. Language and appearance regression tests run through 
 The focused matrix covers both themes at 320, 360, 390, 759, 760, 761, 768, 1024 and 1440 px. It opens the popup, checks its bounds and restores keyboard focus with Escape. At 320 px it also uses a long selected value with 200% text and verifies disabled initial HTML without scripts. The English desktop case verifies that the established Accessibility term stays on one line and captures the surrounding section. Screenshots remain under `output/responsive/control-indicators/<engine>/`. Open them before accepting a change.
 
 The default focused command runs Chromium, Firefox and WebKit, with 36 locale/theme/viewport cases per engine. `RESPONSIVE_ENGINE` selects the matching engine in the existing CI matrix, while `BROWSER_ENGINES` can explicitly select a comma-separated list for this command. `npm test` includes this guard after the responsive and bilingual suites. Compact platform-reference specimens retain their documented metrics.
+
+## Complete control surface regression
+
+`npm run test:surfaces` checks the rendered checkbox, radio and switch selection marks in both locales and themes at 390 x 844. It requires visible marks with at least 3:1 contrast against their selected surface. This catches text-color inheritance that leaves an authored control almost blank. The slider must still reach its maximum through the End key. The complete `inspectControlSurfaces` gate remains active for these states.
+
+The command uses the same browser selection variables as `test:controls`. All three engines run by default. Chromium also verifies the selected switch in forced-colors mode so its knob cannot disappear into the track. CI runs its matching engine and retains images under `output/responsive/control-surfaces/`. Review those images alongside opened dropdown, calendar, color and scrolled-panel images before accepting a control change.

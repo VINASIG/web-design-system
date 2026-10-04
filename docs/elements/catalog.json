@@ -175,7 +175,7 @@
       "platform": "Web",
       "category": "Forms and controls",
       "definition": "A control for entering one date or choosing a date or range from a calendar.",
-      "guidance": "Prefer the native date input when its platform behavior meets the task. A custom calendar must support month changes, selected and unavailable dates, sensible date formats, and a narrow viewport.",
+      "guidance": "Keep direct date entry and use the reviewed styled calendar. Support month changes, selected and unavailable dates, clear date formats and a narrow viewport. Operating-system date popups do not satisfy the VINASIG web-control requirement.",
       "accessibility": "Keep a visible label and explain accepted formats. For a custom calendar, provide keyboard navigation, announce the focused and selected date, and label month controls."
     },
     {
@@ -361,7 +361,7 @@
       "definition": "A two-part color control that shows the current color, opens quick swatches, and provides access to a full color panel.",
       "guidance": "Keep the current-color swatch and the full-panel button distinct. The swatch opens quick choices and an eyedropper when the platform supports screen sampling. The adjacent panel button opens the full color panel.",
       "accessibility": "Name both buttons and expose the current color as text. Keep palette choices keyboard-operable and associate custom color inputs with visible labels and instructions.",
-      "webGuidance": "Use a labeled color input or an accessible picker. Pair the swatch with a text value, keep the quick palette and full panel actions distinct, and offer screen sampling only when the browser supports it."
+      "webGuidance": "Use an accessible styled picker with an editable color value. Keep the quick palette and full panel actions distinct, and offer screen sampling only when the browser supports it. Operating-system color popups do not satisfy the VINASIG web-control requirement."
     },
     {
       "order": 32,

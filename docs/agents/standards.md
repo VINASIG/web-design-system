@@ -8,8 +8,8 @@ This project imports a reviewed local snapshot from [VINASIG/agent-standards](ht
 | ------------------ | ------------------------------------------------------------------ |
 | Standards version  | `0.1.0` public preview                                             |
 | Consumer profile   | `web-typescript`                                                   |
-| Source commit      | `3dc9486b3cba4d7d7c4375fa145d73e53b6137a2`                         |
-| Bundle SHA-256     | `eb0d35d45c774fa157fc64763f8bd235d5a7b7ed8c860819c1ce524d76c6d939` |
+| Source commit      | `00fd107bfc651d4eb9cf7f34cf5e0a9f2ee93ee9`                         |
+| Bundle SHA-256     | `efe05f654da53716186663ff3186623e521003fbc82eedc624a4c46d0cc8adef` |
 | Installed payload  | 47 owned files, including seven namespaced skills                  |
 | Source record      | `.vinasig/provenance.json`                                         |
 | Installed manifest | `.vinasig/manifest.json`                                           |
@@ -47,7 +47,7 @@ The browser matrix was expanded on 2026-10-03 to managed Chromium, Firefox and W
 
 ## Reproduce or update the snapshot
 
-Use a clean checkout of the reviewed agent-standards commit. Follow its [integration contract](https://github.com/VINASIG/agent-standards/blob/3dc9486b3cba4d7d7c4375fa145d73e53b6137a2/docs/integration.md) to build a fresh bundle and inspect the file inventory and digest. A consumer checkout does not need the standards source or network access for ordinary checks.
+Use a clean checkout of the reviewed agent-standards commit. Follow its [integration contract](https://github.com/VINASIG/agent-standards/blob/00fd107bfc651d4eb9cf7f34cf5e0a9f2ee93ee9/docs/integration.md) to build a fresh bundle and inspect the file inventory and digest. A consumer checkout does not need the standards source or network access for ordinary checks.
 
 From the separate standards checkout, in PowerShell:
 
@@ -57,7 +57,7 @@ npm run build
 $taskBundle = node dist/bundle.js output/bundles/wds-reviewed | ConvertFrom-Json
 $taskTarget = (Resolve-Path ../web-design-system).Path
 # Use a digest only after reviewing the source, inventory and bundle.
-$approvedSha256 = 'eb0d35d45c774fa157fc64763f8bd235d5a7b7ed8c860819c1ce524d76c6d939'
+$approvedSha256 = 'efe05f654da53716186663ff3186623e521003fbc82eedc624a4c46d0cc8adef'
 node dist/cli.js init --target $taskTarget --bundle $taskBundle.path --sha256 $approvedSha256 --profile web-typescript --dry-run --json
 node dist/cli.js init --target $taskTarget --bundle $taskBundle.path --sha256 $approvedSha256 --profile web-typescript --json
 node dist/cli.js doctor --target $taskTarget --json

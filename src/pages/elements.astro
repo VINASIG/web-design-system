@@ -2837,6 +2837,24 @@ const displayName = (value: string) =>
     .sample-choice-switch > input[role='switch']::before,
     .sample-choice-save { transition: none; }
   }
+  @media (forced-colors: active) {
+    .sample-choice-switch > input[role='switch'] {
+      forced-color-adjust: none;
+      background: Canvas;
+      border-color: ButtonText;
+    }
+    .sample-choice-switch > input[role='switch']::before {
+      background: ButtonText;
+      box-shadow: none;
+    }
+    .sample-choice-switch > input[role='switch']:checked {
+      background: Highlight;
+      border-color: Highlight;
+    }
+    .sample-choice-switch > input[role='switch']:checked::before {
+      background: HighlightText;
+    }
+  }
   .sample-toggle-demo { display: grid; width: min(100%, 25rem); min-width: 0; gap: 0.7rem; container-type: inline-size; }
   .sample-toggle-label { color: var(--color-text); font-size: 0.84rem; font-weight: 600; }
   .sample-toggle-group { position: relative; display: flex; width: 100%; min-width: 0; align-items: stretch; gap: 0; padding: 0.22rem; background: var(--color-surface-muted); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
@@ -5124,5 +5142,26 @@ const displayName = (value: string) =>
     .sample-multi-transfer-actions { grid-template-columns: repeat(2, 1.8rem); justify-content: center; }
     .element-preview .ui-sample .sample-volume-discrete .sample-volume-ticks > span[data-compact-label] { font-size: 0; }
     .element-preview .ui-sample .sample-volume-discrete .sample-volume-ticks > span[data-compact-label]::after { font-size: 0.62rem; content: attr(data-compact-label); }
+  }
+  /* Complete authored scrollbars. Non-auto standard properties override
+     WebKit parts, including the rule that removes platform arrow buttons. */
+  @media (forced-colors: none) {
+    @supports selector(::-webkit-scrollbar) {
+      :is(.sample-multi-transfer-list, .sample-scrollspy-content, .sample-parallax-viewport, .sample-resize-field, .sample-trash-alert, .sample-positioning-pane, .sample-column-view, .sample-floating-panel) {
+        scrollbar-color: auto;
+        scrollbar-width: auto;
+      }
+
+      :is(.sample-multi-transfer-list, .sample-resize-field, .sample-trash-alert, .sample-column-view, .sample-floating-panel)::-webkit-scrollbar-thumb {
+        background-color: var(--color-text-muted);
+      }
+    }
+
+    @supports not selector(::-webkit-scrollbar) {
+      :is(.sample-multi-transfer-list, .sample-scrollspy-content, .sample-parallax-viewport, .sample-resize-field, .sample-trash-alert, .sample-positioning-pane, .sample-column-view, .sample-floating-panel) {
+        scrollbar-color: var(--color-text-muted) transparent;
+        scrollbar-width: thin;
+      }
+    }
   }
 </style>
