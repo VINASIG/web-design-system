@@ -218,6 +218,7 @@ select:focus-visible {
 
 .docs-main {
   container: docs-layout / inline-size;
+  overflow-wrap: anywhere;
   width: min(100%, 1260px);
   margin: 0 auto;
   padding: 3rem 3.5rem 4rem;
@@ -307,7 +308,7 @@ h3 {
 }
 
 .card {
-  padding: 1.35rem;
+  padding: min(1.35rem, 21.6px);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -360,12 +361,17 @@ h3 {
 
 .rule-callout {
   display: flex;
-  gap: 0.85rem;
-  padding: 1rem 1.15rem;
+  gap: min(0.85rem, 13.6px);
+  padding: min(1rem, 16px) min(1.15rem, 18.4px);
   color: var(--color-warning);
   background: var(--color-warning-background);
   border: 1px solid var(--color-warning-border);
   border-radius: var(--radius-md);
+}
+
+.rule-callout > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .rule-callout strong {
@@ -458,6 +464,9 @@ h3 {
 
 .button {
   display: inline-flex;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   min-height: 2.8rem;
   align-items: center;
   justify-content: center;
@@ -905,13 +914,16 @@ h3 {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.7rem;
-  padding: 1.2rem;
+  padding: min(1.2rem, 19.2px);
   background: var(--color-surface-muted);
   border-radius: var(--radius-sm);
 }
 
 .iconography-demo > span {
   display: inline-flex;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   align-items: center;
   gap: 0.45rem;
   color: var(--color-heading);
@@ -1313,6 +1325,7 @@ h3 {
 
   .docs-main {
     padding: 2rem 1.25rem 3rem;
+    padding-inline: min(1.25rem, 20px);
   }
 
   .page-heading {

@@ -3,7 +3,7 @@ import path from 'node:path';
 import { chromium, firefox, webkit } from 'playwright';
 import { startPreview } from './helpers/preview.mjs';
 import { capturePage } from './helpers/screenshot.mjs';
-import { inspectInterface } from '../.vinasig/standards/templates/web/interface.mjs';
+import { inspectInterface, inspectControlIndicators } from '../.vinasig/standards/templates/web/interface.mjs';
 import AxeBuilder from '@axe-core/playwright';
 import astroConfig from '../astro.config.mjs';
 
@@ -104,6 +104,7 @@ try {
     check('Placement stays disabled before its controller loads', await unavailable.getByRole('combobox', { name: 'Placement', exact: true }).isDisabled());
     check('Placement never exposes an operating-system select', !(await unavailable.locator('#placement').isVisible()));
     check('unavailable controller copy meets interface rules', (await unavailable.evaluate(inspectInterface)).length === 0);
+    check('initial Placement retains measurable indicator spacing', await unavailable.locator('#placement-control [data-control-indicator]').count() === 1 && (await unavailable.evaluate(inspectControlIndicators)).length === 0);
     await capturePage(unavailable, path.join(dir, 'route-components--script-blocked.png'));
     await unavailable.close();
     await page.goto(`${base}/components/`, { waitUntil: 'networkidle' });
@@ -114,6 +115,7 @@ try {
     const placementPanel = page.locator('#placement-options');
     check('Placement exposes its styled options', await placementPanel.isVisible());
     check('Placement open copy meets interface rules', (await page.evaluate(inspectInterface)).length === 0);
+    check('Placement retains measurable indicator spacing when open', await placement.locator('[data-control-indicator]').count() === 1 && (await page.evaluate(inspectControlIndicators)).length === 0);
     const placementBounds = await placementPanel.boundingBox();
     check('Placement options fit the viewport', !!placementBounds && placementBounds.x >= 0 && placementBounds.x + placementBounds.width <= width + 1 && placementBounds.y >= 0 && placementBounds.y + placementBounds.height <= height + 1, placementBounds);
     await page.screenshot({ path: path.join(dir, 'placement--open.png') });

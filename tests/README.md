@@ -46,3 +46,11 @@ GitHub Actions runs all three engines on Ubuntu and Windows. Each job runs the s
 ## Bilingual regression
 
 Read docs/LOCALIZATION.md. Language and appearance regression tests run through the existing browser command. They cover both built locales, native navigation without scripts, metadata, localized guidance, keyboard controls, theme persistence and blocked storage. Authored textarea guidance is translated while its content remains literal. The original core and responsive assertions remain enabled.
+
+## Dropdown indicator regression
+
+`npm run test:controls` checks the actual shared dropdown on English `/components/` and Vietnamese `/vi/components/`. The imported `inspectControlIndicators` requires a 16 CSS px inner trailing inset, a 12 CSS px selected-value gap, declared SVG dimensions and unclipped markup. Expected markers are asserted separately so missing controls cannot produce an empty pass.
+
+The focused matrix covers both themes at 320, 360, 390, 759, 760, 761, 768, 1024 and 1440 px. It opens the popup, checks its bounds and restores keyboard focus with Escape. At 320 px it also uses a long selected value with 200% text and verifies disabled initial HTML without scripts. Screenshots remain under `output/responsive/control-indicators/<engine>/`. Open them before accepting a change.
+
+The default focused command runs Chromium, Firefox and WebKit, with 36 locale/theme/viewport cases per engine. `RESPONSIVE_ENGINE` selects the matching engine in the existing CI matrix, while `BROWSER_ENGINES` can explicitly select a comma-separated list for this command. `npm test` includes this guard after the responsive and bilingual suites. Compact platform-reference specimens retain their documented metrics.

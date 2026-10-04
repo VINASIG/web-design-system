@@ -109,6 +109,7 @@ Use the real browser preview when available. Capture or inspect each changed rou
 - Inspect at least one width just above and below each breakpoint that changed.
 - Check for horizontal page scrolling, clipped text, overlapping cards, detached icons, controls outside the viewport, and sticky elements covering keyboard focus.
 - Check long words, URLs, code, empty data, and populated data. Do not use global `overflow-x: hidden` to mask a layout defect.
+- Measure ordinary dropdown indicators under WEB-008. Require at least 16 CSS px from the SVG box to the inner trailing border, a 12 CSS px gap from the selected value and the declared SVG dimensions. Run `inspectControlIndicators` on initial and enhanced HTML, open and disabled controls, long selected values and 200% text sizing in both locales/themes. Open before/after screenshots at a useful scale. Compact platform-reference specimens retain their documented metrics.
 - Compare the actual result with each supplied visual reference at the same viewport. Check small-screen text size, overflow, element placement, and behavior rather than inferring them from the desktop view.
 - When motion is present, check behavior with reduced motion enabled. Check color contrast on actual rendered foreground and background pairs, not on swatches in isolation.
 
