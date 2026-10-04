@@ -123,3 +123,7 @@ The public site uses [design.vinasig.io.vn](https://design.vinasig.io.vn/) at th
 VINASIG-authored software uses **AGPL-3.0-or-later**. Authored documentation uses **CC-BY-SA-4.0**. Commercial use is allowed under those standard licenses. Fonts and third-party components retain their original terms. Official VINASIG identity assets follow the separate brand policy.
 
 Read [LICENSE](LICENSE), [LICENSES.md](LICENSES.md), [VINASIG Brand Usage Policy](BRAND_POLICY.md) and [the licensing review](docs/audits/licensing-2026-10-04.md) for exact scopes, rationale and remaining review.
+
+## Languages and appearance
+
+English `/` and Vietnamese `/vi/` provide the same features with localized navigation, guidance and accessible controls. Use the compact EN or VI link and adjacent theme button. Only an explicit appearance preference is stored. Inputs and files remain local and unsaved. See [localization maintenance](docs/LOCALIZATION.md).

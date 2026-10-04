@@ -60,7 +60,7 @@ When an interface matches an entry in docs/elements/catalog.json, read its defin
 - When visual browser inspection is available, inspect changed pages at wide, medium, and narrow widths, including a 320 CSS px reflow check where practical. Exercise changed controls in their open and keyboard states. Fix the cause of overflow or clipping instead of hiding it with a broad CSS workaround.
 - Use `npm run check` after source changes. For responsive work, follow `tests/README.md`, build the site and run `npm test`. Keep generated inspection evidence under ignored `output/`, and record durable audit conclusions under `docs/audits/`. Inspect screenshots before accepting a visual result.
 - Keep the existing product identity. Reuse its approved tokens, typeface, icon component, assets, and established patterns. Do not accept a generic generated layout or invent brand choices just to fill gaps. Ask or report the unresolved decision when the source context is insufficient.
-- Keep rules and examples in English in this repository.
+- Keep source guidance in English and maintain the reviewed Vietnamese website translation.
 - When adding or changing guidance, keep its draft status visible and update both the source document and its published page.
 - Use only the owner-provided logo exports in `public/brand/`. Do not redraw, alter, or add editable logo source files.
 - VINASIG logo artwork is excluded from the software and documentation grants. Follow BRAND_POLICY.md for permitted references. Do not infer an author name, assignment or broader permission from repository access.
@@ -68,7 +68,7 @@ When an interface matches an entry in docs/elements/catalog.json, read its defin
 
 ## Writing and typography
 
-- Write visible copy in clear, concise English. Keep the same language across a page and its related guidance.
+- Write visible copy in clear, concise Vietnamese and English. Keep the same language across a page and its related guidance.
 - Do not use em dash or en dash characters. Use a hyphen-minus only where punctuation or a list marker needs one.
 - Mark lists with hyphen-minus characters or a custom layout. Do not use round, square, arrow, or chevron glyphs as list markers.
 - Avoid semicolons in prose, label-colon-value phrasing, term-dash definitions, parenthetical term definitions, and slash separators. Use a complete sentence instead. Keep punctuation required by code syntax.

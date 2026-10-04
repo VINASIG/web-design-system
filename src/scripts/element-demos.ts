@@ -1,3 +1,4 @@
+import { interfaceCopy } from "../lib/interface-copy";
 import { renderIcons } from "./icons";
 
 const dialog = document.querySelector<HTMLDialogElement>(".element-demo-dialog");
@@ -82,7 +83,7 @@ function setComboMenuOpen(menu: HTMLElement, open: boolean) {
 
 function setAction(element: HTMLElement, action: string, label?: string) {
   element.dataset.action = action;
-  if (label) element.setAttribute("aria-label", label);
+  if (label) element.setAttribute("aria-label", interfaceCopy(label));
 }
 
 function asButton(element: HTMLElement, action: string, label?: string) {
@@ -116,7 +117,7 @@ function liveStatus(sample: HTMLElement) {
 }
 
 function announce(sample: HTMLElement, message: string) {
-  liveStatus(sample).textContent = message;
+  liveStatus(sample).textContent = interfaceCopy(message);
 }
 
 function showToolbarFeedback(feedback: HTMLElement, message: string) {
@@ -124,7 +125,7 @@ function showToolbarFeedback(feedback: HTMLElement, message: string) {
   if (previousTimer !== undefined) window.clearTimeout(previousTimer);
 
   feedback.classList.remove("is-leaving");
-  feedback.textContent = message;
+  feedback.textContent = interfaceCopy(message);
   feedback.hidden = false;
 
   const dismissTimer = window.setTimeout(() => {
@@ -238,14 +239,14 @@ function initializeCarousel(sample: HTMLElement) {
     const title = slide.querySelector<HTMLElement>("h3, b, strong")?.textContent?.trim() ?? `Slide ${index + 1}`;
     slide.id = `${prefix}-slide-${index + 1}`;
     slide.setAttribute("role", "group");
-    slide.setAttribute("aria-roledescription", "slide");
-    slide.setAttribute("aria-label", `${index + 1} of ${slides.length}: ${title}`);
+    slide.setAttribute("aria-roledescription", interfaceCopy("slide"));
+    slide.setAttribute("aria-label", interfaceCopy(`${index + 1} of ${slides.length}: ${title}`));
 
     const tab = document.createElement("button");
     tab.type = "button";
     tab.className = "sample-carousel-tab";
     tab.setAttribute("role", "tab");
-    tab.setAttribute("aria-label", `Show slide ${index + 1} of ${slides.length}: ${title}`);
+    tab.setAttribute("aria-label", interfaceCopy(`Show slide ${index + 1} of ${slides.length}: ${title}`));
     tab.setAttribute("aria-controls", slide.id);
     tab.tabIndex = index === 0 ? 0 : -1;
     tab.setAttribute("aria-selected", String(index === 0));
@@ -305,8 +306,8 @@ function initializeTextScramble(sample: HTMLElement) {
     if (frame) cancelAnimationFrame(frame);
     frame = 0;
     demo.classList.remove("is-running");
-    output.textContent = target;
-    status.textContent = "Decoded";
+    output.textContent = interfaceCopy(target);
+    status.textContent = interfaceCopy("Decoded");
     if (progress) progress.style.transform = "scaleX(1)";
   };
 
@@ -316,15 +317,15 @@ function initializeTextScramble(sample: HTMLElement) {
     if (holdTimer) window.clearTimeout(holdTimer);
     holdTimer = 0;
     demo.classList.remove("is-running");
-    output.textContent = target;
+    output.textContent = interfaceCopy(target);
     if (progress) progress.style.transform = "scaleX(1)";
     if (motionPreference.matches) {
-      status.textContent = "Decoded";
+      status.textContent = interfaceCopy("Decoded");
       return;
     }
 
     demo.classList.add("is-running");
-    status.textContent = "Decoding…";
+    status.textContent = interfaceCopy("Decoding…");
     if (progress) progress.style.transform = "scaleX(0)";
     const leadIn = 400;
     const lockInterval = 128;
@@ -336,10 +337,10 @@ function initializeTextScramble(sample: HTMLElement) {
       const elapsed = timestamp - startedAt;
       const amount = Math.min(1, Math.max(0, (elapsed - leadIn) / (duration - leadIn)));
       const settledCount = Math.min(characters.length, Math.max(0, Math.floor((elapsed - leadIn) / lockInterval)));
-      output.textContent = characters.map((character, index) => {
+      output.textContent = interfaceCopy(characters.map((character, index) => {
         if (character === " " || index < settledCount) return character;
         return charset[Math.floor(Math.random() * charset.length)];
-      }).join("");
+      }).join(""));
       if (progress) progress.style.transform = `scaleX(${amount})`;
       if (elapsed >= duration) {
         showFinalText();
@@ -369,11 +370,11 @@ function initializeTextScramble(sample: HTMLElement) {
   };
   textScrambleControllers.set(sample, { replay, cleanup });
 
-  output.textContent = target;
-  status.textContent = "Decode sequence";
+  output.textContent = interfaceCopy(target);
+  status.textContent = interfaceCopy("Decode sequence");
   if (progress) progress.style.transform = "scaleX(1)";
   if (motionPreference.matches) {
-    status.textContent = "Decoded";
+    status.textContent = interfaceCopy("Decoded");
     return;
   }
 
@@ -441,13 +442,13 @@ function renderPaginationResults(owner: HTMLElement, page: number, animate = fal
     const item = document.createElement("article");
     item.className = "sample-pagination-result";
     const heading = document.createElement("strong");
-    heading.textContent = title;
+    heading.textContent = interfaceCopy(title);
     const copy = document.createElement("span");
-    copy.textContent = description;
+    copy.textContent = interfaceCopy(description);
     item.append(heading, copy);
     return item;
   }));
-  results.setAttribute("aria-label", `Search results, page ${page}`);
+  results.setAttribute("aria-label", interfaceCopy(`Search results, page ${page}`));
   if (animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     results.classList.remove("is-changing");
     void results.offsetWidth;
@@ -483,13 +484,13 @@ function renderPagination(owner: HTMLElement, animateResults = false) {
     if (value === "ellipsis") {
       const ellipsis = document.createElement("span");
       ellipsis.className = "sample-pagination-ellipsis";
-      ellipsis.setAttribute("aria-label", "More pages");
+      ellipsis.setAttribute("aria-label", interfaceCopy("More pages"));
       const glyph = document.createElement("span");
       glyph.setAttribute("aria-hidden", "true");
-      glyph.textContent = "…";
+      glyph.textContent = interfaceCopy("…");
       const label = document.createElement("span");
       label.className = "sample-pagination-sr-only";
-      label.textContent = "More pages";
+      label.textContent = interfaceCopy("More pages");
       ellipsis.append(glyph, label);
       item.append(ellipsis);
       return item;
@@ -499,8 +500,8 @@ function renderPagination(owner: HTMLElement, animateResults = false) {
     button.className = "sample-pagination-page";
     button.dataset.action = "pagination-page-select";
     button.dataset.page = String(value);
-    button.setAttribute("aria-label", `Go to page ${value}`);
-    button.textContent = String(value);
+    button.setAttribute("aria-label", interfaceCopy(`Go to page ${value}`));
+    button.textContent = interfaceCopy(String(value));
     if (value === page) {
       button.classList.add("is-current");
       button.setAttribute("aria-current", "page");
@@ -511,7 +512,7 @@ function renderPagination(owner: HTMLElement, animateResults = false) {
 
   previous.disabled = page === 1;
   next.disabled = page === total;
-  summary.textContent = `Page ${page} of ${total}`;
+  summary.textContent = interfaceCopy(`Page ${page} of ${total}`);
   renderPaginationResults(owner, page, animateResults);
 }
 
@@ -689,7 +690,7 @@ function initializeOverlayTrio(sample: HTMLElement) {
   if (popoverTrigger && popover) {
     const id = `sample-overlay-popover-${instance}`;
     popover.id = id;
-    popover.setAttribute("aria-label", "Filter projects");
+    popover.setAttribute("aria-label", interfaceCopy("Filter projects"));
     popoverTrigger.setAttribute("aria-controls", id);
     popoverTrigger.setAttribute("aria-expanded", String(popover.matches(":popover-open")));
     popoverTrigger.setAttribute("aria-haspopup", "dialog");
@@ -748,18 +749,18 @@ function hideSurfaceFeedback(feedback: HTMLElement) {
   if (timer !== undefined) window.clearTimeout(timer);
   surfaceFeedbackTimers.delete(feedback);
   feedback.hidden = true;
-  feedback.textContent = "";
+  feedback.textContent = interfaceCopy("");
 }
 
 function showSurfaceFeedback(feedback: HTMLElement, message: string) {
   const previousTimer = surfaceFeedbackTimers.get(feedback);
   if (previousTimer !== undefined) window.clearTimeout(previousTimer);
   feedback.hidden = false;
-  feedback.textContent = message;
+  feedback.textContent = interfaceCopy(message);
   const timer = window.setTimeout(() => {
     if (surfaceFeedbackTimers.get(feedback) !== timer) return;
     feedback.hidden = true;
-    feedback.textContent = "";
+    feedback.textContent = interfaceCopy("");
     surfaceFeedbackTimers.delete(feedback);
   }, 3000);
   surfaceFeedbackTimers.set(feedback, timer);
@@ -893,8 +894,8 @@ function updateKeyRepeatSlider(sample: HTMLElement) {
   const output = sample.querySelector<HTMLOutputElement>("[data-repeat-output]");
   if (!slider || !output) return;
   const label = keyRepeatValueLabels[slider.value] ?? "Normal";
-  slider.setAttribute("aria-valuetext", label);
-  output.textContent = label;
+  slider.setAttribute("aria-valuetext", interfaceCopy(label));
+  output.textContent = interfaceCopy(label);
 }
 
 function updateVolumeSlider(sample: HTMLElement) {
@@ -904,10 +905,10 @@ function updateVolumeSlider(sample: HTMLElement) {
   if (!slider || !output || !muteButton) return;
 
   const isMuted = Number(slider.value) === 0;
-  output.textContent = isMuted ? "Muted" : `${slider.value}%`;
-  slider.setAttribute("aria-valuetext", isMuted ? "Muted" : `${slider.value}%`);
+  output.textContent = interfaceCopy(isMuted ? "Muted" : `${slider.value}%`);
+  slider.setAttribute("aria-valuetext", interfaceCopy(isMuted ? "Muted" : `${slider.value}%`));
   muteButton.setAttribute("aria-pressed", String(isMuted));
-  muteButton.setAttribute("aria-label", isMuted ? "Unmute volume" : "Mute volume");
+  muteButton.setAttribute("aria-label", interfaceCopy(isMuted ? "Unmute volume" : "Mute volume"));
   const icon = muteButton.querySelector<HTMLElement>(".ui-icon");
   if (icon) {
     icon.dataset.lucide = isMuted ? "volume-x" : "volume-2";
@@ -1017,7 +1018,7 @@ function closeEmptyTrashAlert(sample: HTMLElement, message: string) {
   trigger?.setAttribute("aria-expanded", "false");
   const feedback = sample.querySelector<HTMLElement>("[data-trash-feedback]");
   if (feedback) {
-    feedback.textContent = message;
+    feedback.textContent = interfaceCopy(message);
     feedback.hidden = false;
   }
   trigger?.focus({ preventScroll: true });
@@ -1038,12 +1039,12 @@ function completeEmptyTrash(sample: HTMLElement, message = "The example Trash wa
     trigger.hidden = true;
     trigger.setAttribute("aria-expanded", "false");
   }
-  if (count) count.textContent = "0 items";
+  if (count) count.textContent = interfaceCopy("0 items");
   if (items) items.hidden = true;
   if (emptyState) emptyState.hidden = false;
   if (resetPreference) resetPreference.hidden = !emptyTrashPreferenceIsSaved();
   if (feedback) {
-    feedback.textContent = message;
+    feedback.textContent = interfaceCopy(message);
     feedback.hidden = false;
   }
   feedback?.focus({ preventScroll: true });
@@ -1056,11 +1057,11 @@ function restoreEmptyTrashSample(sample: HTMLElement) {
   const emptyState = sample.querySelector<HTMLElement>("[data-trash-empty]");
   const feedback = sample.querySelector<HTMLElement>("[data-trash-feedback]");
   if (trigger) trigger.hidden = false;
-  if (count) count.textContent = "8 items";
+  if (count) count.textContent = interfaceCopy("8 items");
   if (items) items.hidden = false;
   if (emptyState) emptyState.hidden = true;
   if (feedback) {
-    feedback.textContent = "Restored the 8 example items. The saved alert preference is unchanged.";
+    feedback.textContent = interfaceCopy("Restored the 8 example items. The saved alert preference is unchanged.");
     feedback.hidden = false;
   }
   trigger?.focus({ preventScroll: true });
@@ -1290,7 +1291,7 @@ function initializeTabsSample(sample: HTMLElement) {
   if (!tablist || !tabs.length || !panels.length) return;
 
   const instance = sample.dataset.sampleInstance ?? "example";
-  tablist.setAttribute("aria-label", "Project details");
+  tablist.setAttribute("aria-label", interfaceCopy("Project details"));
   tabs.forEach((tab, index) => {
     const key = tab.dataset.tabKey ?? String(index + 1);
     tab.id = `sample-tabs-${instance}-tab-${key}`;
@@ -1347,7 +1348,7 @@ function updateDockBadge(sample: HTMLElement, requestedCount: number) {
   const count = Math.max(0, Math.min(100, requestedCount));
   const hasBadge = count > 0;
   dock.dataset.badgeCount = String(count);
-  badge.textContent = count > 99 ? "99+" : String(count);
+  badge.textContent = interfaceCopy(count > 99 ? "99+" : String(count));
   if (hasBadge) {
     badge.hidden = false;
     animateDockBadge(badge, "in");
@@ -1363,8 +1364,8 @@ function updateDockBadge(sample: HTMLElement, requestedCount: number) {
   } else {
     badge.hidden = true;
   }
-  countLabel.textContent = hasBadge ? `${count} unread ${count === 1 ? "item" : "items"}` : "All caught up. No badge";
-  app.setAttribute("aria-label", hasBadge ? `Projects app icon with ${count} unread ${count === 1 ? "item" : "items"}` : "Projects app icon with no unread items");
+  countLabel.textContent = interfaceCopy(hasBadge ? `${count} unread ${count === 1 ? "item" : "items"}` : "All caught up. No badge");
+  app.setAttribute("aria-label", interfaceCopy(hasBadge ? `Projects app icon with ${count} unread ${count === 1 ? "item" : "items"}` : "Projects app icon with no unread items"));
   if (clearButton) clearButton.disabled = !hasBadge;
   return count;
 }
@@ -1391,7 +1392,7 @@ function updateStepsSample(sample: HTMLElement, nextIndex?: number) {
       button.disabled = !canSelect;
       if (current) button.setAttribute("aria-current", "step");
       else button.removeAttribute("aria-current");
-      button.setAttribute("aria-label", `${label}, ${completed ? "completed" : current ? "current step" : canSelect ? "next step" : "upcoming step"}`);
+      button.setAttribute("aria-label", interfaceCopy(`${label}, ${completed ? "completed" : current ? "current step" : canSelect ? "next step" : "upcoming step"}`));
     }
     number?.removeAttribute("hidden");
     check?.removeAttribute("hidden");
@@ -1399,7 +1400,7 @@ function updateStepsSample(sample: HTMLElement, nextIndex?: number) {
 
   const status = demo.querySelector<HTMLElement>(".sample-steps-status");
   const label = items[currentIndex]?.querySelector<HTMLElement>(".sample-step-label")?.textContent?.trim() ?? `Step ${currentIndex + 1}`;
-  if (status) status.textContent = `${label}. Step ${currentIndex + 1} of ${items.length}`;
+  if (status) status.textContent = interfaceCopy(`${label}. Step ${currentIndex + 1} of ${items.length}`);
 }
 
 function initializeStepsSample(sample: HTMLElement) {
@@ -1523,7 +1524,7 @@ function initializeAvatarGroupSample(sample: HTMLElement) {
   const instance = sample.dataset.sampleInstance ?? "example";
   list.id = `sample-avatar-list-${instance}`;
   const groupName = group.querySelector<HTMLElement>(".sample-avatar-heading strong")?.textContent?.trim() ?? "Group";
-  list.setAttribute("aria-label", `${groupName} collaborators`);
+  list.setAttribute("aria-label", interfaceCopy(`${groupName} collaborators`));
   toggle.setAttribute("aria-controls", list.id);
 
   members.forEach((member, index) => {
@@ -1533,19 +1534,19 @@ function initializeAvatarGroupSample(sample: HTMLElement) {
   });
   group.classList.toggle("is-expanded", expanded);
   toggle.setAttribute("aria-expanded", String(expanded));
-  toggle.setAttribute("aria-label", expanded ? "Collapse the avatar group" : `Show all ${total} collaborators`);
+  toggle.setAttribute("aria-label", interfaceCopy(expanded ? "Collapse the avatar group" : `Show all ${total} collaborators`));
   const count = toggle.querySelector<HTMLElement>("[data-avatar-overflow-count]");
   const closeIcon = toggle.querySelector(".ui-icon");
   const toggleSlot = toggle.closest<HTMLElement>(".sample-avatar-toggle-slot");
   if (count) {
-    count.textContent = `+${Math.max(0, total - visibleCount)}`;
+    count.textContent = interfaceCopy(`+${Math.max(0, total - visibleCount)}`);
     count.hidden = expanded;
   }
   closeIcon?.toggleAttribute("hidden", !expanded);
   if (toggleSlot) toggleSlot.hidden = total <= visibleCount;
-  hint.textContent = expanded
+  hint.textContent = interfaceCopy(expanded
     ? `All ${total} collaborators shown.`
-    : `Select +${Math.max(0, total - visibleCount)} to see all collaborators.`;
+    : `Select +${Math.max(0, total - visibleCount)} to see all collaborators.`);
 }
 
 function updateAvatarGroupSample(sample: HTMLElement) {
@@ -1575,7 +1576,7 @@ function updateAvatarGroupSample(sample: HTMLElement) {
   });
 
   toggle.setAttribute("aria-expanded", String(expanded));
-  toggle.setAttribute("aria-label", expanded ? "Collapse the avatar group" : `Show all ${total} collaborators`);
+  toggle.setAttribute("aria-label", interfaceCopy(expanded ? "Collapse the avatar group" : `Show all ${total} collaborators`));
   const count = toggle.querySelector<HTMLElement>("[data-avatar-overflow-count]");
   const closeIcon = toggle.querySelector(".ui-icon");
   if (count) count.hidden = expanded;
@@ -1583,7 +1584,7 @@ function updateAvatarGroupSample(sample: HTMLElement) {
   const message = expanded
     ? `All ${total} collaborators shown.`
     : `Select +${Math.max(0, total - visibleCount)} to see all collaborators.`;
-  hint.textContent = message;
+  hint.textContent = interfaceCopy(message);
   announce(sample, message);
 }
 
@@ -1675,11 +1676,11 @@ function renderDataTable(table: HTMLElement, animateRows = false) {
   }
 
   const selection = table.querySelector<HTMLElement>("[data-table-selection]");
-  if (selection) selection.textContent = `${selectedCount} selected`;
+  if (selection) selection.textContent = interfaceCopy(`${selectedCount} selected`);
   const range = table.querySelector<HTMLElement>("[data-table-range]");
-  if (range) range.textContent = rows.length ? `Rows ${firstIndex + 1}-${lastIndex} of ${rows.length}` : "No customers";
+  if (range) range.textContent = interfaceCopy(rows.length ? `Rows ${firstIndex + 1}-${lastIndex} of ${rows.length}` : "No customers");
   const pageLabel = table.querySelector<HTMLElement>("[data-table-page]");
-  if (pageLabel) pageLabel.textContent = `Page ${page} of ${pageCount}`;
+  if (pageLabel) pageLabel.textContent = interfaceCopy(`Page ${page} of ${pageCount}`);
   const previous = table.querySelector<HTMLButtonElement>("[data-action='table-page-prev']");
   const next = table.querySelector<HTMLButtonElement>("[data-action='table-page-next']");
   if (previous) previous.disabled = page <= 1;
@@ -1739,7 +1740,7 @@ function initializeDataTableResizers(table: HTMLElement) {
     applyColumnWidths(widths);
     const currentWidth = Math.round(widths.get(beforeKey) ?? nextWidth);
     handle.setAttribute("aria-valuenow", String(currentWidth));
-    handle.setAttribute("aria-valuetext", `${currentWidth} pixels`);
+    handle.setAttribute("aria-valuetext", interfaceCopy(`${currentWidth} pixels`));
   };
 
   table.querySelectorAll<HTMLElement>("[data-table-resize]").forEach((handle) => {
@@ -1793,7 +1794,7 @@ function initializeDataTableResizers(table: HTMLElement) {
         const width = key ? readColumnWidths().get(key) : undefined;
         if (!width) return;
         handle.setAttribute("aria-valuenow", String(Math.round(width)));
-        handle.setAttribute("aria-valuetext", `${Math.round(width)} pixels`);
+        handle.setAttribute("aria-valuetext", interfaceCopy(`${Math.round(width)} pixels`));
       });
     }).observe(scrollRegion);
   }
@@ -1803,7 +1804,7 @@ function initializeDataTableResizers(table: HTMLElement) {
     const width = key ? readColumnWidths().get(key) : undefined;
     if (!width) return;
     handle.setAttribute("aria-valuenow", String(Math.round(width)));
-    handle.setAttribute("aria-valuetext", `${Math.round(width)} pixels`);
+    handle.setAttribute("aria-valuetext", interfaceCopy(`${Math.round(width)} pixels`));
   });
 }
 
@@ -1963,7 +1964,7 @@ function initializeScrollView(sample: HTMLElement) {
     thumb.style.transform = `translateY(${maxScroll ? (viewport.scrollTop / maxScroll) * travel : 0}px)`;
     rail.setAttribute("aria-valuemax", String(maxScroll));
     rail.setAttribute("aria-valuenow", String(Math.round(viewport.scrollTop)));
-    rail.setAttribute("aria-valuetext", maxScroll ? `${Math.round((viewport.scrollTop / maxScroll) * 100)}% scrolled` : "No overflow");
+    rail.setAttribute("aria-valuetext", interfaceCopy(maxScroll ? `${Math.round((viewport.scrollTop / maxScroll) * 100)}% scrolled` : "No overflow"));
     rail.setAttribute("aria-disabled", String(maxScroll === 0));
     rail.tabIndex = maxScroll ? 0 : -1;
   };
@@ -2030,10 +2031,10 @@ function initializeScrollView(sample: HTMLElement) {
     const overlay = shell.dataset.scrollMode !== "overlay";
     shell.dataset.scrollMode = overlay ? "overlay" : "legacy";
     toggle.setAttribute("aria-pressed", String(overlay));
-    if (caption) caption.textContent = overlay
+    if (caption) caption.textContent = interfaceCopy(overlay
       ? "Overlay scroller. floats over content and fades when idle."
-      : "Legacy scroller. the track reserves space beside the content.";
-    if (status) status.textContent = `${overlay ? "Overlay" : "Legacy"} scroller style selected.`;
+      : "Legacy scroller. the track reserves space beside the content.");
+    if (status) status.textContent = interfaceCopy(`${overlay ? "Overlay" : "Legacy"} scroller style selected.`);
     update();
     if (overlay) revealOverlay();
   });
@@ -2060,7 +2061,7 @@ function updateDragTaskControls(board: HTMLElement) {
   });
   board.querySelectorAll<HTMLElement>(".sample-kanban-column").forEach((column) => {
     const count = column.querySelector<HTMLElement>("[data-column-count]");
-    if (count) count.textContent = String(column.querySelectorAll(".sample-kanban-list > .sample-task-card").length);
+    if (count) count.textContent = interfaceCopy(String(column.querySelectorAll(".sample-kanban-list > .sample-task-card").length));
   });
 }
 
@@ -2157,14 +2158,14 @@ function resizeCanvasSelection(
   if (direction.includes("n")) selection.style.top = `${top}px`;
   if (direction.includes("n") || direction.includes("s")) selection.style.height = `${height}px`;
   const status = selection.closest<HTMLElement>(".sample-selection-panel")?.querySelector<HTMLElement>("[data-selection-status]");
-  if (status) status.textContent = `Selection ${Math.round(width)} × ${Math.round(height)} px.`;
+  if (status) status.textContent = interfaceCopy(`Selection ${Math.round(width)} × ${Math.round(height)} px.`);
 }
 
 function addChip(container: HTMLElement, label: string, className = "sample-selected") {
   const chip = document.createElement("span");
   chip.className = className;
   const text = document.createElement("span");
-  text.textContent = label;
+  text.textContent = interfaceCopy(label);
   const remove = document.createElement("button");
   remove.type = "button";
   remove.className = "sample-chip-remove";
@@ -2208,7 +2209,7 @@ function isRecipientEmail(value: string) {
 function setRecipientMessage(field: HTMLElement, message = "") {
   const status = field.querySelector<HTMLElement>("[data-token-message]");
   if (!status) return;
-  status.textContent = message;
+  status.textContent = interfaceCopy(message);
   status.hidden = !message;
 }
 
@@ -2231,14 +2232,14 @@ function makeRecipientToken(recipient: RecipientToken, entering = false) {
   select.dataset.tokenValue = recipient.value;
   select.dataset.tokenLabel = recipient.label;
   select.setAttribute("aria-pressed", "false");
-  select.setAttribute("aria-label", `Select ${recipient.label} token`);
+  select.setAttribute("aria-label", interfaceCopy(`Select ${recipient.label} token`));
   select.textContent = recipient.label;
 
   const remove = document.createElement("button");
   remove.type = "button";
   remove.className = "sample-token-remove";
   remove.dataset.action = "token-remove";
-  remove.setAttribute("aria-label", `Remove ${recipient.label}`);
+  remove.setAttribute("aria-label", interfaceCopy(`Remove ${recipient.label}`));
   const icon = document.createElement("i");
   icon.className = "ui-icon";
   icon.dataset.lucide = "x";
@@ -2282,7 +2283,7 @@ function updateRecipientSuggestions(field: HTMLElement) {
     const label = document.createElement("span");
     label.textContent = person.label;
     const detail = document.createElement("small");
-    detail.textContent = person.detail;
+    detail.textContent = interfaceCopy(person.detail);
     option.append(label, detail);
     list.append(option);
   });
@@ -2324,7 +2325,7 @@ function initializeTokenField(sample: HTMLElement) {
   entry.setAttribute("role", "group");
   entry.setAttribute("aria-labelledby", label.id);
   list.setAttribute("role", "list");
-  list.setAttribute("aria-label", "Selected recipients");
+  list.setAttribute("aria-label", interfaceCopy("Selected recipients"));
   input.setAttribute("aria-labelledby", label.id);
   input.setAttribute("role", "combobox");
   input.setAttribute("aria-autocomplete", "list");
@@ -2524,8 +2525,8 @@ function refreshMultiSelectShowcase(showcase: HTMLElement) {
   const selectedCheckboxes = Array.from(checkbox?.querySelectorAll<HTMLInputElement>("input[data-input-action='multi-checkbox-option']:checked") ?? []);
   const checkboxCount = checkbox?.querySelector<HTMLElement>("[data-multi-count]");
   const checkboxTrigger = checkbox?.querySelector<HTMLButtonElement>("[data-action='multi-dropdown-toggle']");
-  if (checkboxCount) checkboxCount.textContent = selectedCheckboxes.length + " selected";
-  if (checkboxTrigger) checkboxTrigger.setAttribute("aria-label", selectedCheckboxes.length + " teams selected. Choose teams.");
+  if (checkboxCount) checkboxCount.textContent = interfaceCopy(selectedCheckboxes.length + " selected");
+  if (checkboxTrigger) checkboxTrigger.setAttribute("aria-label", interfaceCopy(selectedCheckboxes.length + " teams selected. Choose teams."));
 
   const tokenField = showcase.querySelector<HTMLElement>(".sample-multi-token-field");
   if (tokenField) {
@@ -2590,7 +2591,7 @@ function addMultiSelectToken(field: HTMLElement, value: string) {
   remove.className = "sample-chip-remove";
   remove.dataset.action = "multi-token-remove";
   remove.dataset.value = value;
-  remove.setAttribute("aria-label", "Remove " + value);
+  remove.setAttribute("aria-label", interfaceCopy("Remove " + value));
   const icon = document.createElement("i");
   icon.className = "ui-icon";
   icon.dataset.lucide = "x";
@@ -2752,7 +2753,7 @@ function selectToggleRadio(button: HTMLElement, focus = false) {
     preview.style.textAlign = value;
   }
   const status = sample.querySelector<HTMLElement>(".sample-toggle-status");
-  if (status) status.textContent = `Single selection. ${value[0]?.toUpperCase()}${value.slice(1)}`;
+  if (status) status.textContent = interfaceCopy(`Single selection. ${value[0]?.toUpperCase()}${value.slice(1)}`);
   if (selectionChanged && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     [preview, status].forEach((element) => {
       if (!element) return;
@@ -2848,9 +2849,9 @@ function selectMacSegment(button: HTMLButtonElement, focus = false) {
 
   const label = button.querySelector("span")?.textContent?.trim() ?? view;
   const current = sample.querySelector<HTMLElement>("[data-segmented-current]");
-  if (current) current.textContent = `${label} view`;
+  if (current) current.textContent = interfaceCopy(`${label} view`);
   const note = sample.querySelector<HTMLElement>("[data-segmented-note]");
-  if (note) note.textContent = `${label} view selected. The same folders are arranged for this browsing style.`;
+  if (note) note.textContent = interfaceCopy(`${label} view selected. The same folders are arranged for this browsing style.`);
   announce(sample, `${label} view selected.`);
   if (focus) button.focus({ preventScroll: true });
 }
@@ -2972,7 +2973,7 @@ function confirmDeleteSheet(sample: HTMLElement) {
   const reset = sample.querySelector<HTMLButtonElement>("[data-action='delete-sheet-reset']");
   if (file) file.hidden = true;
   if (trigger) trigger.hidden = true;
-  if (status) status.textContent = "Q3 Report.pdf removed from this demo. Restore it to replay the sheet.";
+  if (status) status.textContent = interfaceCopy("Q3 Report.pdf removed from this demo. Restore it to replay the sheet.");
   if (reset) reset.hidden = false;
   setDeleteSheetOpen(sample, false, reset);
 }
@@ -2984,7 +2985,7 @@ function resetDeleteSheet(sample: HTMLElement) {
   const reset = sample.querySelector<HTMLButtonElement>("[data-action='delete-sheet-reset']");
   if (file) file.hidden = false;
   if (trigger) trigger.hidden = false;
-  if (status) status.textContent = "Q3 Report.pdf restored in this demo. No real file was changed.";
+  if (status) status.textContent = interfaceCopy("Q3 Report.pdf restored in this demo. No real file was changed.");
   if (reset) reset.hidden = true;
   setDeleteSheetOpen(sample, false, trigger);
 }
@@ -3014,9 +3015,9 @@ function updateLevelMeter(meter: HTMLElement, requestedValue: number) {
 
   meter.dataset.levelState = state;
   meter.setAttribute("aria-valuenow", String(value));
-  meter.setAttribute("aria-valuetext", kind === "capacity"
+  meter.setAttribute("aria-valuetext", interfaceCopy(kind === "capacity"
     ? `${value} of ${max} units used. ${status}.`
-    : `${value} of ${max}. ${status}.`);
+    : `${value} of ${max}. ${status}.`));
   meter.querySelectorAll<HTMLElement>("[data-level-segment], :scope > span").forEach((segment, index) => {
     let delay = 0;
     if (!reduceMotion && Number.isFinite(previousValue) && value > previousValue && index >= previousValue && index < value) {
@@ -3031,7 +3032,7 @@ function updateLevelMeter(meter: HTMLElement, requestedValue: number) {
 
   const card = meter.closest<HTMLElement>(".sample-level-card");
   const output = card?.querySelector<HTMLOutputElement>("[data-level-output]");
-  if (output) output.textContent = `${value} of ${max}. ${status}`;
+  if (output) output.textContent = interfaceCopy(`${value} of ${max}. ${status}`);
   const range = card?.querySelector<HTMLInputElement>("input[type='range']");
   if (range && Number(range.value) !== value) range.value = String(value);
 }
@@ -3050,7 +3051,7 @@ function selectLevelRating(button: HTMLElement, focus = false) {
     radio.classList.toggle("is-selected", rating <= value);
   });
   const output = group.closest<HTMLElement>(".sample-level-card")?.querySelector<HTMLOutputElement>("[data-level-rating-output]");
-  if (output) output.textContent = `${value} of ${radios.length} stars`;
+  if (output) output.textContent = interfaceCopy(`${value} of ${radios.length} stars`);
   if (focus) button.focus({ preventScroll: true });
 }
 
@@ -3081,7 +3082,7 @@ function initializeLevelIndicator(sample: HTMLElement, instance = sample.dataset
     group.setAttribute("aria-labelledby", ratingTitle.id);
     group.querySelectorAll<HTMLElement>("[data-action='level-rating']").forEach((button) => {
       button.setAttribute("role", "radio");
-      button.setAttribute("aria-label", `${button.dataset.value} ${button.dataset.value === "1" ? "star" : "stars"}`);
+      button.setAttribute("aria-label", interfaceCopy(`${button.dataset.value} ${button.dataset.value === "1" ? "star" : "stars"}`));
     });
     const selected = group.querySelector<HTMLElement>("[role='radio'][aria-checked='true']")
       ?? group.querySelector<HTMLElement>("[role='radio']");
@@ -3203,12 +3204,12 @@ function renderColumnBrowser(browser: HTMLElement, focusItem?: { id: string; col
 
     const heading = document.createElement("span");
     heading.className = "sample-column-heading";
-    heading.textContent = columnIndex === 0 ? "Files" : selectedEntries[columnIndex - 1]?.label ?? "Files";
+    heading.textContent = interfaceCopy(columnIndex === 0 ? "Files" : selectedEntries[columnIndex - 1]?.label ?? "Files");
     pane.append(heading);
 
     const list = document.createElement("div");
     list.setAttribute("role", "listbox");
-    list.setAttribute("aria-label", heading.textContent);
+    list.setAttribute("aria-label", interfaceCopy(heading.textContent));
     list.setAttribute("aria-orientation", "vertical");
 
     entries.forEach((entry, entryIndex) => {
@@ -3224,7 +3225,7 @@ function renderColumnBrowser(browser: HTMLElement, focusItem?: { id: string; col
       option.setAttribute("aria-selected", String(isSelected));
       if (hasChildren) {
         option.dataset.hasChildren = "true";
-        option.setAttribute("aria-description", "Folder. Opens the next column.");
+        option.setAttribute("aria-description", interfaceCopy("Folder. Opens the next column."));
       }
       option.tabIndex = isSelected || (!selectedEntry && entryIndex === 0) ? 0 : -1;
 
@@ -3235,7 +3236,7 @@ function renderColumnBrowser(browser: HTMLElement, focusItem?: { id: string; col
       option.append(icon);
 
       const label = document.createElement("span");
-      label.textContent = entry.label;
+      label.textContent = interfaceCopy(entry.label);
       option.append(label);
 
       if (hasChildren) {
@@ -3265,13 +3266,13 @@ function renderColumnBrowser(browser: HTMLElement, focusItem?: { id: string; col
   const pathOutput = browser.querySelector<HTMLOutputElement>("[data-column-path-output]");
   const status = browser.querySelector<HTMLElement>("[data-column-status]");
   const lastEntry = selectedEntries.at(-1);
-  if (pathOutput) pathOutput.textContent = visiblePath;
+  if (pathOutput) pathOutput.textContent = interfaceCopy(visiblePath);
   if (status) {
-    status.textContent = lastEntry?.kind === "file"
+    status.textContent = interfaceCopy(lastEntry?.kind === "file"
       ? `${visiblePath}. ${lastEntry.detail ?? "File selected."}`
       : lastEntry?.kind === "folder" && !lastEntry.children?.length
         ? `${visiblePath}. This folder is empty.`
-        : `${visiblePath}. Select a folder to reveal its contents in the next column.`;
+        : `${visiblePath}. Select a folder to reveal its contents in the next column.`);
   }
 
   const maxScrollLeft = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
@@ -3478,7 +3479,7 @@ function selectCommandPaletteOption(option: HTMLElement) {
   const label = option.dataset.commandLabel ?? option.textContent?.trim() ?? "Command";
   const workspaceStatus = root?.querySelector<HTMLElement>("[data-command-workspace-status]");
   if (!root || !sample || option.hidden) return;
-  if (workspaceStatus) workspaceStatus.textContent = `${label} selected in this preview.`;
+  if (workspaceStatus) workspaceStatus.textContent = interfaceCopy(`${label} selected in this preview.`);
   announce(sample, `${label} selected. The command palette preview does not navigate or create project data.`);
   closeCommandPalette(root);
 }
@@ -3545,7 +3546,7 @@ function updateFormFieldState(input: HTMLInputElement, touched = false) {
   }
 
   const invalid = message.length > 0;
-  error.textContent = message;
+  error.textContent = interfaceCopy(message);
   error.hidden = !invalid;
   helper.hidden = invalid;
   if (invalid) {
@@ -3591,7 +3592,7 @@ function calendarMonthValue(date: Date) {
 }
 
 function formatCalendarDate(value: string, options: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" }) {
-  return new Intl.DateTimeFormat("en", options).format(fromCivilDate(value));
+  return new Intl.DateTimeFormat(document.documentElement.lang === "vi" ? "vi-VN" : "en", options).format(fromCivilDate(value));
 }
 
 function updateCalendarDisplay(picker: HTMLElement) {
@@ -3603,8 +3604,8 @@ function updateCalendarDisplay(picker: HTMLElement) {
   const start = calendar.dataset.rangeStart;
   const end = calendar.dataset.rangeEnd;
   if (picker.dataset.calendarMode !== "range") {
-    value.textContent = start ? formatCalendarDate(start, { month: "short", day: "numeric", year: "numeric" }) : "Choose a date";
-    if (hint) hint.textContent = "Choose a date from the calendar.";
+    value.textContent = interfaceCopy(start ? formatCalendarDate(start, { month: "short", day: "numeric", year: "numeric" }) : "Choose a date");
+    if (hint) hint.textContent = interfaceCopy("Choose a date from the calendar.");
     return;
   }
   if (start && end) {
@@ -3613,14 +3614,14 @@ function updateCalendarDisplay(picker: HTMLElement) {
     const sameYear = startDate.getFullYear() === endDate.getFullYear();
     const startLabel = formatCalendarDate(start, sameYear ? { month: "short", day: "numeric" } : { month: "short", day: "numeric", year: "numeric" });
     const endLabel = formatCalendarDate(end, { month: "short", day: "numeric", year: "numeric" });
-    value.textContent = `${startLabel} - ${endLabel}`;
-    if (hint) hint.textContent = "Choose a new start date to change this range.";
+    value.textContent = interfaceCopy(`${startLabel} - ${endLabel}`);
+    if (hint) hint.textContent = interfaceCopy("Choose a new start date to change this range.");
   } else if (start) {
-    value.textContent = `${formatCalendarDate(start)} - Choose end date`;
-    if (hint) hint.textContent = `Choose an end date on or after ${formatCalendarDate(start, { month: "long", day: "numeric", year: "numeric" })}.`;
+    value.textContent = interfaceCopy(`${formatCalendarDate(start)} - Choose end date`);
+    if (hint) hint.textContent = interfaceCopy(`Choose an end date on or after ${formatCalendarDate(start, { month: "long", day: "numeric", year: "numeric" })}.`);
   } else {
-    value.textContent = "Choose a date range";
-    if (hint) hint.textContent = "Choose a start date, then an end date.";
+    value.textContent = interfaceCopy("Choose a date range");
+    if (hint) hint.textContent = interfaceCopy("Choose a start date, then an end date.");
   }
 }
 
@@ -3670,18 +3671,21 @@ function renderCalendar(calendar: HTMLElement) {
   if (!Number.isFinite(firstDate.getTime())) return;
   const year = firstDate.getFullYear();
   const month = firstDate.getMonth() + 1;
-  title.textContent = new Intl.DateTimeFormat("en", { month: "long", year: "numeric" }).format(firstDate);
-  grid.setAttribute("aria-label", `Dates in ${title.textContent}`);
+  title.textContent = interfaceCopy(new Intl.DateTimeFormat(document.documentElement.lang === "vi" ? "vi-VN" : "en", { month: "long", year: "numeric" }).format(firstDate));
+  grid.setAttribute("aria-label", interfaceCopy(`Dates in ${title.textContent}`));
   grid.replaceChildren();
 
   const headingRow = document.createElement("div");
   headingRow.setAttribute("role", "row");
   headingRow.className = "sample-calendar-weekdays";
-  for (const [short, long] of [["Su", "Sunday"], ["Mo", "Monday"], ["Tu", "Tuesday"], ["We", "Wednesday"], ["Th", "Thursday"], ["Fr", "Friday"], ["Sa", "Saturday"]] as const) {
+  const weekdays = document.documentElement.lang === "vi"
+    ? [["Cn", "Chủ nhật"], ["T2", "Thứ Hai"], ["T3", "Thứ Ba"], ["T4", "Thứ Tư"], ["T5", "Thứ Năm"], ["T6", "Thứ Sáu"], ["T7", "Thứ Bảy"]]
+    : [["Su", "Sunday"], ["Mo", "Monday"], ["Tu", "Tuesday"], ["We", "Wednesday"], ["Th", "Thursday"], ["Fr", "Friday"], ["Sa", "Saturday"]];
+  for (const [short, long] of weekdays) {
     const weekday = document.createElement("span");
     weekday.setAttribute("role", "columnheader");
-    weekday.setAttribute("aria-label", long);
-    weekday.textContent = short;
+    weekday.setAttribute("aria-label", interfaceCopy(long ?? ""));
+    weekday.textContent = interfaceCopy(short ?? "");
     headingRow.append(weekday);
   }
   grid.append(headingRow);
@@ -3716,10 +3720,10 @@ function renderCalendar(calendar: HTMLElement) {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "sample-calendar-day";
-      button.textContent = String(day);
+      button.textContent = interfaceCopy(String(day));
       button.dataset.date = dateValue;
       button.setAttribute("role", "gridcell");
-      button.setAttribute("aria-label", formatCalendarDate(dateValue, { dateStyle: "full" }));
+      button.setAttribute("aria-label", interfaceCopy(formatCalendarDate(dateValue, { dateStyle: "full" })));
       const isStart = dateValue === start;
       const isEnd = dateValue === end;
       const isBetween = Boolean(start && end && dateValue > start && dateValue < end);
@@ -3763,7 +3767,7 @@ function initializeLoginSample(sample: HTMLElement) {
   if (error) {
     error.id = `sample-login-error-${instance}`;
     error.hidden = true;
-    error.textContent = "";
+    error.textContent = interfaceCopy("");
   }
 
   const emailLabel = form.querySelector<HTMLLabelElement>(":scope > label");
@@ -3796,13 +3800,13 @@ function validateLoginForm(sample: HTMLElement) {
   }
   if (error) {
     error.hidden = valid;
-    error.textContent = !emailValid && !passwordValid
+    error.textContent = interfaceCopy(!emailValid && !passwordValid
       ? "Enter a valid email address and password."
       : !emailValid
         ? "Enter a valid email address."
         : !passwordValid
           ? "Enter your password."
-          : "";
+          : "");
   }
 
   return { valid, email, password };
@@ -3837,19 +3841,19 @@ function initializeProgressDemo(
     value = Math.max(0, Math.min(targetValue, Math.round(nextValue)));
     sample.dataset.progressValue = String(value);
     ring.setAttribute("aria-valuenow", String(value));
-    percent.textContent = `${value}%`;
+    percent.textContent = interfaceCopy(`${value}%`);
     arc.style.strokeDashoffset = String(125.66 * (1 - value / 100));
     bar.value = value;
-    bar.textContent = `${value}%`;
-    caption.textContent = `Upload, ${value}%`;
+    bar.textContent = interfaceCopy(`${value}%`);
+    caption.textContent = interfaceCopy(`Upload, ${value}%`);
   };
 
   const renderButton = () => {
-    if (state === "running") toggleButton.textContent = "Pause progress";
-    else if (state === "complete") toggleButton.textContent = "Replay progress";
-    else if (motionPreference.matches && value < targetValue) toggleButton.textContent = "Advance progress";
-    else if (state === "paused") toggleButton.textContent = "Resume progress";
-    else toggleButton.textContent = "Start progress";
+    if (state === "running") toggleButton.textContent = interfaceCopy("Pause progress");
+    else if (state === "complete") toggleButton.textContent = interfaceCopy("Replay progress");
+    else if (motionPreference.matches && value < targetValue) toggleButton.textContent = interfaceCopy("Advance progress");
+    else if (state === "paused") toggleButton.textContent = interfaceCopy("Resume progress");
+    else toggleButton.textContent = interfaceCopy("Start progress");
   };
 
   const stopFrame = () => {
@@ -3859,7 +3863,7 @@ function initializeProgressDemo(
   };
 
   const announceStatus = (message: string) => {
-    status.textContent = message;
+    status.textContent = interfaceCopy(message);
   };
 
   const complete = () => {
@@ -4006,8 +4010,8 @@ function renderInboxSplitView(root: HTMLElement, options: { preserveSelection?: 
   const detail = root.querySelector<HTMLElement>("[data-inbox-detail]");
   const empty = root.querySelector<HTMLElement>("[data-inbox-empty]");
   const footer = root.querySelector<HTMLElement>(".sample-inbox-status");
-  if (listTitle) listTitle.textContent = label;
-  if (list) list.setAttribute("aria-label", `${label} messages`);
+  if (listTitle) listTitle.textContent = interfaceCopy(label);
+  if (list) list.setAttribute("aria-label", interfaceCopy(`${label} messages`));
   if (empty) empty.hidden = rows.length > 0;
 
   const selectedIdValue = selected?.dataset.messageId ?? "";
@@ -4018,7 +4022,7 @@ function renderInboxSplitView(root: HTMLElement, options: { preserveSelection?: 
       ? button.querySelector<HTMLElement>("b")
       : button.querySelector<HTMLElement>("span");
     if (countNode && (button.dataset.mailbox === "inbox" || button.dataset.mailbox === "archive")) {
-      countNode.textContent = String(count);
+      countNode.textContent = interfaceCopy(String(count));
       countNode.hidden = count === 0;
     }
   });
@@ -4034,7 +4038,7 @@ function renderInboxSplitView(root: HTMLElement, options: { preserveSelection?: 
     const unread = row.dataset.unread === "true";
     const dot = row.querySelector<HTMLElement>(".sample-inbox-unread-dot");
     if (dot) dot.hidden = !unread;
-    row.setAttribute("aria-label", `${row.dataset.sender ?? "Message"}, ${row.dataset.subject ?? ""}${unread ? ", unread" : ""}${current ? ", selected" : ""}`);
+    row.setAttribute("aria-label", interfaceCopy(`${row.dataset.sender ?? "Message"}, ${row.dataset.subject ?? ""}${unread ? ", unread" : ""}${current ? ", selected" : ""}`));
     if (!visible || options.animateList) row.classList.remove("is-entering");
     if (visible && options.animateList) row.style.setProperty("--inbox-enter-delay", `${Math.min(rows.indexOf(row), 5) * 18}ms`);
   });
@@ -4051,14 +4055,14 @@ function renderInboxSplitView(root: HTMLElement, options: { preserveSelection?: 
   });
   if (!selected) {
     if (detail) detail.hidden = true;
-    if (footer) footer.textContent = rows.length ? `No message selected. ${label}` : `No messages in ${label}`;
+    if (footer) footer.textContent = interfaceCopy(rows.length ? `No message selected. ${label}` : `No messages in ${label}`);
     announce(root.closest<HTMLElement>(".ui-sample") ?? root, rows.length ? "No message selected." : `No messages in ${label}.`);
     return;
   }
 
   if (detail) {
     detail.hidden = false;
-    detail.setAttribute("aria-label", `Message from ${selected.dataset.sender}: ${selected.dataset.subject}`);
+    detail.setAttribute("aria-label", interfaceCopy(`Message from ${selected.dataset.sender}: ${selected.dataset.subject}`));
     detail.classList.remove("is-updating");
     if (options.markRead || options.animateDetail) {
       void detail.offsetWidth;
@@ -4067,7 +4071,7 @@ function renderInboxSplitView(root: HTMLElement, options: { preserveSelection?: 
   }
   const setText = (selector: string, value: string) => {
     const element = root.querySelector<HTMLElement>(selector);
-    if (element) element.textContent = value;
+    if (element) element.textContent = interfaceCopy(value);
   };
   setText("[data-inbox-folder-label]", label);
   setText("[data-inbox-sender]", selected.dataset.sender ?? "");
@@ -4081,17 +4085,17 @@ function renderInboxSplitView(root: HTMLElement, options: { preserveSelection?: 
   const starred = selected.dataset.starred === "true";
   if (star) {
     star.setAttribute("aria-pressed", String(starred));
-    star.setAttribute("aria-label", starred ? "Remove star from message" : "Star message");
+    star.setAttribute("aria-label", interfaceCopy(starred ? "Remove star from message" : "Star message"));
     star.classList.toggle("is-starred", starred);
   }
   const archive = root.querySelector<HTMLButtonElement>("[data-action='inbox-archive-message']");
   const archived = selected.dataset.archived === "true";
   if (archive) {
     archive.disabled = archived;
-    archive.setAttribute("aria-label", archived ? "Message already archived" : "Archive message");
+    archive.setAttribute("aria-label", interfaceCopy(archived ? "Message already archived" : "Archive message"));
   }
   const count = rows.length;
-  if (footer) footer.textContent = `${count} ${count === 1 ? "message" : "messages"} in ${label}. ${selected.dataset.subject ?? "Selected"}`;
+  if (footer) footer.textContent = interfaceCopy(`${count} ${count === 1 ? "message" : "messages"} in ${label}. ${selected.dataset.subject ?? "Selected"}`);
   announce(root.closest<HTMLElement>(".ui-sample") ?? root, `${count} ${count === 1 ? "message" : "messages"} in ${label}. Selected ${selected.dataset.subject}.`);
 }
 
@@ -4118,7 +4122,7 @@ function initializeInboxSplitView(sample: HTMLElement) {
     const initial = pane === "sidebar" ? 136 : 224;
     root.style.setProperty(pane === "sidebar" ? "--inbox-sidebar-width" : "--inbox-list-width", `${initial}px`);
     splitter.setAttribute("aria-valuenow", String(initial));
-    splitter.setAttribute("aria-valuetext", `${initial} pixels`);
+    splitter.setAttribute("aria-valuetext", interfaceCopy(`${initial} pixels`));
 
     let dragPointer: number | null = null;
     const update = (value: number) => {
@@ -4135,7 +4139,7 @@ function initializeInboxSplitView(sample: HTMLElement) {
       root.style.setProperty(currentPane === "sidebar" ? "--inbox-sidebar-width" : "--inbox-list-width", `${next}px`);
       splitter.setAttribute("aria-valuenow", String(next));
       splitter.setAttribute("aria-valuemax", String(maximum));
-      splitter.setAttribute("aria-valuetext", `${next} pixels`);
+      splitter.setAttribute("aria-valuetext", interfaceCopy(`${next} pixels`));
     };
     const pointerValue = (clientX: number) => {
       const workspaceLeft = workspace.getBoundingClientRect().left;
@@ -4200,7 +4204,7 @@ function initializeSearchField(sample: HTMLElement) {
   menu.querySelector<HTMLElement>(".sample-search-menu-heading")?.setAttribute("role", "presentation");
   menu.querySelector<HTMLElement>(".sample-search-menu-heading")?.setAttribute("aria-hidden", "true");
   menu.querySelector<HTMLElement>("[data-search-recent-list]")?.setAttribute("role", "group");
-  menu.querySelector<HTMLElement>("[data-search-recent-list]")?.setAttribute("aria-label", "Recent queries");
+  menu.querySelector<HTMLElement>("[data-search-recent-list]")?.setAttribute("aria-label", interfaceCopy("Recent queries"));
   menu.querySelector<HTMLElement>("[data-search-recent-empty]")?.setAttribute("role", "presentation");
   refreshSearchRecents(sample);
   updateSearchField(sample, false);
@@ -4246,7 +4250,7 @@ function initializeSavePanel(sample: HTMLElement) {
     reopen.type = "button";
     reopen.className = "sample-save-reopen";
     reopen.dataset.action = "save-reopen";
-    reopen.textContent = "Open Save Panel again";
+    reopen.textContent = interfaceCopy("Open Save Panel again");
     reopen.hidden = true;
     sample.append(reopen);
   }
@@ -4280,9 +4284,9 @@ function updateSavePanel(sample: HTMLElement, statusMessage?: string) {
   const format = savePanelFormats[currentFormat] ?? savePanelFormats.pdf;
   if (!format) return;
 
-  if (locationLabel) locationLabel.textContent = currentLocation;
-  if (formatLabel) formatLabel.textContent = format.label;
-  if (currentPath) currentPath.textContent = currentLocation;
+  if (locationLabel) locationLabel.textContent = interfaceCopy(currentLocation);
+  if (formatLabel) formatLabel.textContent = interfaceCopy(format.label);
+  if (currentPath) currentPath.textContent = interfaceCopy(currentLocation);
   if (saveButton) saveButton.disabled = !nameInput?.value.trim();
   if (validity) validity.hidden = Boolean(nameInput?.value.trim());
   sample.querySelectorAll<HTMLButtonElement>("[role='menuitemradio'][data-location]").forEach((option) => {
@@ -4304,7 +4308,7 @@ function updateSavePanel(sample: HTMLElement, statusMessage?: string) {
       glyph.dataset.lucide = icon;
       glyph.setAttribute("aria-hidden", "true");
       const label = document.createElement("span");
-      label.textContent = name;
+      label.textContent = interfaceCopy(name);
       row.append(glyph, label);
       list.append(row);
     });
@@ -4388,9 +4392,9 @@ function updateSearchField(sample: HTMLElement, announceResult = true) {
   });
 
   if (clear) clear.hidden = input.value.length === 0;
-  if (count) count.textContent = query
+  if (count) count.textContent = interfaceCopy(query
     ? `${matches} ${matches === 1 ? "match" : "matches"}`
-    : `${matches} projects`;
+    : `${matches} projects`);
   if (noResults) {
     const wasHidden = noResults.hidden;
     noResults.hidden = matches > 0;
@@ -4398,11 +4402,11 @@ function updateSearchField(sample: HTMLElement, announceResult = true) {
     else if (wasHidden && shouldAnimate) animateSearchFieldElement(noResults);
   }
   if (announceResult && status) {
-    status.textContent = query
+    status.textContent = interfaceCopy(query
       ? matches
         ? `${matches} ${matches === 1 ? "project" : "projects"} found for ${input.value.trim()}.`
         : `No projects found for ${input.value.trim()}.`
-      : `Showing all ${matches} projects.`;
+      : `Showing all ${matches} projects.`);
   }
 }
 
@@ -4488,11 +4492,11 @@ function updateDesktopSidebarContent(sample: HTMLElement, key: string, animate =
   const label = sample.querySelector<HTMLButtonElement>(`.sample-source-list [data-sidebar-key='${key}']`)?.getAttribute("aria-label");
   if (!content || !heading || !toolbarTitle || !eyebrow || !description || !count || !list || !source || !label) return;
 
-  heading.textContent = label;
-  toolbarTitle.textContent = label;
-  eyebrow.textContent = source.group;
-  description.textContent = source.description;
-  count.textContent = `${source.items.length} ${key === "projects" ? "folders" : "items"}`;
+  heading.textContent = interfaceCopy(label);
+  toolbarTitle.textContent = interfaceCopy(label);
+  eyebrow.textContent = interfaceCopy(source.group);
+  description.textContent = interfaceCopy(source.description);
+  count.textContent = interfaceCopy(`${source.items.length} ${key === "projects" ? "folders" : "items"}`);
   const rows = source.items.map((item) => {
     const row = document.createElement("li");
     const icon = document.createElement("i");
@@ -4502,9 +4506,9 @@ function updateDesktopSidebarContent(sample: HTMLElement, key: string, animate =
     const copy = document.createElement("span");
     copy.className = "sample-sidebar-item-copy";
     const name = document.createElement("strong");
-    name.textContent = item.name;
+    name.textContent = interfaceCopy(item.name);
     const detail = document.createElement("small");
-    detail.textContent = item.detail;
+    detail.textContent = interfaceCopy(item.detail);
     copy.append(name, detail);
     row.append(icon, copy);
     return row;
@@ -4543,7 +4547,7 @@ function initializeDesktopSidebar(sample: HTMLElement) {
   nav.id = `sample-source-navigation-${instance}`;
   toggle.setAttribute("aria-controls", nav.id);
   toggle.setAttribute("aria-expanded", "true");
-  toggle.setAttribute("aria-label", "Hide sidebar");
+  toggle.setAttribute("aria-label", interfaceCopy("Hide sidebar"));
   const items = Array.from(nav.querySelectorAll<HTMLButtonElement>("[data-sidebar-key]"));
   items.forEach((item) => {
     item.classList.toggle("is-current", item.getAttribute("aria-current") === "page");
@@ -4646,7 +4650,7 @@ function setToolbarCompact(sample: HTMLElement, compact: boolean) {
   const overflow = sample.querySelector<HTMLButtonElement>(".sample-toolbar-overflow-trigger");
   if (overflow) overflow.hidden = !compact;
   toggle.setAttribute("aria-pressed", String(compact));
-  toggle.textContent = compact ? "Restore full toolbar width" : "Constrain width to reveal overflow";
+  toggle.textContent = interfaceCopy(compact ? "Restore full toolbar width" : "Constrain width to reveal overflow");
   if (!compact) setToolbarOverflowOpen(sample, false);
   updateToolbarRovingFocus(sample);
 }
@@ -4671,7 +4675,7 @@ function initializeToolbarSample(sample: HTMLElement) {
   const labelsToggle = sample.querySelector<HTMLButtonElement>("[data-action='toolbar-labels']");
   if (labelsToggle) {
     labelsToggle.setAttribute("aria-pressed", "true");
-    labelsToggle.textContent = "Hide item labels";
+    labelsToggle.textContent = interfaceCopy("Hide item labels");
   }
   separator.dataset.toolbarSeparator = "automatic";
   sample.querySelector<HTMLElement>(".sample-toolbar-content")?.classList.remove("is-changing");
@@ -4795,22 +4799,22 @@ function setWindowActionsState(demo: HTMLElement, state: string, message?: strin
   if (minimize) {
     minimize.disabled = state === "closed";
     minimize.setAttribute("aria-pressed", String(state === "minimized"));
-    minimize.setAttribute("aria-label", state === "minimized" ? "Restore minimized preview" : "Minimize preview");
+    minimize.setAttribute("aria-label", interfaceCopy(state === "minimized" ? "Restore minimized preview" : "Minimize preview"));
     const label = minimize.querySelector<HTMLElement>("span");
-    if (label) label.textContent = state === "minimized" ? "Restore" : "Minimize";
+    if (label) label.textContent = interfaceCopy(state === "minimized" ? "Restore" : "Minimize");
   }
   if (expand) {
     expand.disabled = state === "closed" || state === "minimized";
     const expanded = state === "zoomed" || state === "fullscreen";
     expand.setAttribute("aria-pressed", String(expanded));
-    expand.setAttribute("aria-label", expanded ? "Restore preview size" : "Expand preview");
+    expand.setAttribute("aria-label", interfaceCopy(expanded ? "Restore preview size" : "Expand preview"));
     expand.title = expanded ? "Restore preview size" : "Option-click to zoom the preview";
     const label = expand.querySelector<HTMLElement>("span");
-    if (label) label.textContent = expanded ? "Restore" : "Expand";
+    if (label) label.textContent = interfaceCopy(expanded ? "Restore" : "Expand");
     setWindowActionsExpandIcon(expand, expanded);
   }
   if (feedback && message) {
-    feedback.textContent = message;
+    feedback.textContent = interfaceCopy(message);
     feedback.hidden = false;
   }
   if (feedback && !message) feedback.hidden = true;
@@ -4838,11 +4842,11 @@ function setVibrancyMaterial(demo: HTMLElement, material: string, announceChange
   demo.querySelectorAll<HTMLButtonElement>("[data-action='vibrancy-material']").forEach((button) => {
     button.setAttribute("aria-pressed", String(button.dataset.materialValue === material));
   });
-  if (state) state.textContent = materialName;
+  if (state) state.textContent = interfaceCopy(materialName);
   if (status && announceChange) {
-    status.textContent = material === "solid"
+    status.textContent = interfaceCopy(material === "solid"
       ? "Solid fallback selected. The wallpaper no longer shows through the panel."
-      : `${materialName} selected. The panel uses a material tuned for that surface role.`;
+      : `${materialName} selected. The panel uses a material tuned for that surface role.`);
     status.hidden = false;
   }
 }
@@ -4853,12 +4857,12 @@ function setVibrancyForeground(demo: HTMLElement, enabled: boolean, announceChan
   demo.dataset.vibrancy = enabled ? "on" : "off";
   if (toggle) {
     toggle.setAttribute("aria-pressed", String(enabled));
-    toggle.textContent = enabled ? "Vibrancy on" : "Vibrancy off";
+    toggle.textContent = interfaceCopy(enabled ? "Vibrancy on" : "Vibrancy off");
   }
   if (status && announceChange) {
-    status.textContent = enabled
+    status.textContent = interfaceCopy(enabled
       ? "Vibrant foreground enabled. The foreground control uses stronger separation from the material."
-      : "Vibrant foreground disabled. The control returns to its standard appearance.";
+      : "Vibrant foreground disabled. The control returns to its standard appearance.");
     status.hidden = false;
   }
 }
@@ -5165,7 +5169,7 @@ function enhanceSample(sample: HTMLElement) {
       const trigger = sample.querySelector<HTMLElement>(".sample-combo-button > button[aria-haspopup='menu']");
       const menu = sample.querySelector<HTMLElement>(".sample-combo-menu");
       menu?.querySelectorAll<HTMLElement>("[role='menuitem']").forEach((item) => { item.tabIndex = -1; });
-      primary?.setAttribute("aria-label", "Save");
+      primary?.setAttribute("aria-label", interfaceCopy("Save"));
       trigger?.setAttribute("aria-expanded", "true");
       if (menu) {
         menu.dataset.open = "true";
@@ -5245,7 +5249,7 @@ function initializeBottomNavigation(sample: HTMLElement) {
   const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>(".sample-nav-item"));
   const currentKey = nav.dataset.activeDestination ?? "home";
 
-  nav.setAttribute("aria-label", "Primary navigation");
+  nav.setAttribute("aria-label", interfaceCopy("Primary navigation"));
   nav.removeAttribute("role");
 
   panels.forEach((panel) => {
@@ -5267,7 +5271,7 @@ function initializeBottomNavigation(sample: HTMLElement) {
     if (!key || !panel) return;
     link.href = `#${panel.id}`;
     link.setAttribute("aria-controls", panel.id);
-    link.setAttribute("aria-label", key === "inbox" ? `${label}, 3 unread` : label);
+    link.setAttribute("aria-label", interfaceCopy(key === "inbox" ? `${label}, 3 unread` : label));
     link.dataset.action = "select-nav";
     if (key === currentKey) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
@@ -5286,7 +5290,7 @@ function initializeNavigationDrawer(sample: HTMLElement) {
   drawer.id = `sample-navigation-drawer-${sample.dataset.sampleInstance ?? "example"}`;
   trigger.setAttribute("aria-controls", drawer.id);
   trigger.setAttribute("aria-expanded", "false");
-  trigger.setAttribute("aria-label", "Open main navigation");
+  trigger.setAttribute("aria-label", interfaceCopy("Open main navigation"));
   demo.dataset.drawerOpen = "false";
   demo.dataset.drawerState = "closed";
   page.inert = false;
@@ -5374,7 +5378,7 @@ function openNavigationDrawer(demo: HTMLElement) {
   scrim.hidden = false;
   scrim.setAttribute("aria-hidden", "false");
   trigger.setAttribute("aria-expanded", "true");
-  trigger.setAttribute("aria-label", "Close main navigation");
+  trigger.setAttribute("aria-label", interfaceCopy("Close main navigation"));
 
   window.requestAnimationFrame(() => {
     if (demo.dataset.drawerOpen === "true") demo.dataset.drawerState = "open";
@@ -5415,7 +5419,7 @@ function closeNavigationDrawer(demo: HTMLElement, restoreFocus = true) {
   drawer.setAttribute("aria-hidden", "true");
   scrim.setAttribute("aria-hidden", "true");
   trigger.setAttribute("aria-expanded", "false");
-  trigger.setAttribute("aria-label", "Open main navigation");
+  trigger.setAttribute("aria-label", interfaceCopy("Open main navigation"));
 
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     finishNavigationDrawerClose(demo);
@@ -5639,10 +5643,10 @@ function initializeLoadingMotion(sample: HTMLElement) {
   demo.dataset.motionPaused = String(reducedMotion);
   demo.dataset.motionOptIn = "false";
   button.setAttribute("aria-pressed", String(!reducedMotion));
-  button.textContent = reducedMotion ? "Play animation" : "Pause animation";
-  status.textContent = reducedMotion
+  button.textContent = interfaceCopy(reducedMotion ? "Play animation" : "Pause animation");
+  status.textContent = interfaceCopy(reducedMotion
     ? "Motion is paused to match your reduced-motion preference."
-    : "The skeleton shimmer and spinner are moving. Pause motion to inspect them.";
+    : "The skeleton shimmer and spinner are moving. Pause motion to inspect them.");
   setLoadingDemoComplete(demo, false);
 }
 
@@ -5651,7 +5655,7 @@ function setLoadingDemoComplete(demo: HTMLElement, complete: boolean) {
   const badge = demo.querySelector<HTMLElement>("[data-loading-state]");
   const badgeLabel = badge?.querySelector<HTMLElement>("[data-loading-badge-label]");
   if (badge) badge.dataset.loadingState = complete ? "ready" : "loading";
-  if (badgeLabel) badgeLabel.textContent = complete ? "Ready" : "Loading";
+  if (badgeLabel) badgeLabel.textContent = interfaceCopy(complete ? "Ready" : "Loading");
 
   demo.querySelectorAll<HTMLElement>(".sample-loading-option").forEach((option) => {
     option.setAttribute("aria-busy", String(!complete));
@@ -5667,7 +5671,7 @@ function setLoadingDemoComplete(demo: HTMLElement, complete: boolean) {
   const motionButton = demo.querySelector<HTMLButtonElement>("[data-action='loading-motion-toggle']");
   const completionButton = demo.querySelector<HTMLButtonElement>("[data-action='loading-completion-toggle']");
   if (motionButton) motionButton.hidden = complete;
-  if (completionButton) completionButton.textContent = complete ? "Replay loading" : "Show loaded state";
+  if (completionButton) completionButton.textContent = interfaceCopy(complete ? "Replay loading" : "Show loaded state");
 }
 
 function initializeWebFocusRing(sample: HTMLElement) {
@@ -5685,12 +5689,12 @@ function initializeWebFocusRing(sample: HTMLElement) {
     }
 
     input.value = value;
-    status.textContent = `Saved as "${value}". This preview did not send a request.`;
+    status.textContent = interfaceCopy(`Saved as "${value}". This preview did not send a request.`);
   });
 
   form.addEventListener("reset", () => {
     window.requestAnimationFrame(() => {
-      status.textContent = `Reset to "${input.defaultValue}". This preview did not send a request.`;
+      status.textContent = interfaceCopy(`Reset to "${input.defaultValue}". This preview did not send a request.`);
     });
   });
 }
@@ -5703,21 +5707,21 @@ function initializeMacosFocusRing(sample: HTMLElement) {
 
   const updateKeyboardAccess = () => {
     saveButton.tabIndex = accessToggle.checked ? 0 : -1;
-    status.textContent = accessToggle.checked
+    status.textContent = interfaceCopy(accessToggle.checked
       ? "Full Keyboard Access is on. Tab can reach the text field, this checkbox, and Save."
-      : "Full Keyboard Access is off. Tab skips Save. Click it to activate it.";
+      : "Full Keyboard Access is off. Tab skips Save. Click it to activate it.");
   };
 
   accessToggle.addEventListener("change", updateKeyboardAccess);
   sample.addEventListener("focusin", (event) => {
     const target = event.target instanceof Element ? event.target.closest<HTMLElement>("[data-focus-label]") : null;
-    if (target) status.textContent = `First responder: ${target.dataset.focusLabel}.`;
+    if (target) status.textContent = interfaceCopy(`First responder: ${target.dataset.focusLabel}.`);
   });
   sample.addEventListener("focusout", (event) => {
     if (event.relatedTarget instanceof Node && sample.contains(event.relatedTarget)) return;
-    status.textContent = accessToggle.checked
+    status.textContent = interfaceCopy(accessToggle.checked
       ? "Full Keyboard Access is on. Focus a control to see its ring."
-      : "Full Keyboard Access is off. Tab skips Save. Click it to activate it.";
+      : "Full Keyboard Access is off. Tab skips Save. Click it to activate it.");
   });
   updateKeyboardAccess();
 }
@@ -5729,10 +5733,10 @@ function syncInspectorSelection(workspace: HTMLElement, selected: HTMLButtonElem
   const inspectorName = panel?.querySelector<HTMLElement>("[data-inspector-name]");
   const inspectorType = panel?.querySelector<HTMLElement>("[data-inspector-type]");
   const width = panel?.querySelector<HTMLElement>("[data-inspector-width]");
-  const selectionChanged = inspectorName?.textContent !== name;
-  if (inspectorName) inspectorName.textContent = name;
-  if (inspectorType) inspectorType.textContent = type;
-  if (width) width.textContent = selected.dataset.inspectorWidth ?? "Auto";
+  const selectionChanged = inspectorName?.textContent !== interfaceCopy(name);
+  if (inspectorName) inspectorName.textContent = interfaceCopy(name);
+  if (inspectorType) inspectorType.textContent = interfaceCopy(type);
+  if (width) width.textContent = interfaceCopy(selected.dataset.inspectorWidth ?? "Auto");
 
   panel?.querySelectorAll<HTMLInputElement>("[data-inspector-control]").forEach((control) => {
     const property = control.dataset.inspectorControl;
@@ -5741,7 +5745,7 @@ function syncInspectorSelection(workspace: HTMLElement, selected: HTMLButtonElem
       : selected.dataset.inspectorRadius ?? "0";
     control.value = value;
     const output = panel.querySelector<HTMLOutputElement>(`[data-inspector-output='${property}']`);
-    if (output) output.value = output.textContent = property === "opacity" ? `${value}%` : `${value} px`;
+    if (output) output.value = output.textContent = interfaceCopy(property === "opacity" ? `${value}%` : `${value} px`);
   });
   selected.style.opacity = String(Number(selected.dataset.inspectorOpacity ?? "100") / 100);
   selected.style.borderRadius = `${selected.dataset.inspectorRadius ?? "0"}px`;
@@ -5760,7 +5764,7 @@ function syncInspectorSelection(workspace: HTMLElement, selected: HTMLButtonElem
 
   if (announceChange) {
     const status = workspace.querySelector<HTMLElement>(".sample-inspector-status");
-    if (status) status.textContent = `${name} selected. Inspector shows ${type.toLocaleLowerCase()} properties.`;
+    if (status) status.textContent = interfaceCopy(`${name} selected. Inspector shows ${type.toLocaleLowerCase()} properties.`);
   }
 }
 
@@ -5776,16 +5780,16 @@ function setInspectorOpen(workspace: HTMLElement, open: boolean, opener?: HTMLEl
   workspace.querySelectorAll<HTMLButtonElement>("[data-action='inspector-toggle']").forEach((button) => {
     button.setAttribute("aria-expanded", String(open));
     const label = button.querySelector<HTMLElement>(":scope > span");
-    if (label) label.textContent = open ? "Hide Inspector" : "Show Inspector";
-    if (button.hasAttribute("aria-label")) button.setAttribute("aria-label", open ? "Close Inspector" : "Open Inspector");
+    if (label) label.textContent = interfaceCopy(open ? "Hide Inspector" : "Show Inspector");
+    if (button.hasAttribute("aria-label")) button.setAttribute("aria-label", interfaceCopy(open ? "Close Inspector" : "Open Inspector"));
   });
   if (!open && opener && panel.contains(opener)) {
     workspace.querySelector<HTMLButtonElement>(".sample-inspector-toolbar [data-action='inspector-toggle']")?.focus({ preventScroll: true });
   }
   const status = workspace.querySelector<HTMLElement>(".sample-inspector-status");
-  if (status) status.textContent = open
+  if (status) status.textContent = interfaceCopy(open
     ? "Inspector opened. The project canvas stays visible."
-    : "Inspector closed. The project canvas remains available.";
+    : "Inspector closed. The project canvas remains available.");
 }
 
 function updateEditorColorsPanelVisibility(demo: HTMLElement) {
@@ -5803,16 +5807,16 @@ function updateEditorColorsPanelVisibility(demo: HTMLElement) {
   const toggle = demo.querySelector<HTMLButtonElement>("[data-action='editor-panel-toggle']");
   toggle?.setAttribute("aria-expanded", String(open));
   const label = toggle?.querySelector<HTMLElement>("span");
-  if (label) label.textContent = open ? "Hide Colors" : "Show Colors";
+  if (label) label.textContent = interfaceCopy(open ? "Hide Colors" : "Show Colors");
 }
 
 function setEditorColorsPanelOpen(demo: HTMLElement, open: boolean, restoreFocus = false) {
   demo.dataset.panelOpen = String(open);
   updateEditorColorsPanelVisibility(demo);
   const status = demo.querySelector<HTMLElement>(".sample-editor-colors-status");
-  if (status) status.textContent = open
+  if (status) status.textContent = interfaceCopy(open
     ? "Colors panel opened above the editor. The document stays in context."
-    : "Colors panel closed. Document color changes are kept in this preview.";
+    : "Colors panel closed. Document color changes are kept in this preview.");
   if (!open && restoreFocus) demo.querySelector<HTMLButtonElement>("[data-action='editor-panel-toggle']")?.focus({ preventScroll: true });
 }
 
@@ -5876,7 +5880,7 @@ function initializeMacPopoverDemo(sample: HTMLElement, instance = sample.dataset
     input.id = `popover-output-${instance}-${index + 1}`;
   });
   const volume = demo.querySelector<HTMLInputElement>("[data-input-action='macos-popover-volume']");
-  if (volume) volume.setAttribute("aria-valuetext", `${volume.value}%`);
+  if (volume) volume.setAttribute("aria-valuetext", interfaceCopy(`${volume.value}%`));
 
   const initiallyOpen = demo.dataset.popoverOpen !== "false";
   demo.dataset.popoverPlacement = demo.dataset.popoverPlacement ?? "above";
@@ -6035,7 +6039,7 @@ function initializePopupPullDownCombo(sample: HTMLElement, instance = sample.dat
   };
 
   const setStatus = (message: string) => {
-    if (status) status.textContent = message;
+    if (status) status.textContent = interfaceCopy(message);
     announce(sample, message);
   };
 
@@ -6062,7 +6066,7 @@ function initializePopupPullDownCombo(sample: HTMLElement, instance = sample.dat
       freeform.setAttribute("aria-selected", "false");
       freeform.dataset.comboFreeform = input.value.trim();
       freeform.className = "sample-popup-freeform-option";
-      freeform.textContent = `Use “${input.value.trim()}”`;
+      freeform.textContent = interfaceCopy(`Use “${input.value.trim()}”`);
       comboPanel.append(freeform);
     }
   };
@@ -6103,8 +6107,8 @@ function initializePopupPullDownCombo(sample: HTMLElement, instance = sample.dat
         option.setAttribute("aria-selected", String(option === choice));
       });
       const value = trigger?.querySelector<HTMLElement>("[data-popup-trigger-value]");
-      if (value) value.textContent = label;
-      trigger?.setAttribute("aria-label", `Text scale, ${label}`);
+      if (value) value.textContent = interfaceCopy(label);
+      trigger?.setAttribute("aria-label", interfaceCopy(`Text scale, ${label}`));
       if (owner) closeOwner(owner, true);
       setStatus(`${label} is now the selected text scale. The pop-up button keeps this value visible.`);
       return;
@@ -6271,12 +6275,12 @@ function updateEditorDocumentColor(demo: HTMLElement, color: string, name: strin
   const status = demo.querySelector<HTMLElement>(".sample-editor-colors-status");
   const customColor = demo.querySelector<HTMLInputElement>("[data-input-action='editor-custom-hex']");
   const customSwatch = demo.querySelector<HTMLElement>("[data-editor-custom-swatch]");
-  if (colorName) colorName.textContent = name;
-  if (colorValue) colorValue.textContent = normalizedColor;
+  if (colorName) colorName.textContent = interfaceCopy(name);
+  if (colorValue) colorValue.textContent = interfaceCopy(normalizedColor);
   if (customColor && customColor.value.toUpperCase() !== normalizedColor) customColor.value = normalizedColor;
   if (customSwatch) customSwatch.style.backgroundColor = normalizedColor;
   syncEditorCustomColorPicker(demo, normalizedColor);
-  if (status && announceStatus) status.textContent = `${name} selected. The document preview updated. No file was changed.`;
+  if (status && announceStatus) status.textContent = interfaceCopy(`${name} selected. The document preview updated. No file was changed.`);
 }
 
 function renderEditorCustomColorPicker(demo: HTMLElement, hue: number, saturation: number, brightness: number) {
@@ -6295,7 +6299,7 @@ function renderEditorCustomColorPicker(demo: HTMLElement, hue: number, saturatio
   surface?.style.setProperty("--editor-picker-saturation", `${normalizedSaturation}%`);
   surface?.style.setProperty("--editor-picker-brightness", `${normalizedBrightness}%`);
   surface?.setAttribute("aria-valuenow", String(Math.round(normalizedSaturation)));
-  surface?.setAttribute("aria-valuetext", `Saturation ${Math.round(normalizedSaturation)}%, brightness ${Math.round(normalizedBrightness)}%`);
+  surface?.setAttribute("aria-valuetext", interfaceCopy(`Saturation ${Math.round(normalizedSaturation)}%, brightness ${Math.round(normalizedBrightness)}%`));
   if (hueInput) {
     hueInput.value = String(Math.round(normalizedHue));
     hueInput.style.setProperty("--editor-picker-thumb-color", `hsl(${normalizedHue} 100% 43%)`);
@@ -6441,11 +6445,11 @@ function initializeInspector(sample: HTMLElement) {
     if (property === "opacity") {
       selected.dataset.inspectorOpacity = String(value);
       selected.style.opacity = String(value / 100);
-      if (output) output.value = output.textContent = `${value}%`;
+      if (output) output.value = output.textContent = interfaceCopy(`${value}%`);
     } else if (property === "radius") {
       selected.dataset.inspectorRadius = String(value);
       selected.style.borderRadius = `${value}px`;
-      if (output) output.value = output.textContent = `${value} px`;
+      if (output) output.value = output.textContent = interfaceCopy(`${value} px`);
     }
   });
   workspace.addEventListener("change", (event) => {
@@ -6457,7 +6461,7 @@ function initializeInspector(sample: HTMLElement) {
     const output = panel.querySelector<HTMLOutputElement>(`[data-inspector-output='${control.dataset.inspectorControl}']`);
     const property = control.dataset.inspectorControl === "opacity" ? "Opacity" : "Corner radius";
     const status = workspace.querySelector<HTMLElement>(".sample-inspector-status");
-    if (status && output) status.textContent = `${property} updated to ${output.value} for ${name}.`;
+    if (status && output) status.textContent = interfaceCopy(`${property} updated to ${output.value} for ${name}.`);
   });
 
   divider.addEventListener("pointerdown", (event) => {
@@ -6481,7 +6485,7 @@ function initializeInspector(sample: HTMLElement) {
     delete divider.dataset.dragStartWidth;
     delete workspace.dataset.resizing;
     const status = workspace.querySelector<HTMLElement>(".sample-inspector-status");
-    if (status) status.textContent = `Inspector width ${inspectorWidth} pixels.`;
+    if (status) status.textContent = interfaceCopy(`Inspector width ${inspectorWidth} pixels.`);
   };
   divider.addEventListener("pointerup", finishInspectorResize);
   divider.addEventListener("pointercancel", finishInspectorResize);
@@ -6492,7 +6496,7 @@ function initializeInspector(sample: HTMLElement) {
     else return;
     event.preventDefault();
     const status = workspace.querySelector<HTMLElement>(".sample-inspector-status");
-    if (status) status.textContent = `Inspector width ${inspectorWidth} pixels.`;
+    if (status) status.textContent = interfaceCopy(`Inspector width ${inspectorWidth} pixels.`);
   });
 }
 
@@ -6877,7 +6881,7 @@ function refreshTruncationFilename(root: HTMLElement) {
   const filename = root.querySelector<HTMLElement>(".sample-truncation-filename");
   const fullText = filename?.dataset.fullText;
   if (!filename || !fullText) return;
-  filename.textContent = root.dataset.expanded === "true" ? fullText : middleTruncateText(filename, fullText);
+  filename.textContent = interfaceCopy(root.dataset.expanded === "true" ? fullText : middleTruncateText(filename, fullText));
 }
 
 window.addEventListener("resize", () => {
@@ -6898,17 +6902,17 @@ function setColorWellValue(well: HTMLElement, color: string, name: string) {
   well.dataset.color = normalized;
   well.dataset.colorName = name;
   if (swatch) swatch.style.backgroundColor = normalized;
-  if (title) title.textContent = name;
-  if (hex) hex.textContent = normalized;
-  if (trigger) trigger.setAttribute("aria-label", `Open quick color palette. Current color: ${name}, ${normalized}`);
-  if (panelTrigger) panelTrigger.setAttribute("aria-label", `Open full color panel. Current color: ${name}, ${normalized}`);
+  if (title) title.textContent = interfaceCopy(name);
+  if (hex) hex.textContent = interfaceCopy(normalized);
+  if (trigger) trigger.setAttribute("aria-label", interfaceCopy(`Open quick color palette. Current color: ${name}, ${normalized}`));
+  if (panelTrigger) panelTrigger.setAttribute("aria-label", interfaceCopy(`Open full color panel. Current color: ${name}, ${normalized}`));
   if (input) {
     input.value = normalized;
     input.removeAttribute("aria-invalid");
   }
   syncColorPicker(well, normalized);
-  if (panelName) panelName.textContent = name;
-  if (panelHex) panelHex.textContent = normalized;
+  if (panelName) panelName.textContent = interfaceCopy(name);
+  if (panelHex) panelHex.textContent = interfaceCopy(normalized);
   well.querySelector<HTMLElement>(".sample-color-error")?.setAttribute("hidden", "");
   well.querySelectorAll<HTMLElement>(".sample-color-grid [role='option']").forEach((option) => {
     option.setAttribute("aria-selected", String(option.dataset.color?.toUpperCase() === normalized));
@@ -6974,7 +6978,7 @@ function renderColorPickerState(well: HTMLElement, hue: number, saturation: numb
   surface?.style.setProperty("--picker-saturation", `${normalizedSaturation}%`);
   surface?.style.setProperty("--picker-brightness", `${normalizedBrightness}%`);
   surface?.setAttribute("aria-valuenow", String(Math.round(normalizedSaturation)));
-  surface?.setAttribute("aria-valuetext", `Saturation ${Math.round(normalizedSaturation)}%, brightness ${Math.round(normalizedBrightness)}%`);
+  surface?.setAttribute("aria-valuetext", interfaceCopy(`Saturation ${Math.round(normalizedSaturation)}%, brightness ${Math.round(normalizedBrightness)}%`));
   if (hueInput) hueInput.value = String(Math.round(normalizedHue));
   if (hueOutput) hueOutput.value = `${Math.round(normalizedHue)}°`;
   if (hex) {
@@ -7041,7 +7045,7 @@ for (const eventName of ["pointerup", "pointercancel"] as const) {
     const demo = activeColorPickerPointer.surface.closest<HTMLElement>(".sample-editor-colors-demo");
     const color = demo?.querySelector<HTMLElement>("[data-editor-color-value]")?.textContent;
     const status = demo?.querySelector<HTMLElement>(".sample-editor-colors-status");
-    if (demo && color && status) status.textContent = `Custom color ${color} selected. The document preview updated. No file was changed.`;
+    if (demo && color && status) status.textContent = interfaceCopy(`Custom color ${color} selected. The document preview updated. No file was changed.`);
     activeColorPickerPointer = null;
   });
 }
@@ -7249,14 +7253,14 @@ function updateLightbox(root: HTMLElement, index: number, viewer = root.querySel
       clearLightboxImageTransition(image);
       image.className = nextClassName;
     }
-    image.setAttribute("aria-label", photo.alt);
+    image.setAttribute("aria-label", interfaceCopy(photo.alt));
   }
   const title = viewer?.querySelector<HTMLElement>("[data-lightbox-title]");
   const location = viewer?.querySelector<HTMLElement>("[data-lightbox-location]");
   const count = viewer?.querySelector<HTMLElement>("[data-lightbox-count]");
-  if (title) title.textContent = photo.name;
-  if (location) location.textContent = photo.location;
-  if (count) count.textContent = `${String(photoIndex + 1).padStart(2, "0")} - ${String(lightboxPhotos.length).padStart(2, "0")}`;
+  if (title) title.textContent = interfaceCopy(photo.name);
+  if (location) location.textContent = interfaceCopy(photo.location);
+  if (count) count.textContent = interfaceCopy(`${String(photoIndex + 1).padStart(2, "0")} - ${String(lightboxPhotos.length).padStart(2, "0")}`);
   viewer?.querySelectorAll<HTMLButtonElement>("[data-action='lightbox-select']").forEach((thumbnail, thumbnailIndex) => {
     thumbnail.setAttribute("aria-pressed", String(thumbnailIndex === photoIndex));
   });
@@ -7310,7 +7314,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       const collapsed = demo.dataset.sidebarCollapsed !== "true";
       demo.dataset.sidebarCollapsed = String(collapsed);
       button.setAttribute("aria-expanded", String(!collapsed));
-      button.setAttribute("aria-label", collapsed ? "Show sidebar" : "Hide sidebar");
+      button.setAttribute("aria-label", interfaceCopy(collapsed ? "Show sidebar" : "Hide sidebar"));
       announce(sample, collapsed ? "Sidebar collapsed." : "Sidebar expanded.");
       break;
     }
@@ -7333,7 +7337,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       const value = (rawValue.startsWith("#") ? rawValue : `#${rawValue}`).toUpperCase();
       if (!/^#[0-9A-F]{6}$/.test(value)) {
         input.setAttribute("aria-invalid", "true");
-        error.textContent = "Enter a valid six-digit HEX value, such as #295B9C.";
+        error.textContent = interfaceCopy("Enter a valid six-digit HEX value, such as #295B9C.");
         error.hidden = false;
         input.focus();
         break;
@@ -7357,9 +7361,9 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         option.setAttribute("aria-pressed", String(option === button));
       });
       const status = demo.querySelector<HTMLElement>(".sample-editor-colors-status");
-      if (status) status.textContent = style === "hud"
+      if (status) status.textContent = interfaceCopy(style === "hud"
         ? "Light HUD glass appearance selected. The site preview remains in light mode."
-        : "Utility panel appearance selected.";
+        : "Utility panel appearance selected.");
       break;
     }
     case "editor-panel-activity": {
@@ -7367,14 +7371,14 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       if (!demo) break;
       const active = demo.dataset.editorActive !== "false";
       demo.dataset.editorActive = String(!active);
-      button.textContent = active ? "Return to editor" : "Switch app";
+      button.textContent = interfaceCopy(active ? "Return to editor" : "Switch app");
       updateEditorColorsPanelVisibility(demo);
       const status = demo.querySelector<HTMLElement>(".sample-editor-colors-status");
-      if (status) status.textContent = active
+      if (status) status.textContent = interfaceCopy(active
         ? (demo.querySelector<HTMLInputElement>("[data-input-action='editor-hide-inactive']")?.checked
           ? "Editor inactive. Hide-on-deactivate is on, so the panel is hidden until you return."
           : "Editor inactive. The panel remains above the document because hide-on-deactivate is off.")
-        : "Editor active again. Its open Colors panel returned above the document.";
+        : "Editor active again. Its open Colors panel returned above the document.");
       break;
     }
     case "inspector-toggle": {
@@ -7406,7 +7410,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
     }
     case "focus-ring-save": {
       const status = sample.querySelector<HTMLElement>(".sample-focus-status");
-      if (status) status.textContent = "Saved in this preview. No workspace changes were made.";
+      if (status) status.textContent = interfaceCopy("Saved in this preview. No workspace changes were made.");
       break;
     }
     case "context-menu-toggle": {
@@ -7438,10 +7442,10 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       demo.dataset.motionPaused = String(!shouldPlay);
       if (shouldPlay) demo.dataset.motionOptIn = "true";
       button.setAttribute("aria-pressed", String(shouldPlay));
-      button.textContent = shouldPlay ? "Pause animation" : "Play animation";
-      status.textContent = shouldPlay
+      button.textContent = interfaceCopy(shouldPlay ? "Pause animation" : "Play animation");
+      status.textContent = interfaceCopy(shouldPlay
         ? "The skeleton shimmer and spinner are moving. Pause motion to inspect them."
-        : "Animations are paused. Choose Play animation to resume.";
+        : "Animations are paused. Choose Play animation to resume.");
       break;
     }
     case "loading-completion-toggle": {
@@ -7450,9 +7454,9 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       if (!demo || !status) break;
       const complete = demo.dataset.loadingComplete !== "true";
       setLoadingDemoComplete(demo, complete);
-      status.textContent = complete
+      status.textContent = interfaceCopy(complete
         ? "Loading complete. The project preview and analytics are ready."
-        : "Loading restarted. The project preview skeleton and analytics spinner are active.";
+        : "Loading restarted. The project preview skeleton and analytics spinner are active.");
       break;
     }
     case "progress-toggle":
@@ -7502,7 +7506,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       list.replaceChildren();
       refreshSearchRecents(sample);
       const status = sample.querySelector<HTMLElement>("[data-search-status]");
-      if (status) status.textContent = "Recent searches cleared.";
+      if (status) status.textContent = interfaceCopy("Recent searches cleared.");
       break;
     }
     case "save-disclosure": {
@@ -7515,7 +7519,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       disclosure.setAttribute("aria-expanded", String(expanded));
       const label = disclosure.querySelector<HTMLElement>("[data-save-disclosure-label]");
       const icon = disclosure.querySelector<HTMLElement>(".ui-icon");
-      if (label) label.textContent = expanded ? "Hide Browser" : "Show Browser";
+      if (label) label.textContent = interfaceCopy(expanded ? "Hide Browser" : "Show Browser");
       if (icon) {
         icon.dataset.lucide = expanded ? "chevron-up" : "chevron-down";
         renderIcons(disclosure);
@@ -7588,7 +7592,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       }
       trigger?.setAttribute("aria-expanded", "false");
       if (feedback) {
-        feedback.textContent = "Saved.";
+        feedback.textContent = interfaceCopy("Saved.");
         feedback.hidden = false;
         feedback.focus();
       }
@@ -7612,8 +7616,8 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       if (!marquee) break;
       const paused = marquee.classList.toggle("is-paused");
       button.setAttribute("aria-pressed", String(paused));
-      button.setAttribute("aria-label", paused ? "Resume marquee motion" : "Pause marquee motion");
-      button.textContent = paused ? "Resume motion" : "Pause motion";
+      button.setAttribute("aria-label", interfaceCopy(paused ? "Resume marquee motion" : "Pause marquee motion"));
+      button.textContent = interfaceCopy(paused ? "Resume motion" : "Pause motion");
       break;
     }
     case "cursor-category": {
@@ -7712,8 +7716,8 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         if (selected) link.setAttribute("aria-current", "page");
         else link.removeAttribute("aria-current");
       });
-      title.textContent = label;
-      summary.textContent = summaries[destination] ?? `Open the ${label.toLocaleLowerCase()} workspace section.`;
+      title.textContent = interfaceCopy(label);
+      summary.textContent = interfaceCopy(summaries[destination] ?? `Open the ${label.toLocaleLowerCase()} workspace section.`);
       announce(sample, `${label} opened.`);
       closeNavigationDrawer(demo);
       break;
@@ -7756,18 +7760,18 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       const label = presence.querySelector<HTMLElement>("[data-presence-label]");
       const meta = presence.querySelector<HTMLElement>("[data-presence-meta]");
       const feedback = presence.querySelector<HTMLElement>("[data-presence-feedback]");
-      if (live) live.textContent = copy.live;
-      if (label) label.textContent = copy.label;
-      if (meta) meta.textContent = copy.meta;
-      if (feedback) feedback.textContent = copy.feedback;
+      if (live) live.textContent = interfaceCopy(copy.live);
+      if (label) label.textContent = interfaceCopy(copy.label);
+      if (meta) meta.textContent = interfaceCopy(copy.meta);
+      if (feedback) feedback.textContent = interfaceCopy(copy.feedback);
       break;
     }
     case "chat-mark-read": {
       const status = button.closest<HTMLElement>(".sample-chat")?.querySelector<HTMLElement>("[data-chat-status]");
       if (!status || button.getAttribute("aria-pressed") === "true") break;
-      status.textContent = "Read";
+      status.textContent = interfaceCopy("Read");
       button.setAttribute("aria-pressed", "true");
-      button.setAttribute("aria-label", "Read by Sam Kim. Yes! Booking the room now.");
+      button.setAttribute("aria-label", interfaceCopy("Read by Sam Kim. Yes! Booking the room now."));
       break;
     }
     case "avatar-group-toggle":
@@ -7784,7 +7788,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       });
       refreshTruncationFilename(truncation);
       const status = truncation.querySelector<HTMLElement>(".sample-truncation-status");
-      if (status) status.textContent = `${width === "narrow" ? "Narrow" : "Wide"} container. Full text stays available to assistive technology.`;
+      if (status) status.textContent = interfaceCopy(`${width === "narrow" ? "Narrow" : "Wide"} container. Full text stays available to assistive technology.`);
       break;
     }
     case "truncation-expand": {
@@ -7794,11 +7798,11 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       animateTruncationChange(truncation);
       animateTruncationText(truncation, expanded);
       button.setAttribute("aria-pressed", String(expanded));
-      button.textContent = expanded ? "Show truncation" : "Show full text";
+      button.textContent = interfaceCopy(expanded ? "Show truncation" : "Show full text");
       const status = truncation.querySelector<HTMLElement>(".sample-truncation-status");
-      if (status) status.textContent = expanded
+      if (status) status.textContent = interfaceCopy(expanded
         ? "Full text shown for every example."
-        : `${truncation.dataset.width === "wide" ? "Wide" : "Narrow"} container. Full text stays available to assistive technology.`;
+        : `${truncation.dataset.width === "wide" ? "Wide" : "Narrow"} container. Full text stays available to assistive technology.`);
       break;
     }
     case "timeline-complete": {
@@ -7808,17 +7812,17 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       item.classList.toggle("is-current", !delivered);
       item.classList.toggle("is-complete", delivered);
       button.setAttribute("aria-pressed", String(delivered));
-      button.setAttribute("aria-label", delivered ? "Restore order #4821 to in transit" : "Mark order #4821 as delivered");
+      button.setAttribute("aria-label", interfaceCopy(delivered ? "Restore order #4821 to in transit" : "Mark order #4821 as delivered"));
       const title = item.querySelector<HTMLElement>("[data-timeline-title]");
       const detail = item.querySelector<HTMLElement>("[data-timeline-detail]");
       const status = sample.querySelector<HTMLElement>("[data-timeline-status]");
       const hint = sample.querySelector<HTMLElement>(".sample-timeline-hint");
-      if (title) title.textContent = delivered ? "Delivered" : "Out for delivery";
-      if (detail) detail.textContent = delivered ? "The package arrived at your address." : "Arriving by 6 pm";
-      if (status) status.textContent = delivered ? "Delivered" : "Out for delivery";
-      if (hint) hint.textContent = delivered
+      if (title) title.textContent = interfaceCopy(delivered ? "Delivered" : "Out for delivery");
+      if (detail) detail.textContent = interfaceCopy(delivered ? "The package arrived at your address." : "Arriving by 6 pm");
+      if (status) status.textContent = interfaceCopy(delivered ? "Delivered" : "Out for delivery");
+      if (hint) hint.textContent = interfaceCopy(delivered
         ? "Order delivered. Select the marker to restore the previous status."
-        : "Select the open marker to finish delivery.";
+        : "Select the open marker to finish delivery.");
       announce(sample, delivered ? "Order #4821 marked as delivered." : "Order #4821 restored to out for delivery.");
       break;
     }
@@ -7871,7 +7875,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         feedback.setAttribute("role", "status");
         sample.append(feedback);
       }
-      feedback.textContent = "Project inquiry selected.";
+      feedback.textContent = interfaceCopy("Project inquiry selected.");
       feedback.classList.remove("is-arriving");
       void feedback.offsetWidth;
       feedback.classList.add("is-arriving");
@@ -7879,12 +7883,12 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
     }
     case "share-card-read": {
       const status = sample.querySelector<HTMLElement>(".sample-share-status");
-      if (status) status.textContent = "Story preview selected.";
+      if (status) status.textContent = interfaceCopy("Story preview selected.");
       break;
     }
     case "share-card-share": {
       const status = sample.querySelector<HTMLElement>(".sample-share-status");
-      if (status) status.textContent = "Share action selected.";
+      if (status) status.textContent = interfaceCopy("Share action selected.");
       break;
     }
     case "pagination-page-select": {
@@ -7975,7 +7979,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       const status = sample.querySelector<HTMLElement>("[data-resize-status]");
       if (status) {
         status.hidden = false;
-        status.textContent = "Demo message submitted.";
+        status.textContent = interfaceCopy("Demo message submitted.");
       }
       if (button instanceof HTMLButtonElement) button.disabled = true;
       announce(sample, "Demo message submitted.");
@@ -7987,7 +7991,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
     case "delete-sheet-close":
     case "delete-sheet-cancel": {
       const status = sample.querySelector<HTMLElement>("[data-delete-parent-status]");
-      if (status) status.textContent = "Removal canceled. Q3 Report.pdf is unchanged.";
+      if (status) status.textContent = interfaceCopy("Removal canceled. Q3 Report.pdf is unchanged.");
       setDeleteSheetOpen(sample, false);
       break;
     }
@@ -7999,7 +8003,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       break;
     case "delete-sheet-other": {
       const status = sample.querySelector<HTMLElement>("[data-delete-other-status]");
-      if (status) status.textContent = "Activity refreshed just now. The Documents sheet is still open.";
+      if (status) status.textContent = interfaceCopy("Activity refreshed just now. The Documents sheet is still open.");
       break;
     }
     case "stepper-dec":
@@ -8087,7 +8091,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         trigger.focus();
       }
       const feedback = sample.querySelector<HTMLElement>("[data-overflow-feedback]");
-      if (feedback) feedback.textContent = `${destination} selected from the main navigation.`;
+      if (feedback) feedback.textContent = interfaceCopy(`${destination} selected from the main navigation.`);
       break;
     }
     case "overflow-command-toggle": {
@@ -8127,7 +8131,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         trigger.focus();
       }
       const feedback = sample.querySelector<HTMLElement>("[data-overflow-feedback]");
-      if (feedback) feedback.textContent = `Ready to open ${filename}. This preview does not access files.`;
+      if (feedback) feedback.textContent = interfaceCopy(`Ready to open ${filename}. This preview does not access files.`);
       break;
     }
     case "toggle-menubar": {
@@ -8144,9 +8148,9 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       button.classList.add("is-current");
       menu.replaceChildren();
       const label = button.dataset.menuLabel ?? "Menu";
-      menu.setAttribute("aria-label", `${label} menu`);
+      menu.setAttribute("aria-label", interfaceCopy(`${label} menu`));
       const feedback = bar.parentElement?.querySelector<HTMLElement>("[data-menu-feedback]");
-      if (feedback) feedback.textContent = `${label} menu opened. Choose an item to see the sample feedback. No system commands are run.`;
+      if (feedback) feedback.textContent = interfaceCopy(`${label} menu opened. Choose an item to see the sample feedback. No system commands are run.`);
       type MenuBarCommand = { label: string; shortcut?: string; detail?: string } | { separator: true };
       const commands: Record<string, MenuBarCommand[]> = {
         Apple: [
@@ -8209,12 +8213,12 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         item.dataset.menuCommand = command.label;
         item.style.setProperty("--menu-item-index", String(menuItemIndex++));
         const title = document.createElement("span");
-        title.textContent = command.label;
+        title.textContent = interfaceCopy(command.label);
         item.append(title);
         const meta = command.shortcut ?? command.detail;
         if (meta) {
           const hint = document.createElement(command.shortcut ? "kbd" : "small");
-          hint.textContent = meta;
+          hint.textContent = interfaceCopy(meta);
           item.append(hint);
         }
         menu.append(item);
@@ -8268,8 +8272,8 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
           const syncState = extra.querySelector<HTMLElement>("[data-sync-state]");
           const triggerLabel = extra.querySelector<HTMLElement>(".sample-menu-extra-trigger span");
           const icon = extra.querySelector<HTMLElement>(".sample-menu-extra-trigger [data-lucide]");
-          if (syncState) syncState.textContent = paused ? "Syncing is paused" : "All files are current";
-          if (triggerLabel) triggerLabel.textContent = paused ? "Sync paused" : "Up to date";
+          if (syncState) syncState.textContent = interfaceCopy(paused ? "Syncing is paused" : "All files are current");
+          if (triggerLabel) triggerLabel.textContent = interfaceCopy(paused ? "Sync paused" : "Up to date");
           if (icon) {
             icon.dataset.lucide = paused ? "cloud-off" : "cloud-check";
             renderIcons(extra);
@@ -8287,7 +8291,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         }
       }
       if (bar) closeMenuBar(bar, true);
-      if (feedback) feedback.textContent = feedbackText;
+      if (feedback) feedback.textContent = interfaceCopy(feedbackText);
       break;
     }
     case "menu-extra-home": {
@@ -8295,7 +8299,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       if (!extra) break;
       showMenuExtraView(extra, "workspace");
       const feedback = extra.querySelector<HTMLElement>("[data-menu-feedback]");
-      if (feedback) feedback.textContent = "Workspace sync status is open.";
+      if (feedback) feedback.textContent = interfaceCopy("Workspace sync status is open.");
       break;
     }
     case "toggle-hover-card": {
@@ -8450,7 +8454,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       const value = (rawValue.startsWith("#") ? rawValue : `#${rawValue}`).toUpperCase();
       if (!/^#[0-9A-F]{6}$/.test(value)) {
         input.setAttribute("aria-invalid", "true");
-        error.textContent = "Enter a valid six-digit HEX value, such as #21497B.";
+        error.textContent = interfaceCopy("Enter a valid six-digit HEX value, such as #21497B.");
         error.hidden = false;
         const panel = well.querySelector<HTMLElement>(".sample-color-panel");
         if (panel) panel.scrollTop = panel.scrollHeight;
@@ -8522,7 +8526,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       }
       if (trigger) {
         const icon = trigger.querySelector("i");
-        trigger.textContent = button.textContent?.trim() ?? "Selected";
+        trigger.textContent = interfaceCopy(button.textContent?.trim() ?? "Selected");
         trigger.removeAttribute("aria-label");
         if (icon) trigger.append(icon);
         trigger.setAttribute("aria-expanded", "false");
@@ -8544,7 +8548,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
           trigger.focus();
         }
         const feedback = sample.querySelector<HTMLElement>("[data-overflow-feedback]");
-        if (feedback) feedback.textContent = `${command} selected. The menu closed.`;
+        if (feedback) feedback.textContent = interfaceCopy(`${command} selected. The menu closed.`);
         break;
       }
       if (id === "popover-dropdown-tooltip") {
@@ -8559,7 +8563,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
           trigger.focus();
         }
         if (feedback) {
-          feedback.textContent = `${command} selected in the demo. The menu closed.`;
+          feedback.textContent = interfaceCopy(`${command} selected in the demo. The menu closed.`);
           feedback.hidden = false;
         }
         announce(sample, `${command} selected in the demo. The menu closed.`);
@@ -8591,7 +8595,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         const trigger = sample.querySelector<HTMLElement>(".sample-combo-button [aria-haspopup='menu']");
         trigger?.setAttribute("aria-expanded", "false");
         if (feedback) {
-          feedback.textContent = `${command} selected.`;
+          feedback.textContent = interfaceCopy(`${command} selected.`);
           feedback.hidden = false;
           feedback.focus();
         }
@@ -8669,7 +8673,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         ancestor.hidden = !expanded;
       });
       button.setAttribute("aria-expanded", String(expanded));
-      button.setAttribute("aria-label", expanded ? "Collapse hidden breadcrumb levels" : "Show 2 hidden breadcrumb levels");
+      button.setAttribute("aria-label", interfaceCopy(expanded ? "Collapse hidden breadcrumb levels" : "Show 2 hidden breadcrumb levels"));
       const moreIcon = button.querySelector<HTMLElement>(".sample-breadcrumb-more-icon");
       const collapseIcon = button.querySelector<HTMLElement>(".sample-breadcrumb-collapse-icon");
       moreIcon?.toggleAttribute("hidden", expanded);
@@ -8703,7 +8707,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         });
       }
       const note = demo.querySelector<HTMLElement>(".sample-breadcrumb-note");
-      if (note) note.textContent = expanded ? "All five breadcrumb levels are visible." : "Two middle levels are collapsed to keep this path readable.";
+      if (note) note.textContent = interfaceCopy(expanded ? "All five breadcrumb levels are visible." : "Two middle levels are collapsed to keep this path readable.");
       announce(sample, expanded ? "Breadcrumbs expanded. All five levels are visible." : "Breadcrumbs collapsed. Two middle levels are hidden.");
       break;
     }
@@ -8828,9 +8832,9 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
     case "create-project": {
       const title = sample.querySelector<HTMLElement>(".sample-empty-title");
       const message = sample.querySelector<HTMLElement>(".sample-empty-description");
-      if (title) title.textContent = "Project created";
-      if (message) message.textContent = "Your new project is ready to configure.";
-      button.textContent = "Open project";
+      if (title) title.textContent = interfaceCopy("Project created");
+      if (message) message.textContent = interfaceCopy("Your new project is ready to configure.");
+      button.textContent = interfaceCopy("Open project");
       button.dataset.action = "open-created-project";
       animateEmptyStateUpdate(title, message, button);
       announce(sample, "Project created. Open project is ready.");
@@ -8854,8 +8858,8 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       const toastCopy = sample.querySelector<HTMLElement>(".sample-toast-copy");
       const saveState = sample.querySelector<HTMLElement>("[data-toast-save-state]");
       if (!toast) break;
-      if (saveState) saveState.textContent = "Saved just now";
-      if (toastCopy) toastCopy.textContent = "Changes saved just now";
+      if (saveState) saveState.textContent = interfaceCopy("Saved just now");
+      if (toastCopy) toastCopy.textContent = interfaceCopy("Changes saved just now");
       startToastDismissal(toast);
       break;
     }
@@ -8866,7 +8870,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         pauseToastDismissal(toast);
         dismissToastWithExit(toast);
       }
-      if (saveState) saveState.textContent = "Unsaved changes";
+      if (saveState) saveState.textContent = interfaceCopy("Unsaved changes");
       announce(sample, "Save undone. Your changes are back in the draft.");
       sample.querySelector<HTMLButtonElement>("[data-action='toast-save']")?.focus({ preventScroll: true });
       break;
@@ -8893,13 +8897,13 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         : "Card expiration notice dismissed.";
       notice.remove();
       const feedback = sample.querySelector<HTMLElement>(".sample-notice-feedback");
-      if (feedback) feedback.textContent = message;
+      if (feedback) feedback.textContent = interfaceCopy(message);
       focusFallback?.focus({ preventScroll: true });
       break;
     }
     case "notice-review": {
       const feedback = sample.querySelector<HTMLElement>(".sample-notice-feedback");
-      if (feedback) feedback.textContent = "Payment settings are ready to review.";
+      if (feedback) feedback.textContent = interfaceCopy("Payment settings are ready to review.");
       button.focus({ preventScroll: true });
       break;
     }
@@ -8963,7 +8967,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       if (checkbox) checkbox.checked = false;
       if (button) button.hidden = true;
       if (feedback) {
-        feedback.textContent = "The saved alert preference was cleared.";
+        feedback.textContent = interfaceCopy("The saved alert preference was cleared.");
         feedback.hidden = false;
       }
       sample.querySelector<HTMLButtonElement>("[data-action='trash-restore']")?.focus({ preventScroll: true });
@@ -8994,7 +8998,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         : "Save canceled. No file was created.";
       if (panel) panel.hidden = true;
       if (feedback) {
-        feedback.textContent = message;
+        feedback.textContent = interfaceCopy(message);
         feedback.hidden = false;
         feedback.focus();
       }
@@ -9028,7 +9032,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       if (!password) break;
       const reveal = password.type === "password";
       password.type = reveal ? "text" : "password";
-      button.setAttribute("aria-label", reveal ? "Hide password" : "Show password");
+      button.setAttribute("aria-label", interfaceCopy(reveal ? "Hide password" : "Show password"));
       if (icon) {
         icon.dataset.lucide = reveal ? "eye-off" : "eye";
         renderIcons(button);
@@ -9050,7 +9054,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       const visible = demo.dataset.labels !== "false";
       demo.dataset.labels = String(!visible);
       button.setAttribute("aria-pressed", String(!visible));
-      button.textContent = visible ? "Show item labels" : "Hide item labels";
+      button.textContent = interfaceCopy(visible ? "Show item labels" : "Hide item labels");
       announce(sample, visible ? "Toolbar item labels are hidden." : "Toolbar item labels are shown beneath their icons.");
       break;
     }
@@ -9087,9 +9091,9 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
         const summary = sample.querySelector<HTMLElement>(".sample-toolbar-content > p");
         const toolbarTitle = sample.querySelector<HTMLElement>("[data-toolbar-title]");
         const content = sample.querySelector<HTMLElement>(".sample-toolbar-content");
-        if (title) title.textContent = "New note";
-        if (summary) summary.textContent = "Start writing a note in this interactive preview.";
-        if (toolbarTitle) toolbarTitle.textContent = "Untitled note";
+        if (title) title.textContent = interfaceCopy("New note");
+        if (summary) summary.textContent = interfaceCopy("Start writing a note in this interactive preview.");
+        if (toolbarTitle) toolbarTitle.textContent = interfaceCopy("Untitled note");
         if (content) replayToolbarContentMotion(content);
       }
       if (fromMenu) setToolbarOverflowOpen(sample, false, true);
@@ -9174,7 +9178,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       const label = button.getAttribute("aria-label");
       if (!window) break;
       if (window.matches(".sample-mac-window")) {
-        if (label === "Close window") {
+        if (label === interfaceCopy("Close window")) {
           const closed = !window.classList.contains("is-closed");
           const closedState = window.querySelector<HTMLElement>(".sample-window-closed");
           const minimizedState = window.querySelector<HTMLElement>(".sample-window-minimized");
@@ -9190,7 +9194,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
             ? closedState
             : window.querySelector<HTMLElement>("[data-window-content]"));
           announce(sample, closed ? "Window closed. Restore window is available." : "Window reopened.");
-        } else if (label === "Minimize window") {
+        } else if (label === interfaceCopy("Minimize window")) {
           if (window.classList.contains("is-closed")) break;
           const minimized = !window.classList.contains("is-minimized");
           const minimizedState = window.querySelector<HTMLElement>(".sample-window-minimized");
@@ -9203,7 +9207,7 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
             ? minimizedState
             : window.querySelector<HTMLElement>("[data-window-content]"));
           announce(sample, minimized ? "Window minimized to Dock." : "Window restored from Dock.");
-        } else if (label === "Expand window") {
+        } else if (label === interfaceCopy("Expand window")) {
           if (window.classList.contains("is-closed")) break;
           const expanded = !window.classList.contains("is-expanded");
           window.classList.toggle("is-expanded", expanded);
@@ -9273,12 +9277,12 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       if (!demo || !status || !save) break;
       demo.dataset.unsaved = "true";
       status.dataset.unsaved = "true";
-      status.textContent = "Unsaved changes";
+      status.textContent = interfaceCopy("Unsaved changes");
       button.setAttribute("aria-pressed", "true");
       save.disabled = false;
       const feedback = demo.querySelector<HTMLElement>(".sample-window-actions-feedback");
       if (feedback) {
-        feedback.textContent = "Document changed. Its unsaved state is shown as text in this web adaptation.";
+        feedback.textContent = interfaceCopy("Document changed. Its unsaved state is shown as text in this web adaptation.");
         feedback.hidden = false;
       }
       break;
@@ -9290,12 +9294,12 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       if (!demo || !status || !edit) break;
       demo.dataset.unsaved = "false";
       status.dataset.unsaved = "false";
-      status.textContent = "Saved";
+      status.textContent = interfaceCopy("Saved");
       edit.setAttribute("aria-pressed", "false");
       button.setAttribute("disabled", "");
       const feedback = demo.querySelector<HTMLElement>(".sample-window-actions-feedback");
       if (feedback) {
-        feedback.textContent = "Changes saved in this example.";
+        feedback.textContent = interfaceCopy("Changes saved in this example.");
         feedback.hidden = false;
       }
       break;
@@ -9315,9 +9319,9 @@ function runAction(sample: HTMLElement, button: HTMLElement, event?: MouseEvent)
       const title = window.querySelector<HTMLElement>(".sample-window-title");
       const heading = content?.querySelector<HTMLElement>("[data-document-heading]");
       const summary = content?.querySelector<HTMLElement>("[data-document-summary]");
-      if (title) title.textContent = button.dataset.windowTitle ?? button.textContent?.trim() ?? "Window";
-      if (heading) heading.textContent = button.dataset.documentHeading ?? button.textContent?.trim() ?? "";
-      if (summary) summary.textContent = button.dataset.documentSummary ?? "";
+      if (title) title.textContent = interfaceCopy(button.dataset.windowTitle ?? button.textContent?.trim() ?? "Window");
+      if (heading) heading.textContent = interfaceCopy(button.dataset.documentHeading ?? button.textContent?.trim() ?? "");
+      if (summary) summary.textContent = interfaceCopy(button.dataset.documentSummary ?? "");
       animateMacWindowEntry(content);
       animateMacWindowEntry(title);
       announce(sample, `${button.textContent?.trim() ?? "Window"} tab selected.`);
@@ -9571,8 +9575,8 @@ document.addEventListener("click", (event) => {
     const title = entry?.querySelector(".element-name strong")?.textContent?.trim() ?? "Interface example";
     const description = entry?.querySelector(".element-content > p")?.textContent?.trim() ?? "Explore the visual example and its available controls.";
     if (sample) {
-      dialogTitle.textContent = title;
-      dialogDescription.textContent = description;
+      dialogTitle.textContent = interfaceCopy(title);
+      dialogDescription.textContent = interfaceCopy(description);
       const clone = sample.cloneNode(true);
       if (clone instanceof HTMLElement) {
         clone.dataset.sampleInstance = `dialog-${++sampleInstance}`;
@@ -9791,7 +9795,7 @@ document.addEventListener("input", (event) => {
       const demo = input.closest<HTMLElement>(".sample-popover-macos");
       const output = demo?.querySelector<HTMLOutputElement>("[data-popover-volume-output]");
       if (output) output.value = `${input.value}%`;
-      input.setAttribute("aria-valuetext", `${input.value}%`);
+      input.setAttribute("aria-valuetext", interfaceCopy(`${input.value}%`));
       break;
     }
     case "volume-ticks": {
@@ -10252,7 +10256,7 @@ document.addEventListener("keydown", (event) => {
       const query = searchInput.value.trim();
       addSearchRecent(focusedSearchDemo, query);
       const status = focusedSearchDemo.querySelector<HTMLElement>("[data-search-status]");
-      if (status) status.textContent = `Saved ${query} to recent searches.`;
+      if (status) status.textContent = interfaceCopy(`Saved ${query} to recent searches.`);
       return;
     }
     if ((event.key === "ArrowDown" || event.key === "ArrowUp") && searchMenu?.hidden
@@ -11100,7 +11104,7 @@ document.addEventListener("change", (event) => {
     if (!demo) return;
     const status = demo.querySelector<HTMLElement>(".sample-popover-status");
     const message = `Playing through ${input.value}.`;
-    if (status) status.textContent = message;
+    if (status) status.textContent = interfaceCopy(message);
     announce(sample, `${input.value} selected as the output device. The popover stays open.`);
     return;
   }
@@ -11116,7 +11120,7 @@ document.addEventListener("change", (event) => {
     const demo = input.closest<HTMLElement>(".sample-editor-colors-demo");
     const status = demo?.querySelector<HTMLElement>(".sample-editor-colors-status");
     const color = demo?.querySelector<HTMLElement>("[data-editor-color-value]")?.textContent;
-    if (status && color) status.textContent = `Custom color ${color} selected. The document preview updated. No file was changed.`;
+    if (status && color) status.textContent = interfaceCopy(`Custom color ${color} selected. The document preview updated. No file was changed.`);
     return;
   }
   if (input.dataset.inputAction === "editor-hide-inactive") {
@@ -11124,9 +11128,9 @@ document.addEventListener("change", (event) => {
     if (!demo) return;
     updateEditorColorsPanelVisibility(demo);
     const status = demo.querySelector<HTMLElement>(".sample-editor-colors-status");
-    if (status) status.textContent = input.checked
+    if (status) status.textContent = interfaceCopy(input.checked
       ? "The floating panel will hide while this editor is inactive."
-      : "The floating panel will remain above the editor while it is inactive.";
+      : "The floating panel will remain above the editor while it is inactive.");
     return;
   }
   if (input.dataset.inputAction === "overlay-filter") {
@@ -11135,7 +11139,7 @@ document.addEventListener("change", (event) => {
     const message = selected.length ? `${selected.join(" and ")} filters are active.` : "No project filters are active.";
     const feedback = sample.querySelector<HTMLElement>("[data-overlay-feedback]");
     if (feedback) {
-      feedback.textContent = message;
+      feedback.textContent = interfaceCopy(message);
       feedback.hidden = false;
     }
     announce(sample, message);
@@ -11188,7 +11192,7 @@ function updatePositioningState(pane: HTMLElement) {
     const isPinned = pane.scrollTop > 0 && sticky.getBoundingClientRect().top <= pane.getBoundingClientRect().top + 1;
     if (sticky.classList.contains("is-pinned") === isPinned) return;
     sticky.classList.toggle("is-pinned", isPinned);
-    state.textContent = isPinned ? "Pinned at the top" : "In flow";
+    state.textContent = interfaceCopy(isPinned ? "Pinned at the top" : "In flow");
   });
 }
 

@@ -32,6 +32,7 @@ const displayName = (value: string) =>
   </nav>
 
   <p class="catalog-note">The examples use the draft VINASIG palette, Space Grotesk, restrained surfaces, and shared spacing. Use web entries for website work. macOS samples are platform references. Their web adaptations are included only where the underlying need has a reasonable web equivalent.</p>
+  <p class="catalog-note">Specimens keep their reference appearance when the documentation theme changes.</p>
 
   {platforms.map((platform) => {
     const platformEntries = entriesForPlatform(platform);
@@ -126,6 +127,36 @@ const displayName = (value: string) =>
 </DocsLayout>
 
 <style is:global>
+  /* Platform specimens keep their authored reference appearance in both page themes. */
+  .ui-sample {
+    color-scheme: light;
+    --color-canvas: #f7f6f4;
+    --color-surface: #ffffff;
+    --color-surface-muted: #f1efed;
+    --color-surface-hover: #f2edeb;
+    --color-text: #292526;
+    --color-text-muted: #70696a;
+    --color-heading: var(--color-core-graphite);
+    --color-link: var(--color-scout-blue);
+    --color-link-hover: var(--color-scout-blue-strong);
+    --color-border: #e1dedd;
+    --color-border-strong: #bfb7b5;
+    --color-info: var(--color-scout-blue-strong);
+    --color-info-background: var(--color-scout-blue-soft);
+    --color-info-border: var(--color-scout-blue-border);
+    --color-success: var(--color-builder-green-strong);
+    --color-success-background: var(--color-builder-green-soft);
+    --color-success-border: var(--color-builder-green-border);
+    --color-warning: var(--color-thinker-orange-strong);
+    --color-warning-background: var(--color-thinker-orange-soft);
+    --color-warning-border: var(--color-thinker-orange-border);
+    --color-error: var(--color-auditor-red-strong);
+    --color-error-background: var(--color-auditor-red-soft);
+    --color-error-border: var(--color-auditor-red-border);
+    --color-focus: var(--color-scout-blue);
+    color: var(--color-text);
+    background: var(--color-surface);
+  }
   .platform-index {
     display: flex;
     flex-wrap: wrap;
@@ -189,7 +220,7 @@ const displayName = (value: string) =>
   .element-entry {
     min-width: 0;
     padding: 0.9rem;
-    background: var(--color-white);
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
   }
@@ -318,7 +349,7 @@ const displayName = (value: string) =>
 
   .element-notes > summary {
     padding: 0.65rem 0 0.1rem;
-    color: var(--color-scout-blue-strong);
+    color: var(--color-link);
     font-size: var(--font-size-small);
     font-weight: 600;
     cursor: pointer;
@@ -342,7 +373,7 @@ const displayName = (value: string) =>
     max-height: calc(100vh - 2rem);
     padding: 1.25rem;
     color: var(--color-text);
-    background: var(--color-white);
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
     box-shadow: 0 1.25rem 4rem rgb(68 58 59 / 24%);

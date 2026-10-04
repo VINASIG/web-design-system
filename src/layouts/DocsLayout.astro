@@ -2,10 +2,19 @@
 import "../styles/tokens.css";
 import "../styles/global.css";
 import Icon from "../components/Icon.astro";
+import ThemeInit from "../components/ThemeInit.astro";
+import SitePreferences from "../components/SitePreferences.astro";
+import Localized from "../components/Localized.astro";
+import dictionary from "../locales/vi.json";
+import { translateCopy } from "../lib/localization";
 import { withBase } from "../lib/paths";
 
 const { title, description, eyebrow = "Shared interface guidance" } = Astro.props;
-const currentPath = Astro.url.pathname.slice(import.meta.env.BASE_URL.replace(/\/$/, "").length) || "/";
+const lang = Astro.url.pathname.includes('/vi/') ? 'vi' : 'en';
+const t = (value: string) => lang === 'vi' ? translateCopy(value, dictionary) : value;
+const localizedPath = Astro.url.pathname.slice(import.meta.env.BASE_URL.replace(/\/$/, "").length) || "/";
+const currentPath = localizedPath.replace(/^\/vi\//, '/') || '/';
+const alternate = lang === 'vi' ? withBase(currentPath === '/404/' ? '/404.html' : currentPath) : withBase('/vi' + (currentPath === '/404.html' ? '/404/' : currentPath));
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const isErrorPage = currentPath === "/404.html" || currentPath.replace(/\/$/, "") === "/404";
 
@@ -34,19 +43,22 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
+    <ThemeInit />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#443a3b" />
-    <meta name="description" content={description} />
+    <meta name="description" content={t(description)} />
     {isErrorPage ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    {!isErrorPage && <><link rel="alternate" hreflang="en" href={new URL(withBase(currentPath), Astro.site)} /><link rel="alternate" hreflang="vi" href={new URL(withBase('/vi' + currentPath), Astro.site)} /><link rel="alternate" hreflang="x-default" href={new URL(withBase(currentPath), Astro.site)} /></>}
     <link rel="icon" type="image/png" sizes="16x16" href={withBase("/brand/favicons/favicon-16.png")} />
     <link rel="icon" type="image/png" sizes="32x32" href={withBase("/brand/favicons/favicon-32.png")} />
     <link rel="icon" type="image/png" sizes="48x48" href={withBase("/brand/favicons/favicon-48.png")} />
-    <title>{title} | VINASIG Design System</title>
+    <title>{t(title)} | {t('VINASIG Design System')}</title>
   </head>
   <body>
+    <Localized lang={lang}>
     <a class="skip-link" href="#main" tabindex="0">Skip to content</a>
     <div class="app-shell">
       <aside class="sidebar" aria-label="Documentation sidebar">
@@ -66,7 +78,7 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
                   aria-current={currentPath === link.href ? "page" : undefined}
                 >
                   <Icon name={link.icon} class="nav-icon" />
-                  {link.title}
+                  <span class="nav-text">{link.title}</span>
                 </a>
               ))}
             </div>
@@ -82,6 +94,7 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
             <span class="crumb-divider" aria-hidden="true"></span>
             <span aria-current="page">{breadcrumb}</span>
           </div>
+          <SitePreferences lang={lang} alternate={alternate} />
         </header>
 
         <main id="main" class="docs-main">
@@ -94,5 +107,6 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
         </main>
       </div>
     </div>
+    </Localized>
   </body>
 </html>

@@ -99,6 +99,9 @@
   --color-border: #e1dedd;
   --color-border-strong: #bfb7b5;
   --color-focus: var(--color-scout-blue);
+  --color-link: var(--color-scout-blue);
+  --color-link-hover: var(--color-scout-blue-strong);
+  --color-heading: var(--color-core-graphite);
 
   --font-size-small: 0.875rem;
   --font-size-body: 1rem;

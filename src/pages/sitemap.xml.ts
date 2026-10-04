@@ -5,7 +5,7 @@ const routes = ['/', '/agents/', '/brand/', '/foundations/', '/components/', '/p
 
 export const GET: APIRoute = ({ site }) => {
   if (!site) throw new Error('The public site origin is required.');
-  const entries = routes.map((route) => {
+  const entries = routes.flatMap(route => [route, '/vi' + route]).map((route) => {
     const url = new URL(withBase(route), site).href.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
     return `<url><loc>${url}</loc></url>`;
   }).join('');

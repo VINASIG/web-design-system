@@ -42,3 +42,7 @@ The default run uses managed Chromium with reduced motion. Optional environment 
 | `RESPONSIVE_TOUCH`   | Set to `true` to use touch input and mobile emulation below 600 px.                                                                                                |
 
 GitHub Actions runs all three engines on Ubuntu and Windows. Each job runs the same source and standards regression checks, builds the site and runs both the default regression and touch with normal motion at 320, 360 and 390 px. The matrix also checks base-aware keyboard navigation, font loading and favicon requests. Pages deployment depends on the entire matrix. Artifacts remain available for 14 days. Visual inspection remains necessary when changing UI. Passing assertions does not prove that every visual state or browser is correct.
+
+## Bilingual regression
+
+Read docs/LOCALIZATION.md. Language and appearance regression tests run through the existing browser command. They cover both built locales, native navigation without scripts, metadata, localized guidance, keyboard controls, theme persistence and blocked storage. Authored textarea guidance is translated while its content remains literal. The original core and responsive assertions remain enabled.

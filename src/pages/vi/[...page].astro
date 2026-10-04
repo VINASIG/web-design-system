@@ -1,0 +1,15 @@
+---
+import Overview from '../index.astro';
+import Foundations from '../foundations.astro';
+import Components from '../components.astro';
+import Patterns from '../patterns.astro';
+import Brand from '../brand.astro';
+import Elements from '../elements.astro';
+import Agents from '../agents.astro';
+import NotFound from '../404.astro';
+const pages = { overview: Overview, foundations: Foundations, components: Components, patterns: Patterns, brand: Brand, elements: Elements, agents: Agents, '404': NotFound };
+export function getStaticPaths() { return [{params:{page:undefined},props:{name:'overview'}}, ...['foundations','components','patterns','brand','elements','agents','404'].map(name=>({params:{page:name},props:{name}}))]; }
+interface Props { name: keyof typeof pages; }
+const Page = pages[Astro.props.name];
+---
+<Page />
