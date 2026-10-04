@@ -68,6 +68,27 @@ try {
                 await page.evaluate(inspectControlIndicators),
                 [],
               );
+              if (locale === "en" && width === 1440) {
+                const section = page.locator(
+                  'section[aria-labelledby="dropdown-title"]',
+                );
+                const term = section.getByText("Accessibility", {
+                  exact: true,
+                });
+                assert.equal(await term.count(), 1);
+                await section.screenshot({
+                  path: path.join(directory, "desktop-typography.png"),
+                });
+                assert.equal(
+                  await term.evaluate((element) => {
+                    const range = document.createRange();
+                    range.selectNodeContents(element);
+                    return range.getClientRects().length;
+                  }),
+                  1,
+                  "Keep the established desktop term on one line",
+                );
+              }
               await placement.screenshot({
                 path: path.join(directory, "closed.png"),
               });

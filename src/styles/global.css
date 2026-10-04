@@ -218,7 +218,6 @@ select:focus-visible {
 
 .docs-main {
   container: docs-layout / inline-size;
-  overflow-wrap: anywhere;
   width: min(100%, 1260px);
   margin: 0 auto;
   padding: 3rem 3.5rem 4rem;
@@ -256,6 +255,7 @@ h4 {
 }
 
 h1 {
+  overflow-wrap: anywhere;
   margin-bottom: 0.8rem;
   font-size: clamp(2rem, 3.8vw, var(--font-size-title));
   font-weight: 600;

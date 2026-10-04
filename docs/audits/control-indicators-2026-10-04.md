@@ -16,6 +16,8 @@ The final focused captures in both locales/themes show a 320 px document in a 32
 
 ## Observed local evidence
 
+The first spacing revision passed the following gates. The final published-page follow-up has separate verification below.
+
 - Source checks passed standards integrity, catalog/content coverage, script syntax, Astro diagnostics with zero errors/warnings and license validation. The production build generated all 16 localized routes and passed built legal checks.
 - Snapshot regression passed 7 cases and localization unit regression passed 5 cases.
 - Chromium, Firefox and WebKit each passed the full 794-check responsive suite, bilingual browser suite and 36-case focused dropdown matrix. All 108 focused locale/theme/viewport cases passed.
@@ -27,3 +29,11 @@ The full responsive suite visits the eight route layouts and their custom error 
 Immutable initial spacing captures and separate after captures are retained in the sibling qr-generator checkout under ignored `output/responsive/control-inset-2026-10-04/`. All locale/theme trigger contact sheets were opened at a useful scale. The initial enlarged-text overflow and final reflow captures are retained there separately. The final dropdown, callout, button, iconography and code captures were also opened.
 
 Full responsive screenshots/reports are under this checkout's `output/responsive/runs/`. Bilingual evidence is under `output/responsive/localization/`, and focused screenshots are under `output/responsive/control-indicators/<engine>/`. Current-commit CI and Pages deployment are verified separately before delivery. Physical devices, screen readers, field performance and runtime Codex skill discovery remain NOT_RUN.
+
+## Published-page visual follow-up
+
+The first public-page screenshot review found that wrapping inherited from `.docs-main` split the desktop Accessibility term into two lines. The new desktop regression reproduced the defect with two text rectangles instead of one. Heading reflow is now scoped to `h1`, while the explicit callout, button, iconography and selected-value fixes retain their own constraints. The normal desktop term is checked independently of the 320 px enlarged-text cases.
+
+The follow-up passed source checks, the 7 snapshot unit cases and the 16-route production build. The complete default browser command passed 794 Chromium responsive checks, bilingual flows on Chromium/Firefox/WebKit and all 108 focused cases on those three engines. The desktop term stays on one line in both themes, while 320 px enlarged-text reflow remains within the viewport. Final desktop and enlarged-text screenshots were opened.
+
+The initial published screenshot is retained in the sibling QR checkout as `before/design-en-dark-1440x900-typography-followup.png`. Final public captures are accepted only after the follow-up checks and deployment complete.
