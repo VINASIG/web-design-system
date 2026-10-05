@@ -146,6 +146,11 @@ try {
                 })),
                 language: document.documentElement.lang,
                 compact: matchMedia("(width <= 760px)").matches,
+                inner: innerWidth,
+                client: document.documentElement.clientWidth,
+                scroll: scrollY,
+                header: rect(header),
+                padding: getComputedStyle(header!).padding,
                 overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
                 source: logo?.currentSrc,
               };
@@ -156,7 +161,7 @@ try {
                 0.01,
             );
             assert.equal(geometry.prefs.width, 92);
-            assert.equal(geometry.prefs.y, geometry.compact ? 16 : 32, "Shared top safe area drifted");
+            assert.equal(geometry.prefs.y, geometry.compact ? 16 : 32, `Shared top safe area drifted ${engine} ${theme} ${route} ${width} ${JSON.stringify(geometry)}`);
             assert(
               geometry.logo.x + geometry.logo.width + 16 <= geometry.prefs.x,
             );
