@@ -52,6 +52,7 @@ jobs:
         with:
           name: responsive-${{ matrix.os }}-${{ matrix.browser }}-${{ github.sha }}
           path: |
+            output/responsive/site-chrome/
             output/responsive/runs/
             output/responsive/localization/
             output/responsive/control-indicators/

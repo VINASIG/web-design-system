@@ -32,7 +32,7 @@
     "check:scripts": "node --check scripts/check-content.mjs && node --check scripts/check-standards.mjs && node --check tests/standards.test.mjs && node --check tests/helpers/preview.mjs && node --check tests/helpers/screenshot.mjs && node --check tests/responsive.mjs && node --check tests/localization.mjs && node --check tests/control-indicators.mjs && node --check tests/control-surfaces.mjs",
     "check": "npm run check:standards && npm run check:content && npm run check:scripts && astro check && npm run check:licenses",
     "test:standards": "node --test tests/standards.test.mjs",
-    "test": "npm run test:responsive && npm run test:localization && npm run test:controls && npm run test:surfaces",
+    "test": "npm run test:chrome && npm run test:responsive && npm run test:localization && npm run test:controls && npm run test:surfaces",
     "test:surfaces": "node tests/control-surfaces.mjs",
     "test:controls": "node tests/control-indicators.mjs",
     "test:responsive": "node tests/responsive.mjs",
@@ -41,7 +41,8 @@
     "deploy": "gh workflow run check.yml --ref main",
     "deploy:cloudflare": "npm run build -- --base / && wrangler deploy",
     "check:licenses": "node .vinasig/standards/templates/check-licenses.mjs",
-    "test:localization": "node --test tests/localization.test.ts && node tests/localization.mjs"
+    "test:localization": "node --test tests/localization.test.ts && node tests/localization.mjs",
+    "test:chrome": "node tests/site-chrome.ts"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",

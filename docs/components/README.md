@@ -66,3 +66,7 @@ Every future component specification should document its purpose, anatomy, varia
 ## Appearance control approved on 5 October 2026
 
 The owner selected the existing TOTP and QR Scanner appearance pattern for VINASIG websites. Use decorative Lucide Sun and Moon SVGs at 20 CSS px inside a button with a target of at least 44 CSS px. Light mode shows Moon to offer dark mode. Dark mode shows Sun to offer light mode. Keep a localized action name, pressed state, visible keyboard focus and the unchanged language link. Do not replace these recognizable icons with filled squares. Regression checks inspect both icons, their visibility and dimensions before and after toggling, persistence and blocked storage.
+
+## Shared website header and footer
+
+The owner approved the [shared header and footer contract](site-chrome.md) on 5 October 2026. New VINASIG websites reuse the reviewed CSS and semantic footer, then test both locales, supported themes and responsive geometry. Product navigation remains separate from the common identity row.

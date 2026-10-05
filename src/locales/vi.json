@@ -1752,7 +1752,6 @@
   "The reusable control retains a hidden native select for form state. Read the component specification and test the consumer's real interactions before adoption.": "Điều khiển tái sử dụng giữ select gốc ẩn cho trạng thái biểu mẫu. Đọc đặc tả và kiểm tra tương tác thật của dự án trước khi dùng.",
   "The ring and bar show the same upload progress. The spinner has no time estimate.": "Vòng và thanh hiển thị cùng tiến trình tải lên. Biểu tượng chờ chưa có ước tính thời gian.",
   "The shared visual and behavioral choices that components can build on. Everything here is a draft proposal.": "Lựa chọn hình ảnh và hành vi chung để thành phần dùng làm nền. Mọi nội dung ở đây là đề xuất dự thảo.",
-  "The site demonstrates a structure and a proposed visual baseline. No UI rule here is approved as an organization-wide standard yet.": "Web minh họa cấu trúc và nền tảng hình ảnh được đề xuất. Chưa có quy tắc giao diện nào được duyệt làm tiêu chuẩn toàn tổ chức.",
   "The skeleton shimmer and spinner are moving. Pause motion to inspect them.": "Khung chờ và biểu tượng chờ đang chuyển động. Dừng để kiểm tra.",
   "The source archive contains": "Gói nguồn chứa",
   "The supplied PNG files measure 16 × 16, 32 × 32, and 48 × 48 pixels.": "Tệp PNG được cung cấp có kích thước 16 x 16, 32 x 32 và 48 x 48 điểm ảnh.",
@@ -2525,5 +2524,10 @@
   "Saturation 100%, brightness 18%": "Độ bão hòa 100%. Độ sáng 18%",
   "Keep direct date entry and use the reviewed styled calendar. Support month changes, selected and unavailable dates, clear date formats and a narrow viewport. Operating-system date popups do not satisfy the VINASIG web-control requirement.": "Giữ cách nhập ngày trực tiếp và dùng lịch tùy chỉnh đã được kiểm tra. Hỗ trợ đổi tháng, ngày đã chọn và ngày không khả dụng, định dạng rõ ràng và màn hình hẹp. Lịch bật lên của hệ điều hành không đáp ứng yêu cầu giao diện web VINASIG.",
   "Use an accessible styled picker with an editable color value. Keep the quick palette and full panel actions distinct, and offer screen sampling only when the browser supports it. Operating-system color popups do not satisfy the VINASIG web-control requirement.": "Dùng bảng chọn màu tùy chỉnh dễ tiếp cận và cho nhập giá trị màu. Tách hành động chọn nhanh và mở bảng đầy đủ. Chỉ cho lấy màu màn hình khi trình duyệt hỗ trợ. Bảng màu bật lên của hệ điều hành không đáp ứng yêu cầu giao diện web VINASIG.",
-  "Review every part of a control, including its scrolling options, selected marks, calendar, color choices and slider handle. Keep keyboard and touch operation, test the final option and inspect both themes.": "Kiểm tra từng phần của control, gồm danh sách cuộn, dấu chọn, lịch, bảng màu và nút kéo. Giữ thao tác bàn phím và cảm ứng, thử lựa chọn cuối cùng và xem cả giao diện sáng lẫn tối."
+  "Review every part of a control, including its scrolling options, selected marks, calendar, color choices and slider handle. Keep keyboard and touch operation, test the final option and inspect both themes.": "Kiểm tra từng phần của control, gồm danh sách cuộn, dấu chọn, lịch, bảng màu và nút kéo. Giữ thao tác bàn phím và cảm ứng, thử lựa chọn cuối cùng và xem cả giao diện sáng lẫn tối.",
+  "Source code": "Mã nguồn",
+  "Report an issue": "Báo lỗi",
+  "Licenses": "Giấy phép",
+  "Website information": "Thông tin website",
+  "General design proposals remain drafts. The owner has approved the shared header and footer, interface writing and complete control styling.": "Các đề xuất thiết kế chung vẫn là bản nháp. Chủ sở hữu đã duyệt header và footer dùng chung, cách viết nội dung và việc thiết kế đầy đủ các thành phần điều khiển."
 }
