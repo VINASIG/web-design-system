@@ -42,7 +42,7 @@ const navigation = [
 ];
 
 const isHome = currentPath === "/";
-const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).at(-1)?.replaceAll("-", " ");
+const breadcrumb = isHome ? "Overview" : navigation.flatMap((group) => group.links).find((link) => link.href === currentPath)?.title ?? title;
 ---
 
 <!doctype html>
@@ -73,7 +73,7 @@ const breadcrumb = isHome ? "Overview" : currentPath.split("/").filter(Boolean).
  </a>
  <SitePreferences lang={lang} alternate={alternate} />
 </header>
-    <div class="app-shell">
+    <div class="app-shell chrome-container">
       <aside class="sidebar" aria-label="Documentation sidebar">
         <p class="brand-product">Design System</p>
 

@@ -19,6 +19,12 @@ Each entry records its order in the source snapshot, stable identifier, display 
 
 The published page groups entries by platform and category. Every entry shows a reading-size visual sample, with a larger preview and definition, guidance, accessibility notes, and any web adaptation available on demand.
 
+### Direct section links
+
+Platform, category and entry headings are native fragment links. Clicking a heading updates the URL and scrolls to its section. Entry links reuse the stable catalog identifier, such as `/elements/#date-picker` and `/vi/elements/#date-picker`. Do not derive entry fragments from translated display names or reorder numbers. Existing entry URLs must remain valid when copy changes.
+
+The browser handles fragment navigation, reload, Back/Forward and keyboard activation without JavaScript. Targets have a 24px scroll inset. The selected entry has a theme-aware border so the destination is visible. The existing language switch retains the fragment when scripts are available. Keep headings and their links outside interactive specimens so sample controls cannot intercept navigation.
+
 The HTML fragments in specimens.json are baseline markup. Shared visual styling lives in the published elements page. The page adds local demo behavior through src/scripts/element-demos.ts for controls that imply an action, including navigation, tabs, pagination, date selection, menus, autocomplete, form fields, switches, segmented controls, file selection, and resizing. These examples update only their own preview. They do not submit data to a service or create files. Layout, motion, and status examples remain visual references when an interaction would not add useful behavior.
 
 These are interface demonstrations, not production-ready components. Check the relevant component guidance before using a pattern in a product.

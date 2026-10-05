@@ -8,6 +8,7 @@ html {
 }
 
 body {
+  --site-content-width: 80rem;
   margin: 0;
   color: var(--color-text);
   font-family: "Space Grotesk", sans-serif;
@@ -68,19 +69,21 @@ select:focus-visible {
 
 .app-shell {
   display: grid;
-  min-height: 100vh;
-  grid-template-columns: 264px minmax(0, 1fr);
+  align-items: start;
+  gap: 2rem;
+  grid-template-columns: 14rem minmax(0, 1fr);
 }
 
 .sidebar {
   position: sticky;
-  top: 0;
+  top: 1.5rem;
   display: flex;
-  height: 100vh;
+  max-height: calc(100dvh - 3rem);
   flex-direction: column;
-  padding: 1.5rem 1rem 1rem;
-  color: var(--color-text-inverse);
-  background: var(--color-core-graphite);
+  padding: 1rem 1rem 1rem 0;
+  overflow: auto;
+  color: var(--color-text);
+  border-inline-end: 1px solid var(--color-border);
 }
 
 .brand-lockup {
@@ -105,8 +108,8 @@ select:focus-visible {
 }
 
 .brand-product {
-  margin-top: 0.22rem;
-  color: #c9c1c0;
+  margin: 0 0 1.5rem;
+  color: var(--color-heading);
   font-size: var(--font-size-small);
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -118,7 +121,7 @@ select:focus-visible {
 
 .nav-label {
   margin: 0 0 0.5rem 0.7rem;
-  color: #bcb3b2;
+  color: var(--color-text-muted);
   font-size: var(--font-size-small);
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -127,11 +130,11 @@ select:focus-visible {
 .nav-link {
   display: flex;
   min-width: 0;
-  min-height: 2.55rem;
+  min-height: 44px;
   align-items: center;
   gap: 0.65rem;
   padding: 0.5rem 0.7rem;
-  color: #e9e4e1;
+  color: var(--color-text);
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   font-size: var(--font-size-small);
@@ -144,15 +147,21 @@ select:focus-visible {
   overflow-wrap: anywhere;
 }
 
-.nav-link:hover,
-.nav-link.is-active {
-  color: var(--color-white);
-  background: rgb(255 255 255 / 9%);
+.nav-link:hover {
+  color: var(--color-text);
+  background: var(--color-surface-hover);
 }
 
 .nav-link.is-active {
-  border-color: rgb(255 255 255 / 13%);
-  box-shadow: inset 2px 0 0 #f8f5f2;
+  color: var(--color-link);
+  background: var(--color-info-background);
+  border-color: var(--color-info-border);
+  box-shadow: inset 2px 0 0 var(--color-link);
+  font-weight: 600;
+}
+
+.nav-link:focus-visible {
+  outline-offset: -3px;
 }
 
 .nav-icon {
@@ -161,7 +170,7 @@ select:focus-visible {
   height: 1.15rem;
   flex: 0 0 auto;
   place-items: center;
-  color: #c9c1c0;
+  color: inherit;
   font-size: var(--font-size-small);
 }
 
@@ -184,11 +193,10 @@ select:focus-visible {
   justify-content: space-between;
   flex-wrap: wrap;
   display: flex;
-  min-height: 4.3rem;
+  min-height: 3rem;
   align-items: center;
   gap: 1rem;
-  padding: 0 3.5rem;
-  background: var(--color-surface);
+  padding: 0.75rem 0;
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -213,14 +221,13 @@ select:focus-visible {
 .crumb-divider {
   width: 1px;
   height: 0.9rem;
-  background: #b7afae;
+  background: var(--color-border-strong);
 }
 
 .docs-main {
   container: docs-layout / inline-size;
-  width: min(100%, 1260px);
-  margin: 0 auto;
-  padding: 3rem 3.5rem 4rem;
+  min-width: 0;
+  padding: 2rem 0 0;
 }
 
 .page-heading {
@@ -1219,14 +1226,6 @@ h3 {
 }
 
 @media (max-width: 1100px) {
-  .topbar {
-    padding-inline: 2rem;
-  }
-
-  .docs-main {
-    padding-inline: 2rem;
-  }
-
   .snapshot-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1238,9 +1237,17 @@ h3 {
   }
 
   .sidebar {
-    position: relative;
-    height: auto;
-    padding: 0.75rem 1rem 0.8rem;
+    position: static;
+    max-height: none;
+    padding: 0.75rem 0 1.25rem;
+    margin-bottom: 1.25rem;
+    overflow: visible;
+    border-inline-end: 0;
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .brand-product {
+    margin-bottom: 1rem;
   }
 
   .brand-lockup {
@@ -1270,7 +1277,7 @@ h3 {
 
   .nav-label,
   .nav-link {
-    min-height: 2.35rem;
+    min-height: 44px;
     min-width: 0;
     flex: initial;
     padding-inline: 0.7rem;
@@ -1280,6 +1287,7 @@ h3 {
 
   .nav-label {
     grid-column: 1 / -1;
+    min-height: 0;
     margin: 0 0 0.1rem 0.7rem;
   }
 }
@@ -1319,13 +1327,11 @@ h3 {
 
 @media (max-width: 760px) {
   .topbar {
-    min-height: 3.5rem;
-    padding-inline: 1.25rem;
+    min-height: 3rem;
   }
 
   .docs-main {
-    padding: 2rem 1.25rem 3rem;
-    padding-inline: min(1.25rem, 20px);
+    padding: 1.5rem 0 0;
   }
 
   .page-heading {

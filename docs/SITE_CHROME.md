@@ -20,6 +20,14 @@ The owner requested consistent headers and footers across VINASIG websites on 5 
 
 ## Source and maintenance
 
+### Documentation layout integration
+
+The documentation site's identity header, sidebar/content grid and footer share the same centered `chrome-container` and `--site-content-width` value. Its 80rem maximum includes the sidebar. Keep the shared outer gutters instead of making the documentation grid full viewport width or adding another horizontal inset to the main content.
+
+Use semantic theme colors for navigation text, hover, active state and dividers. A documentation sidebar must not retain a fixed dark surface in the light theme. Let it size to its navigation, remain within the documentation grid and stop before the footer. On wide screens, its sticky position has a 24px top inset and a viewport-bounded scroll area. Below 960px the navigation becomes a wrapping row above the document.
+
+Inspect the whole composed layout at both the top and bottom of a long page. Matching isolated header/footer dimensions does not establish alignment with product navigation and content. Confirm the shared left/right edges, safe gutters, theme colors and sticky behavior in both languages and at breakpoint neighbors.
+
 src/styles/site-chrome.css is the shared CSS source. src/components/SiteFooter.astro provides the Astro footer. Consumers copy these small source files with their existing build tools. Unphar uses equivalent semantic HTML and the same CSS because it deliberately has no framework.
 
 Consumer copies are project-owned, outside managed standards snapshots. Change the source contract first, review its diff, then synchronize consumers in a bounded adoption task. Keep the existing standards hashes intact. Regression tests pin the CSS digest and check actual geometry, localized destinations, appearance changes, keyboard links and JavaScript-unavailable fallbacks. Inspect saved screenshots as well as DOM assertions.
