@@ -131,6 +131,9 @@ export async function checkLocalization(
         await page.locator('.language-switch').click();
         assert.equal(page.url(), target);
         assert.equal(await page.locator('html').getAttribute('lang'), language === 'vi' ? 'en' : 'vi');
+        // ThemeInit sets the root preference before deferred controls finish.
+        // Assert the new page's artwork after its actual readiness signal.
+        await page.locator('[data-theme-toggle]:enabled').waitFor();
         await page.waitForFunction(() => document.documentElement.dataset['theme'] === 'light');
         assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), light);
         const sources = await page.locator('[data-brand-logo] source').all();
