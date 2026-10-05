@@ -29,6 +29,10 @@ The HTML fragments in specimens.json are baseline markup. Shared visual styling 
 
 These are interface demonstrations, not production-ready components. Check the relevant component guidance before using a pattern in a product.
 
+## Specimen surfaces
+
+The full inline preview and enlarged demo stage own the neutral reference canvas. Their light reference tokens remain stable in both documentation themes. The width-limited `.ui-sample` wrapper only arranges the example and stays transparent. Forms, cards, menus and other specimen components own their actual surfaces. Do not paint the layout wrapper white or leave reference text over the documentation's dark canvas. Inspect the stage padding, wrapper edges and actual component surfaces in both themes, including small controls and opened panels.
+
 ## Reference sources
 
 - [NameThatUI](https://namethatui.com/) supplies the names, grouping, and 81-entry snapshot.

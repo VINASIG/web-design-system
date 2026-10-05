@@ -129,7 +129,9 @@ const displayName = (value: string) =>
 </DocsLayout>
 
 <style is:global>
-  /* Platform specimens keep their authored reference appearance in both page themes. */
+  /* Isolate reference colors at the full stage, not the width-limited layout wrapper. */
+  .element-preview,
+  .element-demo-stage,
   .ui-sample {
     color-scheme: light;
     --color-canvas: #f7f6f4;
@@ -157,7 +159,10 @@ const displayName = (value: string) =>
     --color-error-border: var(--color-auditor-red-border);
     --color-focus: var(--color-scout-blue);
     color: var(--color-text);
-    background: var(--color-surface);
+  }
+
+  .ui-sample {
+    background: transparent;
   }
   .platform-index {
     display: flex;
