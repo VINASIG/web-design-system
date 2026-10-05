@@ -8,6 +8,8 @@ The owner reported inconsistent header, documentation sidebar and footer geometr
 
 The three layout regions now use the same centered 80rem content band, including the sidebar. The shared `site-chrome.css`, original artwork and footer destinations remain intact. The documentation navigation uses semantic theme colors, a content-sized sticky sidebar with a 24px top inset, and its existing wrapping navigation below 960px. Main content no longer adds a second horizontal gutter. Footer separation remains defined by the shared chrome source.
 
+Narrow navigation columns use a minimum based on text size. Enlarged text can switch to one column rather than retaining two cramped columns. Enlarged-text inspection waits for the rendered style/layout update and explicitly confirms a computed 32px root/body font against the ordinary 16px baseline. A requested size without confirmed computed values is insufficient evidence.
+
 All 81 entry headings, nine category headings and both platform headings are native fragment links. Entry IDs remain catalog identifiers in both languages. Targets have a 24px scroll inset and accept fragment focus without joining the ordinary Tab order. Entry targets receive a visible theme-aware border. No navigation dependency or custom scroll handler was added. The existing language switch preserves the fragment with JavaScript. Direct links and heading activation also work without it.
 
 Project instructions and both copies of the shared chrome contract now require reviewing the complete composed layout at the top and bottom of long pages. The catalog guide records stable link maintenance.

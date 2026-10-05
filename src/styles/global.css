@@ -1305,7 +1305,7 @@ h3 {
   }
 
   .nav-group {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, max(8rem, calc((100% - 0.8rem) / 3))), 1fr));
   }
 
   .nav-label {
@@ -1321,7 +1321,7 @@ h3 {
 
 @media (max-width: 480px) {
   .nav-group {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
   }
 }
 
