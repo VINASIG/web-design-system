@@ -31,3 +31,7 @@ Inspect the whole composed layout at both the top and bottom of a long page. Mat
 src/styles/site-chrome.css is the shared CSS source. src/components/SiteFooter.astro provides the Astro footer. Consumers copy these small source files with their existing build tools. Unphar uses equivalent semantic HTML and the same CSS because it deliberately has no framework.
 
 Consumer copies are project-owned, outside managed standards snapshots. Change the source contract first, review its diff, then synchronize consumers in a bounded adoption task. Keep the existing standards hashes intact. Regression tests pin the CSS digest and check actual geometry, localized destinations, appearance changes, keyboard links and JavaScript-unavailable fallbacks. Inspect saved screenshots as well as DOM assertions.
+
+## Shared preferences
+
+The owner approved ecosystem synchronization on 7 October 2026. Apply WEB-011 and [the localization contract](../LOCALIZATION.md). `src/scripts/shared-preferences.js` is the canonical dependency-free runtime, copied locally with the normalized-LF digest in `docs/SHARED_PREFERENCES.json`. Preserve the exact reviewed Sun/Moon target-state controls and original transparent artwork. System defaults write no preferences; manual choices store only finite theme/language cookies. Theme updates never navigate; language changes from another tab preserve active work.

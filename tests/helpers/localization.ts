@@ -67,7 +67,7 @@ export async function checkLocalization(
       assert.equal(await page.locator('.language-switch').evaluate((element: HTMLAnchorElement) => element.href), firstURL);
     } finally { await noScript.close(); }
     for (const [url, language] of [[firstURL, options.defaultLanguage], [secondURL, other]] as const) {
-      const context = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: 'dark', reducedMotion: 'reduce' });
+      const context = await browser.newContext({ locale: language === 'vi' ? 'vi-VN' : 'en-US', viewport: { width: 390, height: 844 }, colorScheme: 'dark', reducedMotion: 'reduce' });
       try {
         const page = await context.newPage();
         const errors: string[] = [];

@@ -48,7 +48,6 @@ const breadcrumb = isHome ? "Overview" : navigation.flatMap((group) => group.lin
 <!doctype html>
 <html lang={lang}>
   <head>
-    <ThemeInit />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#443a3b" />
@@ -59,6 +58,7 @@ const breadcrumb = isHome ? "Overview" : navigation.flatMap((group) => group.lin
     <link rel="icon" type="image/png" sizes="32x32" href={withBase("/brand/favicons/favicon-32.png")} />
     <link rel="icon" type="image/png" sizes="48x48" href={withBase("/brand/favicons/favicon-48.png")} />
     <title>{t(title)} | {t('VINASIG Design System')}</title>
+  <ThemeInit />
   </head>
   <body>
     <Localized lang={lang}>
