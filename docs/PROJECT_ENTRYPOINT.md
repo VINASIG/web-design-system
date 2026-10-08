@@ -38,3 +38,5 @@ Read `docs/LOCALIZATION.md`. Both locales must include navigation, accessible na
 ## Shared header and footer
 
 Read docs/SITE_CHROME.md before header or footer changes. Keep shared chrome consistent and run npm run test:chrome.
+
+For QR intake changes read `docs/components/qr-image-intake.md`. Keep the component and stylesheet pins synchronized with QR Scanner and TOTP Generator and verify their actual acquisition paths.

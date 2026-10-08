@@ -2585,5 +2585,16 @@
   "Shared appearance": "Giao diện dùng chung",
   "Use the shared canvas, surface and text roles. Ordinary text needs at least 4.5:1 contrast. Meaningful icons, focus indicators and control boundaries need at least 3:1 against their actual adjacent colors.": "Dùng các màu nền trang, bề mặt và chữ chung. Chữ thông thường cần độ tương phản ít nhất 4,5:1. Icon mang ý nghĩa, dấu hiệu focus và viền điều khiển cần độ tương phản ít nhất 3:1 với màu liền kề thực tế.",
   "Use red actions for deleting data, clearing a session or discarding unsaved edits.": "Dùng màu đỏ cho thao tác xóa dữ liệu, xóa nội dung phiên hoặc bỏ các chỉnh sửa chưa lưu.",
-  "Destructive action": "Thao tác xóa"
+  "Destructive action": "Thao tác xóa",
+  "Local image input": "Nhập ảnh trên thiết bị",
+  "QR image input": "Nhập ảnh QR",
+  "Use the same image intake in QR Scanner and TOTP Generator. Product adapters decide how to use a decoded code.": "Dùng chung vùng nhập ảnh trong QR Scanner và TOTP Generator. Mỗi công cụ xử lý mã đã đọc theo mục đích của mình.",
+  "Paste or drop a QR image here": "Dán hoặc thả ảnh QR vào đây",
+  "Paste a QR image": "Dán ảnh QR",
+  "Choose image": "Chọn ảnh",
+  "Paste image": "Dán ảnh",
+  "Scan with camera": "Quét bằng camera",
+  "Select the paste area and use your keyboard, choose an image or start the camera.": "Chọn vùng dán và dùng bàn phím, chọn ảnh hoặc bật camera.",
+  "This layout preview keeps acquisition disabled. Use either tool to read an image or scan with a camera.": "Bản xem mẫu này chưa bật chức năng nhận ảnh. Dùng một trong hai công cụ để đọc ảnh hoặc quét bằng camera.",
+  "Keep the shared source and stylesheet identical. Verify native image paste, mobile keyboard paste, file selection, camera permission failure and cancellation in the consuming product.": "Giữ mã nguồn và kiểu hiển thị chung giống nhau. Kiểm tra dán ảnh, dán từ bàn phím điện thoại, chọn ảnh, từ chối quyền camera và hủy thao tác trong công cụ sử dụng mẫu này."
 }

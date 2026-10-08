@@ -1,4 +1,5 @@
 ---
+import QrImageIntake from "../components/QrImageIntake.astro";
 import SelectControl from "../components/SelectControl.astro";
 import DocsLayout from "../layouts/DocsLayout.astro";
 import { withBase } from "../lib/paths";
@@ -147,6 +148,25 @@ import "../styles/select-control.css";
       <a class="text-link" href={withBase("/foundations/")}>Read color foundations&nbsp;<Icon name="externalLink" class="text-link-icon" /></a>
     </article>
   </section>
+
+  <section class="page-section" aria-labelledby="qr-input-title">
+    <div class="section-heading">
+      <div><p class="section-kicker">Local image input</p><h2 id="qr-input-title">QR image input</h2></div>
+      <p>Use the same image intake in QR Scanner and TOTP Generator. Product adapters decide how to use a decoded code.</p>
+    </div>
+    <article class="card">
+      <QrImageIntake id="qr-input-example" pasteId="qr-example-paste" fileId="qr-example-file" chooseId="qr-example-choose"
+        pasteButtonId="qr-example-clipboard" cameraId="qr-example-camera" cameraControlsId="qr-example-camera-panel" cameraDescribedBy="qr-example-help"
+        title="Paste or drop a QR image here" placeholder="Paste a QR image"
+        chooseLabel="Choose image" pasteLabel="Paste image" cameraLabel="Scan with camera"
+        helpId="qr-example-help" help="Select the paste area and use your keyboard, choose an image or start the camera."
+        describedBy="qr-example-help" accept="image/png,image/jpeg,image/webp,image/gif" />
+      <div id="qr-example-camera-panel" hidden></div>
+      <p class="card-copy">This layout preview keeps acquisition disabled. Use either tool to read an image or scan with a camera.</p>
+      <p class="card-copy">Keep the shared source and stylesheet identical. Verify native image paste, mobile keyboard paste, file selection, camera permission failure and cancellation in the consuming product.</p>
+    </article>
+  </section>
+
 </DocsLayout>
 <script>
   import { installSelects } from "../scripts/select-control";

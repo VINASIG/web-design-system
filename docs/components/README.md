@@ -74,3 +74,7 @@ The owner selected the existing TOTP and QR Scanner appearance pattern for VINAS
 ## Shared website header and footer
 
 The owner approved the [shared header and footer contract](site-chrome.md) on 5 October 2026. New VINASIG websites reuse the reviewed CSS and semantic footer, then test both locales, supported themes and responsive geometry. Product navigation remains separate from the common identity row.
+
+## Shared QR image intake - 8 October 2026
+
+Read [the shared intake contract](qr-image-intake.md). QR Scanner and TOTP Generator reuse the same source, styles and three ordered acquisition actions, with product-specific validation adapters.
