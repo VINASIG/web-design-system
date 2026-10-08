@@ -2227,5 +2227,11 @@
   "6 of 10 units used. Normal.": "Đã dùng 6 trên 10 đơn vị. Bình thường.",
   "8 of 10. Strong match.": "8 trên 10. Mức phù hợp cao.",
   "Saturation 100%, brightness 100%": "Độ bão hòa 100%. Độ sáng 100%",
-  "Saturation 100%, brightness 18%": "Độ bão hòa 100%. Độ sáng 18%"
+  "Saturation 100%, brightness 18%": "Độ bão hòa 100%. Độ sáng 18%",
+  "Identity artwork and reference accents": "Đồ họa nhận diện và màu nhấn tham khảo",
+  "Neutral backgrounds for light and dark mode": "Nền trung tính cho chế độ sáng và tối",
+  "Radix Gray interface neutrals were approved across VINASIG websites on 8 October 2026. Identity artwork and palette data keep their original colors.": "Màu trung tính Radix Gray được duyệt cho giao diện các website VINASIG vào ngày 8 tháng 10 năm 2026. Đồ họa nhận diện và dữ liệu bảng màu giữ nguyên màu gốc.",
+  "Radix is a palette source. Accessibility depends on the final combination of colors and interaction states.": "Radix cung cấp bảng màu. Khả năng tiếp cận phụ thuộc vào cách kết hợp màu và các trạng thái tương tác thực tế.",
+  "Shared appearance": "Giao diện dùng chung",
+  "Use the shared canvas, surface and text roles. Ordinary text needs at least 4.5:1 contrast. Meaningful icons, focus indicators and control boundaries need at least 3:1 against their actual adjacent colors.": "Dùng các màu nền trang, bề mặt và chữ chung. Chữ thông thường cần độ tương phản ít nhất 4,5:1. Icon mang ý nghĩa, dấu hiệu focus và viền điều khiển cần độ tương phản ít nhất 3:1 với màu liền kề thực tế."
 }

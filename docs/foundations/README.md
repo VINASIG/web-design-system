@@ -28,7 +28,7 @@ Keep the five recorded VINASIG identity colors unchanged. The existing color tok
 - `--color-thinker-orange` supports attention and warnings.
 - `--color-builder-green` supports success and confirmation.
 - `--color-auditor-red` supports errors and destructive actions.
-- `--color-core-graphite` supports primary text and dark surfaces.
+- `--color-core-graphite` remains an identity anchor. Interface text and dark surfaces use the approved neutral roles.
 
 Use derived shades for interface roles while keeping the identity anchors intact. Each accent family has a `-soft` shade for subtle backgrounds, a `-border` shade for outlines, and a `-strong` shade for high-contrast text, icons, and interaction states. Use the base color for brand accents and indicators.
 
@@ -40,6 +40,8 @@ Use semantic tokens in interface code:
 - `--color-error`, `--color-error-accent`, `--color-error-background`, and `--color-error-border` map errors to Auditor Red.
 
 Use `--color-canvas`, `--color-surface`, `--color-surface-muted`, and `--color-surface-hover` for page and component surfaces. Use the shared text and border tokens instead of adding near-duplicate neutral values. Do not communicate status through color alone. Pair status color with text or an icon, and check text contrast on each surface.
+
+The owner approved [Radix Gray interface neutrals](theme-colors.md) across VINASIG websites on 8 October 2026. This appearance decision is approved even while other foundations remain proposals. Use the strong boundary role for recognizable controls and the indicator role for progress or range state. Identity artwork and palette data keep their original colors.
 
 ### Shared palette
 
