@@ -157,12 +157,11 @@ import "../styles/select-control.css";
     <article class="card">
       <QrImageIntake id="qr-input-example" pasteId="qr-example-paste" fileId="qr-example-file" chooseId="qr-example-choose"
         pasteButtonId="qr-example-clipboard" cameraId="qr-example-camera" cameraControlsId="qr-example-camera-panel" cameraDescribedBy="qr-example-help"
-        title="Paste or drop a QR image here" placeholder="Paste a QR image"
-        chooseLabel="Choose image" pasteLabel="Paste image" cameraLabel="Scan with camera"
-        helpId="qr-example-help" help="Select the paste area and use your keyboard, choose an image or start the camera."
+        title="Paste or drop a QR image" placeholder="Ctrl + V or Paste"
+        chooseLabel="Choose image" pasteLabel="Paste image" cameraLabel="Camera"
         describedBy="qr-example-help" accept="image/png,image/jpeg,image/webp,image/gif" />
       <div id="qr-example-camera-panel" hidden></div>
-      <p class="card-copy">This layout preview keeps acquisition disabled. Use either tool to read an image or scan with a camera.</p>
+      <p class="card-copy" id="qr-example-help">This layout preview keeps acquisition disabled. Use either tool to read an image or scan with a camera.</p>
       <p class="card-copy">Keep the shared source and stylesheet identical. Verify native image paste, mobile keyboard paste, file selection, camera permission failure and cancellation in the consuming product.</p>
     </article>
   </section>
