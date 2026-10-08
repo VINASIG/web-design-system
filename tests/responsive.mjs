@@ -428,9 +428,13 @@ try {
     check('editor color marker remains visible at corner',editorMarker.fits,editorMarker);
     await shot('editor-colors-panel','scrolled-corner');
     await panel.evaluate(el=>el.scrollTop=0);
-    await editor.locator('[data-action="editor-panel-close"]').click();
+    await tap(editor.locator('[data-action="editor-panel-close"]'));
     await settle();
-    check('editor close control remains reachable',await editor.locator('.sample-editor-colors-demo').getAttribute('data-panel-visible')==='false');
+    const editorClosed=await editor.locator('.sample-editor-colors-demo').evaluate(demo=>{
+      const panel=demo.querySelector('[data-editor-colors-panel]');
+      return {open:demo.dataset.panelOpen,visible:demo.dataset.panelVisible,inert:panel.inert,hidden:panel.getAttribute('aria-hidden')};
+    });
+    check('editor close control remains reachable',editorClosed.open==='false'&&editorClosed.visible==='false'&&editorClosed.inert&&editorClosed.hidden==='true',editorClosed);
     const parallax=entry('parallax-scrolling').locator('.sample-parallax-viewport');
     const scroll=await parallax.evaluate(el=>{el.scrollTop=el.scrollHeight;return {top:el.scrollTop,max:el.scrollHeight-el.clientHeight};});
     check('intentional parallax scroller reaches its end',scroll.top===scroll.max&&scroll.max>0,scroll);
