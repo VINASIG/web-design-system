@@ -10,7 +10,7 @@
 }
 
 [data-destructive-action]:disabled,
-[data-destructive-action][aria-disabled='true'] {
+[data-destructive-action][aria-disabled="true"] {
   color: var(--color-error);
   background: var(--color-surface);
   border-color: var(--color-error);
@@ -22,30 +22,30 @@
   color: inherit;
 }
 
-[data-destructive-action]:not(:disabled, [aria-disabled='true']):hover,
-[data-destructive-action]:not(:disabled, [aria-disabled='true']):active {
+[data-destructive-action]:not(:disabled, [aria-disabled="true"]):hover,
+[data-destructive-action]:not(:disabled, [aria-disabled="true"]):active {
   color: var(--color-error);
   background: var(--color-error-background);
   border-color: var(--color-error);
 }
 
-[data-destructive-action='filled'] {
+[data-destructive-action="filled"] {
   color: var(--color-white);
   background: var(--color-error-accent);
   border-color: var(--color-error);
 }
 
-[data-destructive-action='filled']:disabled,
-[data-destructive-action='filled'][aria-disabled='true'] {
+[data-destructive-action="filled"]:disabled,
+[data-destructive-action="filled"][aria-disabled="true"] {
   color: var(--color-white);
   background: var(--color-error-accent);
   border-color: var(--color-error);
 }
 
-[data-destructive-action='filled']:not(:disabled, [aria-disabled='true']):hover,
-[data-destructive-action='filled']:not(
+[data-destructive-action="filled"]:not(:disabled, [aria-disabled="true"]):hover,
+[data-destructive-action="filled"]:not(
     :disabled,
-    [aria-disabled='true']
+    [aria-disabled="true"]
   ):active {
   color: var(--color-white);
   background: var(--color-auditor-red-strong);
@@ -54,26 +54,26 @@
 
 @media (forced-colors: active) {
   [data-destructive-action] {
-    color: ButtonText;
-    background: ButtonFace;
-    border-color: ButtonText;
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
   }
 
   [data-destructive-action]:focus-visible {
-    outline-color: Highlight;
+    outline-color: CanvasText;
   }
 
   [data-destructive-action]:disabled,
-  [data-destructive-action][aria-disabled='true'] {
+  [data-destructive-action][aria-disabled="true"] {
     color: GrayText;
     border-color: GrayText;
     opacity: 1;
   }
 
-  [data-destructive-action]:not(:disabled, [aria-disabled='true']):hover,
-  [data-destructive-action]:not(:disabled, [aria-disabled='true']):active {
-    color: HighlightText;
-    background: Highlight;
-    border-color: Highlight;
+  [data-destructive-action]:not(:disabled, [aria-disabled="true"]):hover,
+  [data-destructive-action]:not(:disabled, [aria-disabled="true"]):active {
+    color: Canvas;
+    background: CanvasText;
+    border-color: CanvasText;
   }
 }

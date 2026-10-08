@@ -39,6 +39,8 @@ The reusable `inspectDestructiveActions` checks exact declared counts, missing o
 
 The inspector's color probes are isolated from the action's layout. Cross-engine testing exposed interference from host transitions, important child styles and flex hover geometry. The corrected inspector resolves the scoped palette outside the button and has dedicated regressions. Thresholds and semantic red requirements remain unchanged.
 
+Forced-colors checks also emulate the actual light or dark color scheme. Firefox's translucent Highlight focus color and WebKit's white ButtonText on a gray ButtonFace did not meet the same contrast requirements. The shared fallback therefore uses the CanvasText and Canvas system pair for text, boundaries and focus, with an inverted pair on hover and active. This respects the user's high-contrast palette without preserving an unreadable custom red.
+
 ## Evidence and acceptance
 
 Canonical Agent Standards source is [567d839f6fdb983582e1f0ed4c33678799cc6fe8](https://github.com/VINASIG/agent-standards/commit/567d839f6fdb983582e1f0ed4c33678799cc6fe8). Its [source checks](https://github.com/VINASIG/agent-standards/actions/runs/37765546323) and [web fixture checks](https://github.com/VINASIG/agent-standards/actions/runs/37765546329) both passed on Linux and Windows.
