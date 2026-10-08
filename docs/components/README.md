@@ -8,6 +8,10 @@ The [UI element catalog](../elements/README.md) defines all 81 entries in the Na
 
 Use a button for an action in the current page and a link for navigation. Give each control a clear verb and keep the visible focus state. Use the primary style for the page's main action. Use the secondary style for supporting actions. Destructive actions should say what will be removed or changed.
 
+On 8 October 2026 the owner required semantic red for deleting data, clearing all inputs or a session, and discarding unsaved edits. Use `data-destructive-action` with the reviewed `src/styles/destructive-actions.css` after product styles. A filled red confirmation may use `data-destructive-action="filled"`. Keep explicit localized labels and Lucide icons. Verify enabled, hover, active, keyboard focus, disabled and forced-colors states in both themes/locales with `inspectDestructiveActions` and actual synthetic clear/discard flows. Preserve contrast of 4.5:1 for text and 3:1 for meaningful icons, boundaries and focus.
+
+Classify by actual effect. Clearing a search/date/filter, cancelling a picker, restoring a sample or producing a new processed copy is ordinarily a supporting action. Never recolor every `clear-button` class since that class is also used for paging, sharing and uploads. Color does not replace an understandable verb. [W3C use of color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html) supports the redundant label. [GOV.UK warning buttons](https://design-system.service.gov.uk/components/button/#warning-buttons) reserve red for destructive consequences. VINASIG additionally applies red to session-data loss at the owner's request. This does not add a confirmation dialog to routine local clears.
+
 ## Text input
 
 Show a persistent label. Use helper text for instructions and error text for a correction. Keep the entered value when validation fails. Associate the error with the field so assistive technology can announce it.

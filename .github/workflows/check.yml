@@ -58,6 +58,7 @@ jobs:
             output/responsive/control-indicators/
             output/responsive/control-surfaces/
             output/responsive/palette/
+            output/responsive/destructive-actions/
           if-no-files-found: ignore
           retention-days: 14
       - name: Package verified Pages files

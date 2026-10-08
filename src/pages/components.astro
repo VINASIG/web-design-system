@@ -28,10 +28,11 @@ import "../styles/select-control.css";
       <div class="component-demo" aria-label="Button examples">
         <button class="button button-primary" type="button">Primary action</button>
         <button class="button button-secondary" type="button">Secondary action</button>
-        <button class="button button-danger" type="button">Delete draft</button>
+        <button class="button button-danger" type="button" data-destructive-action="filled">Delete draft</button>
         <a class="button button-secondary" href={withBase("/patterns/")}>Link action</a>
       </div>
       <ul class="rule-list">
+        <li><span class="rule-term">Destructive action</span><span class="rule-text">Use red actions for deleting data, clearing a session or discarding unsaved edits.</span></li>
         <li><span class="rule-term">Purpose</span><span class="rule-text">Perform an action in the current context.</span></li>
         <li><span class="rule-term">Label</span><span class="rule-text">Use a concise verb that describes the outcome.</span></li>
         <li><span class="rule-term">Keyboard</span><span class="rule-text">Preserve native button and link keyboard behavior. Keep the focus outline visible.</span></li>
