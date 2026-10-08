@@ -2,30 +2,36 @@
 import DocsLayout from "../layouts/DocsLayout.astro";
 import Icon from "../components/Icon.astro";
 
-type PaletteColor = {
-  name: string;
-  token: string;
-  hex: string;
-  deepTones: { label: string; token: string; hex: string }[];
-  match: string;
+import palette from "../data/palette.json";
+const groups: Record<string, string> = {
+  identity: "Identity color",
+  support: "Supporting color",
+  neutral: "Neutral color",
+  deep: "Deep tone",
 };
-
-const paletteColors: PaletteColor[] = [
-  { name: "Citron", token: "--color-palette-citron", hex: "#DDD605", deepTones: [{ label: "Deep", token: "--color-palette-citron-shade", hex: "#373501" }], match: "Extended accent" },
-  { name: "Porcelain", token: "--color-palette-porcelain", hex: "#E3D4D1", deepTones: [{ label: "Deep", token: "--color-palette-porcelain-shade", hex: "#383534" }], match: "Extended neutral" },
-  { name: "Fog", token: "--color-palette-fog", hex: "#CECACA", deepTones: [{ label: "Deep", token: "--color-palette-fog-shade", hex: "#333232" }], match: "Extended neutral" },
-  { name: "Warm Graphite", token: "--color-palette-warm-graphite", hex: "#443A3B", deepTones: [{ label: "Deep", token: "--color-palette-warm-graphite-shade", hex: "#110E0E" }], match: "Core Graphite alias" },
-  { name: "Carmine", token: "--color-palette-carmine", hex: "#971607", deepTones: [{ label: "Deep", token: "--color-palette-carmine-shade", hex: "#250501" }], match: "Auditor Red alias" },
-  { name: "Clay", token: "--color-palette-clay", hex: "#B4684D", deepTones: [{ label: "Deep", token: "--color-palette-clay-shade", hex: "#2D1A13" }], match: "Extended accent" },
-  { name: "Saffron", token: "--color-palette-saffron", hex: "#DEB12D", deepTones: [{ label: "Deep", token: "--color-palette-saffron-shade", hex: "#372C0B" }], match: "Extended accent" },
-  { name: "Leaf", token: "--color-palette-leaf", hex: "#47A036", deepTones: [{ label: "Deep", token: "--color-palette-leaf-shade", hex: "#04280D" }], match: "Builder Green alias" },
-  { name: "Lagoon", token: "--color-palette-lagoon", hex: "#2CBAA8", deepTones: [{ label: "Deep", token: "--color-palette-lagoon-shade", hex: "#0B2E2A" }], match: "Extended accent" },
-  { name: "Deep Blue", token: "--color-palette-deep-blue", hex: "#21497B", deepTones: [{ label: "Deep", token: "--color-palette-deep-blue-shade", hex: "#08121E" }], match: "Scout Blue alias" },
-  { name: "Violet", token: "--color-palette-violet", hex: "#9A5CC6", deepTones: [{ label: "Deep", token: "--color-palette-violet-shade", hex: "#261731" }], match: "Extended accent" },
-  { name: "Tangerine", token: "--color-palette-tangerine", hex: "#EB7114", deepTones: [{ label: "Deep", token: "--color-palette-tangerine-shade", hex: "#3B1D05" }], match: "Thinker Orange alias" },
-  { name: "Sky", token: "--color-palette-sky", hex: "#8BB3FF", deepTones: [{ label: "Deep", token: "--color-palette-sky-shade", hex: "#232D40" }], match: "Extended accent" },
-  { name: "Amber", token: "--color-palette-amber", hex: "#FFAA00", deepTones: [{ label: "Olive deep", token: "--color-palette-amber-olive-shade", hex: "#2A2A00" }, { label: "Brown deep", token: "--color-palette-amber-brown-shade", hex: "#402A00" }], match: "Extended accent" },
-];
+const paletteColors = palette.colors.map((color) => {
+  const firstTone = color.backgrounds[0];
+  if (!firstTone) throw new Error("Missing canonical palette tone");
+  return {
+    id: color.id,
+    name: color.name,
+    token: color.token ?? firstTone.token,
+    hex: color.foreground ?? firstTone.hex,
+    baseLabel: color.foreground
+      ? "Base color"
+      : color.id === "amber-deep"
+        ? firstTone.name
+        : "Deep tone",
+    deepTones: (
+      color.foreground ? color.backgrounds : color.backgrounds.slice(1)
+    ).map((tone) => ({
+      label: color.id === "amber-deep" ? tone.name : "Deep tone",
+      token: tone.token,
+      hex: tone.hex,
+    })),
+    match: groups[color.group],
+  };
+});
 ---
 
 <DocsLayout
@@ -168,8 +174,8 @@ const paletteColors: PaletteColor[] = [
   <section class="page-section" aria-labelledby="palette-colors-title">
     <div class="section-heading">
       <div>
-        <p class="section-kicker">Optional palette</p>
-        <h2 id="palette-colors-title">Extended colors for specific cases</h2>
+        <p class="section-kicker">Shared palette</p>
+        <h2 id="palette-colors-title">The shared VINASIG palette</h2>
       </div>
       <p>Use these supporting colors only when content needs more category choices. They do not replace VINASIG identity colors.</p>
     </div>
@@ -178,7 +184,7 @@ const paletteColors: PaletteColor[] = [
     <div class="two-column-grid color-role-notes">
       <article class="card">
         <h3>Keep brand and semantic roles clear</h3>
-        <p class="card-copy">Warm Graphite, Carmine, Leaf, Deep Blue, and Tangerine reuse existing identity colors.</p>
+        <p class="card-copy">The five identity anchors keep their names and values. Supporting colors, neutrals and deep tones use the shared Brand Assets palette.</p>
         <p class="card-copy">Use the existing identity and semantic tokens for navigation, actions, and status messages. Choose extra colors only when their meaning helps people distinguish content.</p>
       </article>
       <article class="card">
@@ -187,10 +193,10 @@ const paletteColors: PaletteColor[] = [
       </article>
     </div>
 
-    <h3 class="palette-color-section-title">Extended palette</h3>
+    <h3 class="palette-color-section-title">Base colors and deep tones</h3>
     <div class="palette-color-grid">
       {paletteColors.map((color) => (
-        <article class="card palette-color-card">
+        <article class="card palette-color-card" data-palette-id={color.id}>
           <div class="palette-color-swatches" style={`--swatch-count: ${1 + color.deepTones.length}`} aria-hidden="true">
             <span style={`background: var(${color.token})`}></span>
             {color.deepTones.map((tone) => <span style={`background: var(${tone.token})`}></span>)}
@@ -199,7 +205,7 @@ const paletteColors: PaletteColor[] = [
             <div class="palette-color-title"><h3>{color.name}</h3></div>
             <p class="palette-color-match">{color.match}</p>
             <div class="palette-color-values">
-              <span>Base <code>{color.hex}</code></span>
+              <span>{color.baseLabel} <code>{color.hex}</code></span>
               {color.deepTones.map((tone) => <span>{tone.label} <code>{tone.hex}</code></span>)}
             </div>
             <code class="palette-color-token">{color.token}</code>

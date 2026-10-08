@@ -1,0 +1,8 @@
+{
+  "format": 1,
+  "repository": "VINASIG/vinasig-brand-assets",
+  "revision": "e3b62aa64c893495eabe523570e28338dfe5a0d5",
+  "path": "assets/palette.json",
+  "sha256": "52a35f188a5c0fa989347d767f720dea174616017c73c07699ad3539e9adf87a",
+  "purpose": "Canonical VINASIG names, values and tokens. Update only after reviewing the source revision."
+}

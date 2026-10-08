@@ -1,5 +1,12 @@
 # Changelog
 
+## Shared palette - 2026-10-08
+
+- Adopt the exact reviewed Brand Assets palette through a pinned source revision and SHA-256 record.
+- Generate palette CSS from the shared JSON and render Foundations swatches from the same data in English and Vietnamese.
+- Use VINASIG names, 16 base colors and all 30 reviewed deep tones. Keep one small inspiration credit and preserve the five identity anchors and semantic UI shades.
+- Add source, corruption and rendered-color regressions to existing local checks and the complete CI browser matrix.
+
 ## 0.1.0 public preview - 2026-10-02
 
 - Standardize the repository under `VINASIG/web-design-system` with canonical source metadata, contribution guidance, security reporting and explicit rights status.

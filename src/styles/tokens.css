@@ -1,3 +1,5 @@
+@import "./palette.css";
+
 @font-face {
   font-family: "Space Grotesk";
   src: url("../../public/fonts/SpaceGrotesk-VariableFont_wght.ttf") format("truetype");
@@ -20,39 +22,6 @@
   --color-core-graphite: #443a3b;
   --color-black: #000000;
   --color-white: #ffffff;
-
-  /* Optional palette extensions. Keep identity matches as aliases. */
-  --color-palette-citron: #ddd605;
-  --color-palette-porcelain: #e3d4d1;
-  --color-palette-fog: #cecaca;
-  --color-palette-warm-graphite: var(--color-core-graphite);
-  --color-palette-carmine: var(--color-auditor-red);
-  --color-palette-clay: #b4684d;
-  --color-palette-saffron: #deb12d;
-  --color-palette-leaf: var(--color-builder-green);
-  --color-palette-lagoon: #2cbaa8;
-  --color-palette-deep-blue: var(--color-scout-blue);
-  --color-palette-violet: #9a5cc6;
-  --color-palette-tangerine: var(--color-thinker-orange);
-  --color-palette-sky: #8bb3ff;
-  --color-palette-amber: #ffaa00;
-
-  /* Optional deep tones are palette references, not default UI shadows. */
-  --color-palette-citron-shade: #373501;
-  --color-palette-porcelain-shade: #383534;
-  --color-palette-fog-shade: #333232;
-  --color-palette-warm-graphite-shade: #110e0e;
-  --color-palette-carmine-shade: #250501;
-  --color-palette-clay-shade: #2d1a13;
-  --color-palette-saffron-shade: #372c0b;
-  --color-palette-leaf-shade: #04280d;
-  --color-palette-lagoon-shade: #0b2e2a;
-  --color-palette-deep-blue-shade: #08121e;
-  --color-palette-violet-shade: #261731;
-  --color-palette-tangerine-shade: #3b1d05;
-  --color-palette-sky-shade: #232d40;
-  --color-palette-amber-olive-shade: #2a2a00;
-  --color-palette-amber-brown-shade: #402a00;
 
   /* Restrained shades derived from the identity colors. */
   --color-scout-blue-soft: #eaf0f6;

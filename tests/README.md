@@ -4,6 +4,8 @@ Use the Node version in `.node-version` and install the locked dependencies with
 
 ## Source and content
 
+`npm run check:palette` verifies the pinned Brand Assets JSON hash, generated CSS and Vietnamese names. `npm run test:palette:web` checks the actual Foundations swatches against that canonical data in both locales and themes, including narrow widths, breakpoint neighbors and enlarged text. It is included in `npm test` and the existing CI browser matrix. Screenshots and the measured report are retained under `output/responsive/palette/`.
+
 Run `npm run check` to validate the pinned standards snapshot, element catalog, rendered specimen coverage, icon registry, required local assets, Node script syntax and Astro TypeScript diagnostics. The checks use the existing source files as their input.
 
 Run `npm run test:standards` when changing the snapshot or integrity checker. Native Node tests use isolated copies under ignored `output/publication/standards-tests/` to prove that changed payloads, altered manifests, unsafe paths, instruction damage and root overrides fail. They never modify the real installed snapshot. These tests do not verify discovery by a running Codex session.

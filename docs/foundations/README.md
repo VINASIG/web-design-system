@@ -41,31 +41,15 @@ Use semantic tokens in interface code:
 
 Use `--color-canvas`, `--color-surface`, `--color-surface-muted`, and `--color-surface-hover` for page and component surfaces. Use the shared text and border tokens instead of adding near-duplicate neutral values. Do not communicate status through color alone. Pair status color with text or an icon, and check text contrast on each surface.
 
-### Extended palette
+### Shared palette
 
-Use this extended palette only when a component needs additional categories or chart series. These colors are supporting options, not additions to the VINASIG identity. Keep the established semantic tokens for information, success, warning, and error states.
+Palette inspired by Minecraft.
 
-Warm Graphite, Carmine, Leaf, Deep Blue, and Tangerine alias existing identity tokens. The remaining colors are optional accents.
+Brand Assets owns the canonical palette. This project adopts an exact JSON copy with a reviewed revision and SHA-256 in [the source record](../PALETTE_SOURCE.json). The complete [name, Hex, RGB and token reference](palette-reference.md) is generated from that data. The Foundations page and src/styles/palette.css use the same record.
 
-| Palette color | Base token | Base value | Deep tone token | Deep tone |
-| --- | --- | --- | --- | --- |
-| Citron | `--color-palette-citron` | `#DDD605` | `--color-palette-citron-shade` | `#373501` |
-| Porcelain | `--color-palette-porcelain` | `#E3D4D1` | `--color-palette-porcelain-shade` | `#383534` |
-| Fog | `--color-palette-fog` | `#CECACA` | `--color-palette-fog-shade` | `#333232` |
-| Warm Graphite | `--color-palette-warm-graphite` | `#443A3B` | `--color-palette-warm-graphite-shade` | `#110E0E` |
-| Carmine | `--color-palette-carmine` | `#971607` | `--color-palette-carmine-shade` | `#250501` |
-| Clay | `--color-palette-clay` | `#B4684D` | `--color-palette-clay-shade` | `#2D1A13` |
-| Saffron | `--color-palette-saffron` | `#DEB12D` | `--color-palette-saffron-shade` | `#372C0B` |
-| Leaf | `--color-palette-leaf` | `#47A036` | `--color-palette-leaf-shade` | `#04280D` |
-| Lagoon | `--color-palette-lagoon` | `#2CBAA8` | `--color-palette-lagoon-shade` | `#0B2E2A` |
-| Deep Blue | `--color-palette-deep-blue` | `#21497B` | `--color-palette-deep-blue-shade` | `#08121E` |
-| Violet | `--color-palette-violet` | `#9A5CC6` | `--color-palette-violet-shade` | `#261731` |
-| Tangerine | `--color-palette-tangerine` | `#EB7114` | `--color-palette-tangerine-shade` | `#3B1D05` |
-| Sky | `--color-palette-sky` | `#8BB3FF` | `--color-palette-sky-shade` | `#232D40` |
-| Amber | `--color-palette-amber` | `#FFAA00` | `--color-palette-amber-olive-shade` | `#2A2A00` |
-| Amber | `--color-palette-amber` | `#FFAA00` | `--color-palette-amber-brown-shade` | `#402A00` |
+There are 16 base colors, 30 deep tones and 45 distinct Hex values. The five identity anchors retain their original names and values. Supporting colors are Clay, Saffron, Lagoon, Violet and Sky. Neutrals are Porcelain, Fog, Stone, Slate, Ink and Paper. Additional dark tones use their own VINASIG names. Bright base accents outside the reviewed selection are not part of this palette.
 
-Treat deep tones as palette references, not general interface shadows or pre-approved text colors. Check contrast for each actual foreground and background combination. Do not add saturated colors for decoration or replace a semantic status color with an extended palette color.
+Deep tones are reference primitives. Check actual text and background contrast before use. Semantic status colors retain their existing roles. Use npm run check:palette to verify the source hash, generated CSS and translated names. Updating upstream data requires reviewing and pinning a new revision rather than fetching mutable data during a build.
 
 ## Typography
 

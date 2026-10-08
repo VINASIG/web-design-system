@@ -6,6 +6,8 @@ The canonical repository is [VINASIG/web-design-system](https://github.com/VINAS
 
 Open the [documentation website](https://design.vinasig.io.vn/). GitHub Actions publishes the checked static build from `main` after Linux and Windows verification.
 
+The [shared VINASIG palette](docs/foundations/palette-reference.md) uses the exact names, values and tokens maintained by Brand Assets. [The source record](docs/PALETTE_SOURCE.json) pins the reviewed revision and data hash. Run `npm run check:palette` to detect data, CSS or translation drift.
+
 VINASIG uses **Super Intelligence (SI)** and **SI agents** as its preferred terms in project-authored copy. This is a naming convention, not a claim that every current system exceeds human intelligence. Preserve original wording in research titles, quotations, official names, laws, and technical identifiers.
 
 ## Technology
