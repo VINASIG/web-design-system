@@ -45,21 +45,29 @@ Forced-colors checks also emulate the actual light or dark color scheme. Firefox
 
 Canonical Agent Standards source is [567d839f6fdb983582e1f0ed4c33678799cc6fe8](https://github.com/VINASIG/agent-standards/commit/567d839f6fdb983582e1f0ed4c33678799cc6fe8). Its [source checks](https://github.com/VINASIG/agent-standards/actions/runs/37765546323) and [web fixture checks](https://github.com/VINASIG/agent-standards/actions/runs/37765546329) both passed on Linux and Windows.
 
+The strengthened system-palette fixtures at [cb3161cb04b3cdab15f007d0c9e201a71a40833d](https://github.com/VINASIG/agent-standards/commit/cb3161cb04b3cdab15f007d0c9e201a71a40833d) also passed the [source and installer job](https://github.com/VINASIG/agent-standards/actions/runs/37774508205) and [web matrix](https://github.com/VINASIG/agent-standards/actions/runs/37774508200). The installed runtime payload remains the approved 567d839 snapshot. Fixture-only improvements do not change that payload.
+
+The final revisions, CI runs, deployment checks and live results are recorded in the [ecosystem publication receipt](https://github.com/VINASIG/agent-standards/blob/main/docs/audits/destructive-actions-2026-10-08.md).
+
 Synthetic inputs are used throughout. The TOTP fixture is a public test key. Metadata fixtures are generated test images. Reports and screenshots remain in ignored output directories and CI artifacts rather than publishing user files.
 
-| Evidence                                                          | Status before publication                                       |
-| ----------------------------------------------------------------- | --------------------------------------------------------------- |
-| Baseline product behavior and opened before images                | PASS, 32 locale and theme combinations                          |
-| Local product source, unit and production builds                  | PASS for all eight affected tools                               |
-| Local Chromium product interactions and opened after images       | PASS, 32 locale and theme combinations                          |
-| Canonical installer unit tests and browser fixtures               | See the final source CI and publication receipt                 |
-| Persistent product regressions in Chromium, Firefox and WebKit    | See the final source CI and publication receipt                 |
-| Design specimens in both languages, themes and widths             | See the final source CI and publication receipt                 |
-| Managed integrity in all fourteen web repositories                | PASS before publication, rechecked after final adoption         |
-| Exact revision CI, deployment and live behavior                   | Required before completion, recorded in the publication receipt |
-| Physical devices, screen readers and independent human evaluation | NOT_RUN                                                         |
+| Evidence                                                          | Recorded evidence                                                  |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Baseline product behavior and opened before images                | PASS, 32 locale and theme combinations                             |
+| Local product source, unit and production builds                  | PASS for all eight affected tools                                  |
+| Local Chromium product interactions and opened after images       | PASS, 32 locale and theme combinations                             |
+| Canonical installer unit tests and browser fixtures               | PASS, 20 unit tests and 204 browser cases on each operating system |
+| Persistent product regressions in Chromium, Firefox and WebKit    | See the final source CI and publication receipt                    |
+| Design specimens in both languages, themes and widths             | PASS locally, 24 combinations across all three engines             |
+| Managed integrity in all fourteen web repositories                | PASS before publication, rechecked after final adoption            |
+| Exact revision CI, deployment and live behavior                   | See the exact revision and live results in the publication receipt |
+| Physical devices, screen readers and independent human evaluation | NOT_RUN                                                            |
 
 The design regression uses 390 and 1440 CSS pixel widths in both languages and themes across Chromium, Firefox and WebKit. Each action is checked in default, hover, active, keyboard focus and forced colors states. It confirms empty-trash and clear-recent-history effects. Product regressions additionally check initial disabled states where the product provides them and actual clear or discard outcomes. Existing responsive, localization, controls, chrome and performance gates continue to run as applicable.
+
+The full browser gate exposed a separate Foundations issue at 320 CSS pixels with 200% text. Fixed spacing and type columns squeezed content, and the brand-role swatches did not reflow their descriptions. The repaired layouts wrap or stack at the available container size. All 108 palette locale/theme/viewport cases pass, including enlarged text in every engine. No horizontal-overflow or contrast threshold was removed. Enlarged geometry and the actual color, type and spacing specimens are retained with the browser artifacts.
+
+Native keyboard checks preserve browser focus behavior. In a modal, Tab at the final action can leave the same element active while traversing browser chrome. The test follows actual native Tab navigation back to the action instead of assuming one fixed Tab/Shift+Tab pair. Menu actions are reached through the menu's End key. No focus class, tabindex override or forced focus styling is injected to satisfy the assertion.
 
 ## Sources and authority
 

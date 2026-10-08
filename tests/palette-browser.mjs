@@ -138,9 +138,59 @@ try {
               results.push({ engine, locale, theme, width, status: "PASS" });
             }
             await page.setViewportSize({ width: 320, height: 900 });
-            await page.evaluate(() => {
+            await page.evaluate(async () => {
               document.documentElement.style.fontSize = "200%";
+              await document.fonts.ready;
+              await new Promise(requestAnimationFrame);
+              await new Promise(requestAnimationFrame);
             });
+            await page.screenshot({
+              path: path.join(
+                directory,
+                engine,
+                `${locale}-${theme}`,
+                "enlarged-viewport.png",
+              ),
+              animations: "disabled",
+            });
+            for (const selector of [
+              ".color-grid",
+              ".type-specimen",
+              ".space-list",
+            ]) {
+              await page.locator(selector).screenshot({
+                path: path.join(
+                  directory,
+                  engine,
+                  `${locale}-${theme}`,
+                  `enlarged-${selector.slice(1)}.png`,
+                ),
+                animations: "disabled",
+              });
+            }
+            const enlargedGeometry = await page.evaluate(() => ({
+              width: innerWidth,
+              scrollWidth: document.documentElement.scrollWidth,
+              overflow: [...document.querySelectorAll("body *")]
+                .filter((node) => {
+                  const box = node.getBoundingClientRect();
+                  return box.width && box.right > innerWidth + 1;
+                })
+                .map((node) => ({
+                  tag: node.tagName,
+                  classes: node.className,
+                  box: node.getBoundingClientRect().toJSON(),
+                })),
+            }));
+            await writeFile(
+              path.join(
+                directory,
+                engine,
+                `${locale}-${theme}`,
+                "enlarged-geometry.json",
+              ),
+              `${JSON.stringify(enlargedGeometry, null, 2)}\n`,
+            );
             assert.equal(
               await page.evaluate(
                 () => document.documentElement.scrollWidth > innerWidth,

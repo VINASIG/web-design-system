@@ -89,8 +89,8 @@ async function openAction(page, slug, selector, keyboard = false) {
   const open = async (trigger) => {
     if (keyboard) {
       await trigger.focus();
-      await page.keyboard.press("Shift+Tab");
       await page.keyboard.press("Tab");
+      await page.keyboard.press("Shift+Tab");
       await trigger.press("Enter");
     } else await trigger.click();
   };
@@ -109,8 +109,8 @@ async function openAction(page, slug, selector, keyboard = false) {
       const trigger = sample.locator(".sample-context-target");
       if (keyboard) {
         await trigger.focus();
-        await page.keyboard.press("Shift+Tab");
         await page.keyboard.press("Tab");
+        await page.keyboard.press("Shift+Tab");
         await trigger.press("Shift+F10");
       } else await trigger.click({ button: "right" });
     }
@@ -156,6 +156,7 @@ try {
               assert.equal((await page.goto(`${base}elements/`)).status(), 200);
               await inspect(page, inventory);
               for (const [slug, selector] of actions) {
+                result.action = { slug, selector };
                 const { sample, button } = await openAction(
                   page,
                   slug,
@@ -172,13 +173,30 @@ try {
                 if ((await button.getAttribute("role")) === "menuitem") {
                   await page.keyboard.press("Escape");
                   await openAction(page, slug, selector, true);
-                  await button.focus();
+                  await page.keyboard.press("End");
                 } else {
                   await openAction(page, slug, selector);
                   await button.focus();
-                  await page.keyboard.press("Shift+Tab");
                   await page.keyboard.press("Tab");
+                  await page.keyboard.press("Shift+Tab");
                 }
+                if (
+                  !(await button.evaluate(
+                    (node) =>
+                      node === document.activeElement &&
+                      node.matches(":focus-visible"),
+                  )) &&
+                  (await button.evaluate((node) =>
+                    Boolean(node.closest("dialog[open]")),
+                  ))
+                )
+                  await page.keyboard.press("Tab");
+                await page.waitForFunction(
+                  (node) =>
+                    node === document.activeElement &&
+                    node.matches(":focus-visible"),
+                  await button.elementHandle(),
+                );
                 assert(
                   await button.evaluate((node) =>
                     node.matches(":focus-visible"),
@@ -210,6 +228,7 @@ try {
                 await page.emulateMedia({ forcedColors: "none" });
                 await page.keyboard.press("Escape");
               }
+              delete result.action;
               const blue = page.locator(".sample-trash-open");
               const originalStyle = await blue.getAttribute("style");
               await blue.evaluate((node) => {
