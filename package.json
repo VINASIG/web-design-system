@@ -60,6 +60,6 @@
   "dependencies": {
     "@lucide/astro": "1.50.0",
     "lucide": "1.50.0",
-    "simple-icons": "16.33.0"
+    "simple-icons": "16.34.0"
   }
 }
